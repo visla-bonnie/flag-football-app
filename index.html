@@ -12,13 +12,11 @@
         canvas { 
             border: 12px solid #f59e0b; 
             border-radius: 28px; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-            background: #166534;
+            box-shadow: 0 30px 60px -15px rgba(245,158,11,0.5);
         }
     </style>
 </head>
 <body class="bg-emerald-800 text-white">
-    <!-- Navigation -->
     <nav class="bg-emerald-700 border-b-4 border-amber-400 py-5 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
             <div class="flex items-center gap-4">
@@ -38,17 +36,15 @@
     </nav>
 
     <div class="max-w-6xl mx-auto px-6 py-10">
-        <!-- Home Tab with Animation -->
+        <!-- Home - Animation -->
         <div id="tab0" class="tab-content">
-            <div class="grid md:grid-cols-12 gap-10 items-start">
-                <!-- Left: Text + Tips -->
-                <div class="md:col-span-5 space-y-8">
-                    <h2 class="title-font text-6xl font-bold leading-none mb-6">
-                        Animation<br>Classroom!
-                    </h2>
-                    <p class="text-2xl">Drag the little bear to run! Watch cute animals pass the ball, pull flags, and celebrate touchdowns!</p>
+            <div class="grid md:grid-cols-12 gap-12">
+                <!-- Left Text -->
+                <div class="md:col-span-5">
+                    <h2 class="title-font text-6xl font-bold leading-none mb-6">Animation Classroom!</h2>
+                    <p class="text-2xl mb-8">Drag the little bear to run! Watch cute animals pass the ball, pull flags, and celebrate touchdowns!</p>
 
-                    <div class="bg-amber-400 text-emerald-900 p-8 rounded-3xl text-lg font-bold">
+                    <div class="bg-amber-400 text-emerald-900 p-8 rounded-3xl text-lg font-bold mb-10">
                         🖱️ <strong>Tips for Kids:</strong><br><br>
                         • Drag the 🐻 bear with your mouse to practice running routes<br>
                         • Click other animals to "pull the flag" and see fun effects<br>
@@ -56,36 +52,30 @@
                         • Perfect for classroom projection!
                     </div>
 
-                    <div class="flex flex-wrap gap-4">
-                        <button onclick="startDemo()" 
-                                class="bg-amber-400 hover:bg-amber-300 text-emerald-900 px-10 py-6 rounded-3xl text-2xl font-bold flex items-center gap-3">
+                    <div class="flex gap-4">
+                        <button onclick="startDemo()" class="bg-amber-400 hover:bg-amber-300 text-emerald-900 px-10 py-6 rounded-3xl text-2xl font-bold">
                             ▶️ Auto Demo Attack
                         </button>
-                        <button onclick="resetAnimation()" 
-                                class="border-4 border-white hover:bg-white/20 px-9 py-6 rounded-3xl text-2xl font-bold">
+                        <button onclick="resetAnimation()" class="border-4 border-white hover:bg-white/20 px-8 py-6 rounded-3xl text-2xl font-bold">
                             Reset Animation 🔄
                         </button>
                     </div>
                 </div>
 
-                <!-- Right: Animation Canvas -->
+                <!-- Right: Interactive Canvas -->
                 <div class="md:col-span-7">
-                    <canvas id="animationCanvas" width="720" height="480" class="mx-auto"></canvas>
-                    <div class="text-center mt-4 text-amber-300 font-bold text-lg">
-                        🐻 Drag the bear to run! Click other animals to pull flags!
+                    <canvas id="animationCanvas" width="720" height="480"></canvas>
+                    <div class="text-center mt-4 text-amber-300 font-bold">
+                        🐻 Drag the bear • Click others to pull flags
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Other Tabs -->
+        <!-- Other Tabs (简洁版) -->
         <div id="tab1" class="tab-content hidden">
             <h2 class="text-5xl font-bold mb-8">What is Flag Football?</h2>
-            <div class="prose prose-invert text-2xl max-w-3xl">
-                <p>Flag Football is a fun, safe, non-contact version of American football.</p>
-                <p>Players wear belts with two flags. Defenders tackle by pulling a flag — no hitting or pushing!</p>
-                <p>The ball is thrown forward. Score 6 points by reaching the end zone!</p>
-            </div>
+            <p class="text-2xl max-w-3xl">Flag Football is a safe, non-contact version of American football. Players wear flag belts. Defenders pull the flag instead of tackling. The goal is to score touchdowns by reaching the end zone.</p>
         </div>
 
         <div id="tab2" class="tab-content hidden">
@@ -93,33 +83,33 @@
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="bg-white/10 p-8 rounded-3xl">
                     <h3 class="text-3xl font-bold">Flag Guarding</h3>
-                    <p class="text-xl mt-3">Blocking your own flag with your hands.</p>
-                    <p class="text-red-400 font-bold mt-6">Penalty: 10 yards + loss of down</p>
+                    <p>Blocking your own flag with hands.</p>
+                    <p class="text-red-400 font-bold mt-4">Penalty: 10 yards</p>
                 </div>
                 <div class="bg-white/10 p-8 rounded-3xl">
-                    <h3 class="text-3xl font-bold">Pushing / Illegal Blocking</h3>
-                    <p class="text-xl mt-3">Pushing other players with your body.</p>
-                    <p class="text-red-400 font-bold mt-6">Penalty: 10 yards + loss of down</p>
+                    <h3 class="text-3xl font-bold">Pushing / Blocking</h3>
+                    <p>Using body to push or block illegally.</p>
+                    <p class="text-red-400 font-bold mt-4">Penalty: 10 yards</p>
                 </div>
             </div>
         </div>
 
         <div id="tab3" class="tab-content hidden">
             <h2 class="text-5xl font-bold mb-8">How to Play with 5 Players</h2>
-            <div class="grid md:grid-cols-2 gap-12 text-xl">
+            <div class="grid md:grid-cols-2 gap-10 text-xl">
                 <div>
-                    <h3 class="text-amber-300 text-3xl font-bold mb-6">Offense</h3>
-                    <ul class="space-y-5">
-                        <li><strong>🐻 Quarterback (QB)</strong> — Throws the ball</li>
-                        <li><strong>🐒 Wide Receiver (WR)</strong> — Catches the ball</li>
-                        <li><strong>🐴 Running Back (RB)</strong> — Runs with the ball</li>
+                    <h3 class="text-amber-300 font-bold text-3xl mb-6">Offense</h3>
+                    <ul class="space-y-4">
+                        <li>🐻 Quarterback (QB) - Throws the ball</li>
+                        <li>🐒 Wide Receiver (WR) - Catches the ball</li>
+                        <li>🐴 Running Back (RB) - Runs with the ball</li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-amber-300 text-3xl font-bold mb-6">Defense</h3>
-                    <ul class="space-y-5">
-                        <li><strong>🐆 Rusher</strong> — Rushes the QB to pull flag</li>
-                        <li><strong>🦒 Defensive Back</strong> — Covers receivers</li>
+                    <h3 class="text-amber-300 font-bold text-3xl mb-6">Defense</h3>
+                    <ul class="space-y-4">
+                        <li>🐆 Rusher - Pulls QB's flag</li>
+                        <li>🦒 Defensive Back - Covers receivers</li>
                     </ul>
                 </div>
             </div>
@@ -139,18 +129,12 @@
                 this.name = name;
             }
             draw() {
-                ctx.save();
-                ctx.font = '68px system-ui';
+                ctx.font = '72px system-ui';
                 ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.shadowColor = '#00000080';
-                ctx.shadowBlur = 10;
                 ctx.fillText(this.emoji, this.x, this.y);
-
-                ctx.font = 'bold 18px Comic Neue';
+                ctx.font = 'bold 17px Comic Neue';
                 ctx.fillStyle = 'white';
-                ctx.fillText(this.name, this.x, this.y + 58);
-                ctx.restore();
+                ctx.fillText(this.name, this.x, this.y + 62);
             }
         }
 
@@ -158,22 +142,23 @@
             canvas = document.getElementById('animationCanvas');
             ctx = canvas.getContext('2d');
 
+            // 5个动物（增加了小鹿）
             animals = [
-                new Animal(180, 200, '🐻', 'Bear - QB'),
-                new Animal(360, 160, '🐒', 'Monkey - WR'),
-                new Animal(520, 280, '🐴', 'Horse - RB'),
-                new Animal(550, 140, '🐆', 'Leopard - Rusher')
+                new Animal(160, 180, '🐻', 'Bear - QB'),
+                new Animal(340, 140, '🐒', 'Monkey - WR'),
+                new Animal(520, 260, '🐴', 'Horse - RB'),
+                new Animal(550, 130, '🐆', 'Leopard - Rusher'),
+                new Animal(220, 320, '🦒', 'Giraffe - DB')
             ];
 
-            // Mouse controls
-            canvas.addEventListener('mousedown', (e) => {
+            canvas.addEventListener('mousedown', e => {
                 const rect = canvas.getBoundingClientRect();
                 mouse.x = e.clientX - rect.left;
                 mouse.y = e.clientY - rect.top;
                 mouse.dragging = true;
             });
 
-            canvas.addEventListener('mousemove', (e) => {
+            canvas.addEventListener('mousemove', e => {
                 const rect = canvas.getBoundingClientRect();
                 mouse.x = e.clientX - rect.left;
                 mouse.y = e.clientY - rect.top;
@@ -182,19 +167,16 @@
             canvas.addEventListener('mouseup', () => mouse.dragging = false);
             canvas.addEventListener('mouseleave', () => mouse.dragging = false);
 
-            // Click to pull flag effect
-            canvas.addEventListener('click', (e) => {
+            // 点击拉旗效果
+            canvas.addEventListener('click', e => {
                 const rect = canvas.getBoundingClientRect();
-                const clickX = e.clientX - rect.left;
-                const clickY = e.clientY - rect.top;
+                const cx = e.clientX - rect.left;
+                const cy = e.clientY - rect.top;
 
-                animals.forEach(animal => {
-                    const dx = clickX - animal.x;
-                    const dy = clickY - animal.y;
-                    if (Math.hypot(dx, dy) < 70 && animal.emoji !== '🐻') {
-                        // Simple pull effect - shake the animal
-                        animal.y += 15;
-                        setTimeout(() => animal.y -= 15, 200);
+                animals.forEach(a => {
+                    if (Math.hypot(cx - a.x, cy - a.y) < 80 && a.emoji !== '🐻') {
+                        a.y += 25;   // 被拉旗往下掉
+                        setTimeout(() => a.y -= 25, 300);
                     }
                 });
             });
@@ -202,26 +184,23 @@
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Field background
             ctx.fillStyle = '#166534';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // White lines
-            ctx.strokeStyle = 'rgba(255,255,255,0.85)';
-            ctx.lineWidth = 8;
-            for (let i = 80; i < canvas.height; i += 90) {
+            // 球场白线
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 7;
+            for (let i = 70; i < 480; i += 85) {
                 ctx.beginPath();
-                ctx.moveTo(50, i);
-                ctx.lineTo(canvas.width - 50, i);
+                ctx.moveTo(40, i);
+                ctx.lineTo(680, i);
                 ctx.stroke();
             }
 
-            // Draw animals
             animals.forEach(animal => {
                 if (animal.emoji === '🐻' && mouse.dragging) {
-                    animal.x = Math.max(60, Math.min(mouse.x, canvas.width - 60));
-                    animal.y = Math.max(80, Math.min(mouse.y, canvas.height - 80));
+                    animal.x = mouse.x;
+                    animal.y = mouse.y;
                 }
                 animal.draw();
             });
@@ -230,12 +209,12 @@
         }
 
         function startDemo() {
-            alert("Auto Demo Mode\n\nWatch the animals play! (We can make a full animated play later if you want)");
+            alert("Auto Demo: The animals are playing! (We can add real passing animation later if needed)");
         }
 
         function resetAnimation() {
-            animals[0].x = 180;
-            animals[0].y = 200;
+            animals[0].x = 160;
+            animals[0].y = 180;
         }
 
         function switchTab(n) {
