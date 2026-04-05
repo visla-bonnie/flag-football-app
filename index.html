@@ -17,6 +17,7 @@
     </style>
 </head>
 <body class="bg-emerald-800 text-white">
+    <!-- Navigation -->
     <nav class="bg-emerald-700 border-b-4 border-amber-400 py-5 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
             <div class="flex items-center gap-4">
@@ -36,9 +37,10 @@
     </nav>
 
     <div class="max-w-6xl mx-auto px-6 py-10">
-        <!-- Home Tab -->
+        <!-- Home Tab with Animation -->
         <div id="tab0" class="tab-content">
-            <div class="grid md:grid-cols-12 gap-12">
+            <div class="grid md:grid-cols-12 gap-12 items-start">
+                <!-- Left Side -->
                 <div class="md:col-span-5">
                     <h2 class="title-font text-6xl font-bold leading-none mb-6">Animation Classroom!</h2>
                     <p class="text-2xl mb-8">Drag the little bear to run! Watch cute animals pass the ball, pull flags, and celebrate touchdowns!</p>
@@ -47,7 +49,7 @@
                         🖱️ <strong>Tips for Kids:</strong><br><br>
                         • Drag the 🐻 bear with your mouse to practice running routes<br>
                         • Click other animals to "pull the flag" and see fun effects<br>
-                        • The Auto Demo button will be improved soon<br>
+                        • Click "Auto Demo Attack" to watch the bear throw the ball to the monkey!<br>
                         • Perfect for classroom projection!
                     </div>
 
@@ -63,7 +65,7 @@
                     </div>
                 </div>
 
-                <!-- Animation Canvas -->
+                <!-- Right Side - Interactive Canvas -->
                 <div class="md:col-span-7">
                     <canvas id="animationCanvas" width="720" height="480"></canvas>
                     <div class="text-center mt-4 text-amber-300 font-bold text-lg">
@@ -73,37 +75,39 @@
             </div>
         </div>
 
-        <!-- Other Tabs -->
+        <!-- Tab 1 -->
         <div id="tab1" class="tab-content hidden">
             <h2 class="text-5xl font-bold mb-8">What is Flag Football?</h2>
-            <p class="text-2xl max-w-3xl">Flag Football is a safe, non-contact version of American football. Players wear flag belts. Defenders pull the flag instead of tackling. Score 6 points by reaching the end zone!</p>
+            <p class="text-2xl max-w-3xl">Flag Football is a safe, non-contact version of American football. Each player wears a belt with two flags. Defenders tackle by pulling a flag instead of hitting. The goal is to score touchdowns by reaching the end zone!</p>
         </div>
 
+        <!-- Tab 2 -->
         <div id="tab2" class="tab-content hidden">
             <h2 class="text-5xl font-bold mb-8">Common Fouls</h2>
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="bg-white/10 p-8 rounded-3xl">
                     <h3 class="text-3xl font-bold">Flag Guarding</h3>
-                    <p class="text-xl mt-3">Blocking your own flag with your hands.</p>
+                    <p class="text-xl mt-3">Using hands to block your own flag so others can't pull it.</p>
                     <p class="text-red-400 font-bold mt-6">Penalty: 10 yards + loss of down</p>
                 </div>
                 <div class="bg-white/10 p-8 rounded-3xl">
                     <h3 class="text-3xl font-bold">Pushing / Illegal Blocking</h3>
-                    <p class="text-xl mt-3">Pushing other players with your body.</p>
+                    <p class="text-xl mt-3">Pushing defenders with your body.</p>
                     <p class="text-red-400 font-bold mt-6">Penalty: 10 yards + loss of down</p>
                 </div>
             </div>
         </div>
 
+        <!-- Tab 3 -->
         <div id="tab3" class="tab-content hidden">
             <h2 class="text-5xl font-bold mb-8">How to Play with 5 Players</h2>
             <div class="grid md:grid-cols-2 gap-12 text-xl">
                 <div>
                     <h3 class="text-amber-300 text-3xl font-bold mb-6">Offense</h3>
                     <ul class="space-y-5">
-                        <li><strong>🐻 Quarterback</strong> — Throws the ball</li>
-                        <li><strong>🐒 Wide Receiver</strong> — Catches the ball</li>
-                        <li><strong>🐴 Running Back</strong> — Runs with the ball</li>
+                        <li><strong>🐻 Quarterback (QB)</strong> — Throws the ball</li>
+                        <li><strong>🐒 Wide Receiver (WR)</strong> — Catches the ball</li>
+                        <li><strong>🐴 Running Back (RB)</strong> — Runs with the ball</li>
                     </ul>
                 </div>
                 <div>
@@ -120,7 +124,10 @@
     <script>
         let canvas, ctx;
         let animals = [];
+        let football = { x: 0, y: 0, vx: 0, vy: 0, active: false };
+        let particles = [];
         let mouse = { x: 360, y: 240, dragging: false };
+        let isDemoRunning = false;
 
         class Animal {
             constructor(x, y, emoji, name) {
@@ -144,11 +151,11 @@
             ctx = canvas.getContext('2d');
 
             animals = [
-                new Animal(160, 180, '🐻', 'Bear - QB'),
-                new Animal(340, 140, '🐒', 'Monkey - WR'),
-                new Animal(520, 260, '🐴', 'Horse - RB'),
-                new Animal(550, 130, '🐆', 'Leopard - Rusher'),
-                new Animal(220, 320, '🦒', 'Giraffe - DB')
+                new Animal(160, 200, '🐻', 'Bear - QB'),
+                new Animal(400, 160, '🐒', 'Monkey - WR'),
+                new Animal(540, 270, '🐴', 'Horse - RB'),
+                new Animal(570, 130, '🐆', 'Leopard - Rusher'),
+                new Animal(250, 340, '🦒', 'Giraffe - DB')
             ];
 
             canvas.addEventListener('mousedown', e => {
@@ -172,14 +179,39 @@
                 const rect = canvas.getBoundingClientRect();
                 const cx = e.clientX - rect.left;
                 const cy = e.clientY - rect.top;
-
                 animals.forEach(a => {
                     if (Math.hypot(cx - a.x, cy - a.y) < 80 && a.emoji !== '🐻') {
-                        a.y += 20;
-                        setTimeout(() => { a.y -= 20; }, 250);
+                        a.y += 25;
+                        setTimeout(() => a.y -= 25, 280);
                     }
                 });
             });
+        }
+
+        function createParticles(x, y) {
+            for (let i = 0; i < 35; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 12,
+                    vy: (Math.random() - 0.5) * 10 - 3,
+                    life: 45,
+                    color: '#fcd34d'
+                });
+            }
+        }
+
+        function throwFootball() {
+            const qb = animals[0];
+            const wr = animals[1];
+            football = {
+                x: qb.x + 45,
+                y: qb.y - 35,
+                vx: (wr.x - qb.x - 20) / 25,
+                vy: (wr.y - qb.y - 40) / 25 - 7,
+                active: true,
+                target: wr
+            };
         }
 
         function animate() {
@@ -187,6 +219,7 @@
             ctx.fillStyle = '#166534';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+            // Field lines
             ctx.strokeStyle = 'white';
             ctx.lineWidth = 7;
             for (let i = 70; i < 480; i += 85) {
@@ -196,6 +229,7 @@
                 ctx.stroke();
             }
 
+            // Draw animals
             animals.forEach(animal => {
                 if (animal.emoji === '🐻' && mouse.dragging) {
                     animal.x = Math.max(60, Math.min(mouse.x, canvas.width - 60));
@@ -204,37 +238,61 @@
                 animal.draw();
             });
 
+            // Football
+            if (football.active) {
+                football.x += football.vx;
+                football.y += football.vy;
+                football.vy += 0.32;
+
+                ctx.font = '46px system-ui';
+                ctx.fillText('🏈', football.x, football.y);
+
+                if (football.target) {
+                    const dx = football.x - football.target.x;
+                    const dy = football.y - football.target.y;
+                    if (Math.hypot(dx, dy) < 50) {
+                        football.active = false;
+                        createParticles(football.x, football.y);
+                    }
+                }
+            }
+
+            // Particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.3;
+                p.life--;
+                ctx.globalAlpha = p.life / 45;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, 11, 11);
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+            ctx.globalAlpha = 1;
+
             requestAnimationFrame(animate);
         }
 
-        // 修复后的 Auto Demo（不再弹出难看的 alert）
         function startDemo() {
-            // 可以在这里以后加真正的动画演示，目前只是轻微提示
-            const demoMsg = document.createElement('div');
-            demoMsg.style.position = 'fixed';
-            demoMsg.style.top = '100px';
-            demoMsg.style.left = '50%';
-            demoMsg.style.transform = 'translateX(-50%)';
-            demoMsg.style.background = '#f59e0b';
-            demoMsg.style.color = '#0a6f3e';
-            demoMsg.style.padding = '16px 32px';
-            demoMsg.style.borderRadius = '9999px';
-            demoMsg.style.fontWeight = 'bold';
-            demoMsg.style.boxShadow = '0 10px 15px rgba(0,0,0,0.3)';
-            demoMsg.style.zIndex = '1000';
-            demoMsg.textContent = 'Auto Demo: Animals are playing! (Full animation coming soon)';
-            document.body.appendChild(demoMsg);
+            if (isDemoRunning) return;
+            isDemoRunning = true;
 
-            setTimeout(() => {
-                demoMsg.style.transition = 'opacity 0.6s';
-                demoMsg.style.opacity = '0';
-                setTimeout(() => demoMsg.remove(), 600);
-            }, 2500);
+            // Reset positions
+            animals[0].x = 160;
+            animals[0].y = 200;
+            animals[1].x = 400;
+            animals[1].y = 160;
+
+            setTimeout(() => throwFootball(), 500);
+            setTimeout(() => isDemoRunning = false, 4000);
         }
 
         function resetAnimation() {
             animals[0].x = 160;
-            animals[0].y = 180;
+            animals[0].y = 200;
+            football.active = false;
+            particles = [];
         }
 
         function switchTab(n) {
