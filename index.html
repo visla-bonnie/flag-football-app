@@ -52,7 +52,7 @@
       position: relative;
       width: 100%;
       aspect-ratio: 16 / 10;
-      min-height: 420px;
+      min-height: 440px;
       background:
         repeating-linear-gradient(
           90deg,
@@ -111,12 +111,14 @@
       color: rgba(255,255,255,0.88);
       text-shadow: 0 3px 12px rgba(0,0,0,0.25);
       pointer-events: none;
+      text-align: center;
+      padding: 0 12px;
     }
 
     .endzone.top { top: 12px; }
     .endzone.bottom { bottom: 12px; }
 
-    .route-layer, .football-layer, .burst-layer {
+    .route-layer, .football-layer, .burst-layer, .confetti-layer {
       position: absolute;
       inset: 0;
       pointer-events: none;
@@ -136,6 +138,7 @@
 
     .animal:hover { filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18)); }
     .animal.dragging { z-index: 7; transform: translate(-50%, -50%) scale(1.06); }
+    .animal.selected { filter: drop-shadow(0 0 0 rgba(0,0,0,0)) drop-shadow(0 0 20px rgba(255,255,255,0.65)); }
     .animal .label {
       position: absolute;
       left: 50%;
@@ -166,7 +169,6 @@
     .animal .flag.right { right: 12px; background: #ffd447; }
     .animal.pulled .flag.left { transform: translateX(-24px) rotate(-25deg); opacity: 0.15; }
     .animal.pulled .flag.right { transform: translateX(24px) rotate(25deg); opacity: 0.15; }
-
     .animal svg { width: 100%; height: 100%; overflow: visible; }
 
     .float-bob {
@@ -256,9 +258,7 @@
       stroke-linecap: round;
     }
 
-    @keyframes dash {
-      to { stroke-dashoffset: -52; }
-    }
+    @keyframes dash { to { stroke-dashoffset: -52; } }
 
     .hidden-tab { display: none; }
 
@@ -316,6 +316,37 @@
       inset: 0;
     }
 
+    .scoreboard {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr 1.2fr;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .score-panel, .score-mid {
+      background: linear-gradient(180deg, rgba(7,18,35,0.9) 0%, rgba(12,32,58,0.9) 100%);
+      border: 2px solid rgba(255,255,255,0.14);
+      border-radius: 24px;
+      padding: 14px;
+      text-align: center;
+      box-shadow: inset 0 0 18px rgba(255,255,255,0.05), 0 14px 26px rgba(0,0,0,0.18);
+    }
+
+    .digit {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 46px;
+      line-height: 1;
+      color: #7dffb2;
+      text-shadow: 0 0 12px rgba(125,255,178,0.35);
+    }
+
+    .small-led {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 22px;
+      color: #ffd15c;
+      text-shadow: 0 0 10px rgba(255,209,92,0.3);
+    }
+
     .status-box {
       margin-top: 14px;
       padding: 12px 14px;
@@ -326,37 +357,142 @@
       min-height: 54px;
     }
 
-    .small-note {
-      color: #eaf7ff;
-      opacity: 0.92;
+    .touchdown-banner {
+      position: fixed;
+      left: 50%;
+      top: 12%;
+      transform: translateX(-50%) scale(0.7);
+      background: linear-gradient(180deg, #fff3a8 0%, #ffd15c 100%);
+      color: #17345e;
+      padding: 18px 28px;
+      border-radius: 24px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      box-shadow: 0 22px 40px rgba(0,0,0,0.24);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 50;
     }
+
+    .touchdown-banner.show {
+      animation: touchdownPop 1.4s ease forwards;
+    }
+
+    @keyframes touchdownPop {
+      0% { opacity: 0; transform: translateX(-50%) scale(0.7); }
+      20% { opacity: 1; transform: translateX(-50%) scale(1.06); }
+      70% { opacity: 1; transform: translateX(-50%) scale(1); }
+      100% { opacity: 0; transform: translateX(-50%) scale(0.92); }
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 18px;
+      border-radius: 4px;
+      opacity: 0.96;
+      animation: confettiFall 1.5s linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0% { transform: translateY(-40px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(300px) rotate(420deg); opacity: 0; }
+    }
+
+    .speak-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.13);
+      border: 2px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 800;
+    }
+
+    .playbook-btn.active {
+      background: #ffd15c;
+      color: #17345e;
+    }
+
+    .small-note { color: #eaf7ff; opacity: 0.92; }
 
     @media (max-width: 900px) {
       .field { min-height: 360px; }
       .animal { width: 80px; height: 104px; }
       .lineup-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .scoreboard { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
       .field { min-height: 320px; }
       .animal { width: 74px; height: 98px; }
+      .touchdown-banner { font-size: 26px; width: calc(100% - 40px); text-align: center; }
     }
   </style>
 </head>
 <body>
+  <div id="touchdown-banner" class="touchdown-banner">TOUCHDOWN! 达阵!</div>
+
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
     <header class="glass rounded-[32px] p-5 sm:p-7 mb-6">
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-        <div class="flex items-center gap-4">
-          <div class="w-20 h-20 rounded-[26px] bg-white/20 flex items-center justify-center text-5xl shadow-xl">🏈</div>
-          <div>
-            <div class="title-font text-3xl sm:text-5xl font-bold leading-tight">Flag Football Fun</div>
-            <div class="text-yellow-200 font-extrabold text-base sm:text-lg">Coach Byryden classroom app • cute cartoon animals • American flag football</div>
+      <div class="flex flex-col gap-5">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+          <div class="flex items-center gap-4">
+            <div class="w-20 h-20 rounded-[26px] bg-white/20 flex items-center justify-center text-5xl shadow-xl">🏈</div>
+            <div>
+              <div class="title-font text-3xl sm:text-5xl font-bold leading-tight" id="hero-title">Flag Football Fun</div>
+              <div class="text-yellow-200 font-extrabold text-base sm:text-lg" id="hero-subtitle">Coach Byryden classroom app • cute cartoon animals • American flag football</div>
+            </div>
+          </div>
+          <div class="glass rounded-[28px] px-5 py-4 max-w-xl">
+            <div class="font-extrabold text-yellow-200 mb-1">Level 2 Upgrade</div>
+            <div class="text-sm sm:text-base">Playbook mode, click-to-learn positions, bilingual labels, teacher custom team names, scoreboard, down & touchdown effects, plus extra cute character skins.</div>
           </div>
         </div>
-        <div class="glass rounded-[28px] px-5 py-4 max-w-xl">
-          <div class="font-extrabold text-yellow-200 mb-1">What this version adds</div>
-          <div class="text-sm sm:text-base">Full-body cartoon characters, drag-to-run bear movement, passing football animation, route lines, foul lessons, and a 5v5 positions guide for kids and teachers.</div>
+
+        <div class="grid lg:grid-cols-12 gap-4 items-start">
+          <div class="lg:col-span-7 scoreboard">
+            <div class="score-panel">
+              <div class="text-xs font-extrabold uppercase tracking-[0.25em] text-cyan-200" id="score-home-name">Bears</div>
+              <div class="digit" id="home-score">0</div>
+              <div class="text-sm text-white/80" id="score-home-sub">Home 主队</div>
+            </div>
+            <div class="score-mid">
+              <div class="small-led"><span id="down-label">Down</span> <span id="down-value">1</span></div>
+              <div class="small-led mt-2"><span id="playbook-mode-label">Play</span>: <span id="current-play-name">Slant Pass</span></div>
+              <div class="text-xs mt-3 text-white/70">Kids can watch • drag • click • learn</div>
+            </div>
+            <div class="score-panel">
+              <div class="text-xs font-extrabold uppercase tracking-[0.25em] text-pink-200" id="score-away-name">Monkeys</div>
+              <div class="digit" id="away-score">0</div>
+              <div class="text-sm text-white/80" id="score-away-sub">Away 客队</div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 grid sm:grid-cols-2 gap-3">
+            <label class="glass rounded-[22px] p-4 block">
+              <div class="text-sm font-extrabold text-yellow-200 mb-2">School / 学校</div>
+              <input id="school-name" class="w-full rounded-xl px-3 py-2 text-slate-900 font-bold" value="Coach Byryden School" />
+            </label>
+            <label class="glass rounded-[22px] p-4 block">
+              <div class="text-sm font-extrabold text-yellow-200 mb-2">Home Team / 主队</div>
+              <input id="team-home" class="w-full rounded-xl px-3 py-2 text-slate-900 font-bold" value="Bears" />
+            </label>
+            <label class="glass rounded-[22px] p-4 block">
+              <div class="text-sm font-extrabold text-yellow-200 mb-2">Away Team / 客队</div>
+              <input id="team-away" class="w-full rounded-xl px-3 py-2 text-slate-900 font-bold" value="Monkeys" />
+            </label>
+            <label class="glass rounded-[22px] p-4 block">
+              <div class="text-sm font-extrabold text-yellow-200 mb-2">Language / 语言</div>
+              <select id="language-toggle" class="w-full rounded-xl px-3 py-2 text-slate-900 font-bold">
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+                <option value="both" selected>EN + 中文</option>
+              </select>
+            </label>
+          </div>
         </div>
       </div>
     </header>
@@ -376,45 +512,85 @@
           <div class="lg:col-span-4 space-y-5">
             <div class="glass rounded-[30px] p-6">
               <h2 class="title-font text-4xl font-bold mb-3">Interactive Field</h2>
-              <p class="text-lg leading-8">Drag the little <strong>bear quarterback</strong> to a new spot. Then press a play button to see <strong>route lines</strong> and a real <strong>football pass animation</strong>. Click a defender to practice a <strong>flag pull</strong>.</p>
+              <p class="text-lg leading-8">Drag the little <strong>bear quarterback</strong>. Pick a <strong>playbook play</strong>. Click a player to learn the job in <strong>English + Chinese</strong>. Watch the <strong>scoreboard, down counter, and touchdown animation</strong>.</p>
             </div>
 
             <div class="glass rounded-[30px] p-6">
-              <div class="font-extrabold text-yellow-200 text-xl mb-3">How kids can use it</div>
-              <ul class="space-y-3 text-base sm:text-lg leading-7">
-                <li>🧸 Move the bear with your mouse or finger.</li>
-                <li>🏈 Watch a short pass, handoff, or touchdown demo.</li>
-                <li>🚩 Click defenders to see the flag-pull effect.</li>
-                <li>📚 Open the learning tabs to read rules and positions.</li>
-              </ul>
-            </div>
-
-            <div class="glass rounded-[30px] p-6">
-              <div class="font-extrabold text-yellow-200 text-xl mb-4">Play controls</div>
+              <div class="font-extrabold text-yellow-200 text-xl mb-3">Playbook Mode</div>
               <div class="grid gap-3">
-                <button id="btn-pass" class="rounded-2xl px-4 py-4 bg-yellow-300 text-slate-900 font-extrabold text-lg hover:scale-[1.02] transition">🏈 Pass to Monkey WR</button>
-                <button id="btn-handoff" class="rounded-2xl px-4 py-4 bg-pink-300 text-slate-900 font-extrabold text-lg hover:scale-[1.02] transition">🤝 Handoff to Horse RB</button>
-                <button id="btn-demo" class="rounded-2xl px-4 py-4 bg-cyan-300 text-slate-900 font-extrabold text-lg hover:scale-[1.02] transition">▶️ Auto Demo Play</button>
+                <button class="playbook-btn active rounded-2xl px-4 py-3 bg-white/15 font-extrabold text-left" data-play="slant">🏈 Slant Pass / 斜线传球</button>
+                <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="handoff">🤝 Handoff Run / 交接跑球</button>
+                <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="go">⚡ Go Route / 直线深传</button>
+                <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="sweep">🌪️ Sweep / 外侧冲跑</button>
+              </div>
+            </div>
+
+            <div class="glass rounded-[30px] p-6">
+              <div class="font-extrabold text-yellow-200 text-xl mb-4">Controls</div>
+              <div class="grid gap-3">
+                <button id="btn-run-play" class="rounded-2xl px-4 py-4 bg-yellow-300 text-slate-900 font-extrabold text-lg hover:scale-[1.02] transition">▶️ Run Selected Play</button>
+                <button id="btn-demo" class="rounded-2xl px-4 py-4 bg-cyan-300 text-slate-900 font-extrabold text-lg hover:scale-[1.02] transition">🎬 Auto Demo Series</button>
+                <button id="btn-score" class="rounded-2xl px-4 py-4 bg-pink-300 text-slate-900 font-extrabold text-lg hover:scale-[1.02] transition">🏁 Add Touchdown</button>
                 <button id="btn-reset" class="rounded-2xl px-4 py-4 bg-white/15 text-white font-extrabold text-lg border-2 border-white/20 hover:bg-white/20 transition">🔄 Reset Field</button>
               </div>
-              <div id="status-box" class="status-box mt-4">Ready! Drag the bear or start a play.</div>
+              <div id="status-box" class="status-box mt-4">Ready! Drag the bear or pick a playbook play.</div>
+            </div>
+
+            <div class="glass rounded-[30px] p-6">
+              <div class="font-extrabold text-yellow-200 text-xl mb-4">Cute Skins</div>
+              <select id="skin-style" class="w-full rounded-xl px-3 py-3 text-slate-900 font-bold mb-3">
+                <option value="classic">Classic Team</option>
+                <option value="superhero">Superhero</option>
+                <option value="space">Space</option>
+                <option value="rainbow">Rainbow</option>
+              </select>
+              <div class="small-note">Changes the animal outfit style so kids can have more fun.</div>
             </div>
           </div>
 
-          <div class="lg:col-span-8">
+          <div class="lg:col-span-5">
             <div class="field-card">
               <div class="field" id="field">
-                <div class="endzone top">TOUCHDOWN ZONE</div>
-                <div class="endzone bottom">TOUCHDOWN ZONE</div>
+                <div class="endzone top" id="top-endzone">Coach Byryden School</div>
+                <div class="endzone bottom" id="bottom-endzone">Coach Byryden School</div>
                 <svg class="route-layer" id="route-layer" viewBox="0 0 1000 620" preserveAspectRatio="none"></svg>
                 <div class="football-layer" id="football-layer"></div>
                 <div class="burst-layer" id="burst-layer"></div>
+                <div class="confetti-layer" id="confetti-layer"></div>
               </div>
             </div>
             <div class="mt-4 flex flex-wrap gap-3 text-sm sm:text-base font-bold">
-              <span class="pill"><span class="legend-dot" style="background:#ffd447"></span>Offense learning routes</span>
-              <span class="pill"><span class="legend-dot" style="background:#ff6d9b"></span>Defense / flag pull fun</span>
+              <span class="pill"><span class="legend-dot" style="background:#ffd447"></span>Offense routes</span>
+              <span class="pill"><span class="legend-dot" style="background:#ff6d9b"></span>Defense / flag pull</span>
               <span class="pill"><span class="legend-dot" style="background:#7dd3fc"></span>Animated football pass</span>
+            </div>
+          </div>
+
+          <div class="lg:col-span-3 space-y-5">
+            <div class="glass rounded-[30px] p-6">
+              <div class="flex items-center justify-between gap-3 mb-3">
+                <h3 class="title-font text-3xl font-bold">Player Coach Card</h3>
+                <button id="speak-role" class="speak-btn">🔊 Speak</button>
+              </div>
+              <div id="role-card-emoji" class="text-5xl mb-2">🐻</div>
+              <div id="role-card-title" class="font-extrabold text-2xl mb-2">Bear QB</div>
+              <div id="role-card-body" class="text-lg leading-8">Quarterback: throws the ball and leads the play. 四分卫：负责传球并指挥进攻。</div>
+              <div class="mt-3 text-sm text-yellow-200 font-bold">Click any player on the field to learn the role.</div>
+            </div>
+
+            <div class="glass rounded-[30px] p-6">
+              <h3 class="title-font text-3xl font-bold mb-3">Selected Play</h3>
+              <div id="play-desc" class="text-lg leading-8">Slant Pass: the receiver cuts across the field for a quick pass. 斜线传球：外接手斜切进入空档接球。</div>
+            </div>
+
+            <div class="glass rounded-[30px] p-6">
+              <h3 class="title-font text-3xl font-bold mb-3">Teacher Ideas</h3>
+              <ul class="space-y-3 text-base leading-7">
+                <li>✅ Use the school/team name boxes for class branding.</li>
+                <li>✅ Let kids click players and read the jobs aloud.</li>
+                <li>✅ Use the language switch for EN / 中文 learning.</li>
+                <li>✅ Run plays and ask students which route they saw.</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -424,37 +600,21 @@
         <div class="grid lg:grid-cols-12 gap-6">
           <div class="lg:col-span-7 glass rounded-[30px] p-7">
             <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">What is Flag Football?</h2>
-            <p class="text-lg sm:text-xl leading-9 mb-5">Flag football is a <strong>safe, non-contact version of American football</strong>. Instead of tackling, defenders pull a player’s <strong>flag belt</strong> to stop the play. Teams try to move the ball down the field and score a touchdown in the end zone.</p>
+            <p class="text-lg sm:text-xl leading-9 mb-5">Flag football is a <strong>safe, non-contact version of American football</strong>. Instead of tackling, defenders pull a player’s <strong>flag belt</strong> to stop the play. Teams try to move the ball down the field and score a touchdown in the end zone. 夺旗橄榄球是美式橄榄球的安全版，不用擒抱，而是通过拉旗来停止进攻。</p>
             <div class="grid sm:grid-cols-2 gap-4">
-              <div class="mini-card">
-                <div class="text-3xl mb-2">🏈</div>
-                <div class="font-extrabold text-xl mb-1">What players do</div>
-                <div>Throw, catch, run routes, hand off, defend passes, and pull flags.</div>
-              </div>
-              <div class="mini-card">
-                <div class="text-3xl mb-2">🚩</div>
-                <div class="font-extrabold text-xl mb-1">How a play stops</div>
-                <div>A defender pulls the ball carrier’s flag, a pass falls incomplete, or a score happens.</div>
-              </div>
-              <div class="mini-card">
-                <div class="text-3xl mb-2">🧠</div>
-                <div class="font-extrabold text-xl mb-1">What kids learn</div>
-                <div>Teamwork, spacing, routes, passing timing, defense, and sportsmanship.</div>
-              </div>
-              <div class="mini-card">
-                <div class="text-3xl mb-2">😊</div>
-                <div class="font-extrabold text-xl mb-1">Why it’s fun</div>
-                <div>Fast plays, lots of movement, easier safety rules, and everyone can join in.</div>
-              </div>
+              <div class="mini-card"><div class="text-3xl mb-2">🏈</div><div class="font-extrabold text-xl mb-1">What players do / 球员做什么</div><div>Throw, catch, run, defend, and pull flags. 传球、接球、跑动、防守、拉旗。</div></div>
+              <div class="mini-card"><div class="text-3xl mb-2">🚩</div><div class="font-extrabold text-xl mb-1">How a play stops / 何时停止</div><div>A flag gets pulled, the pass is incomplete, or a score happens. 拉旗、传球未完成或得分。</div></div>
+              <div class="mini-card"><div class="text-3xl mb-2">🧠</div><div class="font-extrabold text-xl mb-1">What kids learn / 学到什么</div><div>Teamwork, spacing, passing timing, and sportsmanship. 团队合作、站位、传球时机和体育精神。</div></div>
+              <div class="mini-card"><div class="text-3xl mb-2">😊</div><div class="font-extrabold text-xl mb-1">Why it’s fun / 为什么好玩</div><div>Fast plays, safer rules, and everyone can join. 节奏快、更安全、人人都能参与。</div></div>
             </div>
           </div>
           <div class="lg:col-span-5 glass rounded-[30px] p-7">
-            <h3 class="title-font text-3xl font-bold mb-4">Simple kid-friendly game flow</h3>
+            <h3 class="title-font text-3xl font-bold mb-4">Simple game flow / 简单流程</h3>
             <div class="space-y-4 text-lg leading-8">
-              <div class="mini-card"><strong>1. Start the play</strong><br />The center snaps the ball to the quarterback.</div>
-              <div class="mini-card"><strong>2. Choose a move</strong><br />The offense can pass, hand off, or run.</div>
-              <div class="mini-card"><strong>3. Defend safely</strong><br />The defense covers players and tries to pull the flag.</div>
-              <div class="mini-card"><strong>4. Score!</strong><br />If the offense reaches the end zone, that is a touchdown.</div>
+              <div class="mini-card"><strong>1. Start the play / 开球</strong><br />The center snaps the ball to the quarterback. 中锋把球传给四分卫。</div>
+              <div class="mini-card"><strong>2. Choose a move / 选择战术</strong><br />The offense can pass, hand off, or run. 进攻方可以传球、交接球或自己跑。</div>
+              <div class="mini-card"><strong>3. Defend safely / 安全防守</strong><br />The defense covers players and tries to pull the flag. 防守方盯防并尝试拉旗。</div>
+              <div class="mini-card"><strong>4. Score / 得分</strong><br />Reach the end zone for a touchdown. 跑到达阵区就得分。</div>
             </div>
           </div>
         </div>
@@ -462,15 +622,15 @@
 
       <section id="tab-fouls" class="tab-panel hidden-tab">
         <div class="glass rounded-[30px] p-7">
-          <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">Common Fouls</h2>
-          <p class="text-lg sm:text-xl leading-8 mb-6">These are common kid-friendly examples teachers can explain. Exact penalties can vary by school or league, so coaches can customize the wording later.</p>
+          <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">Common Fouls / 常见犯规</h2>
+          <p class="text-lg sm:text-xl leading-8 mb-6">These are kid-friendly teaching examples. Exact penalties can change by league. 这些是适合课堂教学的示例，不同学校或联赛的处罚距离可能不同。</p>
           <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-            <div class="mini-card"><div class="text-4xl mb-3">🚫🖐️</div><div class="font-extrabold text-2xl mb-2">Flag Guarding</div><div>Using hands, arms, or the ball to block a defender from pulling your flag.</div></div>
-            <div class="mini-card"><div class="text-4xl mb-3">🚫💥</div><div class="font-extrabold text-2xl mb-2">Illegal Contact</div><div>Pushing, tackling, or rough contact instead of safe flag football play.</div></div>
-            <div class="mini-card"><div class="text-4xl mb-3">🚫⏱️</div><div class="font-extrabold text-2xl mb-2">Offside</div><div>Starting across the line before the ball is snapped.</div></div>
-            <div class="mini-card"><div class="text-4xl mb-3">🚫🌀</div><div class="font-extrabold text-2xl mb-2">Spinning Into Contact</div><div>Turning or jumping into defenders in a dangerous way.</div></div>
-            <div class="mini-card"><div class="text-4xl mb-3">🚫🤾</div><div class="font-extrabold text-2xl mb-2">Illegal Screen / Block</div><div>Getting in someone’s way with the body when the rules do not allow blocking.</div></div>
-            <div class="mini-card"><div class="text-4xl mb-3">🚫🎯</div><div class="font-extrabold text-2xl mb-2">Pass Interference</div><div>Grabbing or bumping a receiver too early while the ball is in the air.</div></div>
+            <div class="mini-card"><div class="text-4xl mb-3">🚫🖐️</div><div class="font-extrabold text-2xl mb-2">Flag Guarding / 护旗</div><div>Using your hands or the ball to stop someone from pulling your flag. 用手或球挡住别人拉旗。</div></div>
+            <div class="mini-card"><div class="text-4xl mb-3">🚫💥</div><div class="font-extrabold text-2xl mb-2">Illegal Contact / 非法身体接触</div><div>Pushing, tackling, or rough contact. 推人、擒抱或粗暴碰撞。</div></div>
+            <div class="mini-card"><div class="text-4xl mb-3">🚫⏱️</div><div class="font-extrabold text-2xl mb-2">Offside / 越位</div><div>Crossing the line too early before the snap. 开球前太早越过开球线。</div></div>
+            <div class="mini-card"><div class="text-4xl mb-3">🚫🌀</div><div class="font-extrabold text-2xl mb-2">Dangerous Spin / 危险转身</div><div>Spinning or jumping into contact unsafely. 不安全地转身或跳向对手。</div></div>
+            <div class="mini-card"><div class="text-4xl mb-3">🚫🤾</div><div class="font-extrabold text-2xl mb-2">Illegal Block / 非法阻挡</div><div>Using your body to block when the rule does not allow it. 规则不允许时用身体阻挡。</div></div>
+            <div class="mini-card"><div class="text-4xl mb-3">🚫🎯</div><div class="font-extrabold text-2xl mb-2">Pass Interference / 传球干扰</div><div>Grabbing or bumping a receiver too early. 球还没到就拉拽或撞击接球员。</div></div>
           </div>
         </div>
       </section>
@@ -478,14 +638,14 @@
       <section id="tab-positions" class="tab-panel hidden-tab">
         <div class="grid lg:grid-cols-12 gap-6">
           <div class="lg:col-span-5 glass rounded-[30px] p-7">
-            <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">5v5 Positions</h2>
-            <p class="text-lg sm:text-xl leading-8 mb-5">This tab gives a simple overview of the main jobs kids may hear about in class or practice.</p>
+            <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">5v5 Positions / 五人制位置</h2>
+            <p class="text-lg sm:text-xl leading-8 mb-5">Click the same positions on the home field too. 你也可以在主页点击这些角色来听和看说明。</p>
             <div class="space-y-3 text-lg">
-              <div class="mini-card"><strong>Quarterback (QB)</strong><br />Gets the snap and decides to throw, hand off, or run.</div>
-              <div class="mini-card"><strong>Center</strong><br />Snaps the ball to start the play.</div>
-              <div class="mini-card"><strong>Wide Receiver (WR)</strong><br />Runs routes and catches passes.</div>
-              <div class="mini-card"><strong>Running Back (RB)</strong><br />Can take handoffs, run, or catch short passes.</div>
-              <div class="mini-card"><strong>Rusher / Defensive Back / Safety / Linebacker</strong><br />These defenders rush the QB, cover receivers, help in the middle, and protect deep passes depending on the scheme.</div>
+              <div class="mini-card"><strong>Quarterback (QB) / 四分卫</strong><br />Throws or runs the ball and leads the play.</div>
+              <div class="mini-card"><strong>Center / 中锋</strong><br />Snaps the ball to start the play.</div>
+              <div class="mini-card"><strong>Wide Receiver (WR) / 外接手</strong><br />Runs routes and catches passes.</div>
+              <div class="mini-card"><strong>Running Back (RB) / 跑卫</strong><br />Takes handoffs or catches short passes.</div>
+              <div class="mini-card"><strong>Rusher / Defensive Back / Safety / Linebacker</strong><br />Rush, cover, help in the middle, and protect deep.</div>
             </div>
           </div>
 
@@ -548,11 +708,127 @@
       const routeLayer = document.getElementById('route-layer');
       const footballLayer = document.getElementById('football-layer');
       const burstLayer = document.getElementById('burst-layer');
+      const confettiLayer = document.getElementById('confetti-layer');
       const statusBox = document.getElementById('status-box');
-      const passBtn = document.getElementById('btn-pass');
-      const handoffBtn = document.getElementById('btn-handoff');
+      const runPlayBtn = document.getElementById('btn-run-play');
       const demoBtn = document.getElementById('btn-demo');
+      const scoreBtn = document.getElementById('btn-score');
       const resetBtn = document.getElementById('btn-reset');
+      const homeScoreEl = document.getElementById('home-score');
+      const awayScoreEl = document.getElementById('away-score');
+      const downValueEl = document.getElementById('down-value');
+      const currentPlayNameEl = document.getElementById('current-play-name');
+      const playDescEl = document.getElementById('play-desc');
+      const languageToggle = document.getElementById('language-toggle');
+      const schoolNameInput = document.getElementById('school-name');
+      const teamHomeInput = document.getElementById('team-home');
+      const teamAwayInput = document.getElementById('team-away');
+      const topEndzone = document.getElementById('top-endzone');
+      const bottomEndzone = document.getElementById('bottom-endzone');
+      const scoreHomeName = document.getElementById('score-home-name');
+      const scoreAwayName = document.getElementById('score-away-name');
+      const heroTitle = document.getElementById('hero-title');
+      const heroSubtitle = document.getElementById('hero-subtitle');
+      const skinStyleSelect = document.getElementById('skin-style');
+      const touchdownBanner = document.getElementById('touchdown-banner');
+      const speakRoleBtn = document.getElementById('speak-role');
+      const roleEmojiEl = document.getElementById('role-card-emoji');
+      const roleTitleEl = document.getElementById('role-card-title');
+      const roleBodyEl = document.getElementById('role-card-body');
+
+      const playerInfo = {
+        bear: {
+          emoji: '🐻',
+          enTitle: 'Bear QB',
+          zhTitle: '小熊四分卫',
+          enBody: 'Quarterback: throws the ball, starts decisions, and leads the offense.',
+          zhBody: '四分卫：负责传球、做决定，并带领进攻。'
+        },
+        monkey: {
+          emoji: '🐒',
+          enTitle: 'Monkey WR',
+          zhTitle: '小猴子外接手',
+          enBody: 'Wide Receiver: runs routes, gets open, and catches passes.',
+          zhBody: '外接手：跑路线、摆脱防守并接球。'
+        },
+        horse: {
+          emoji: '🐴',
+          enTitle: 'Horse RB',
+          zhTitle: '小马跑卫',
+          enBody: 'Running Back: takes handoffs, runs outside, or catches short passes.',
+          zhBody: '跑卫：接交接球、外侧冲跑，或接短传。'
+        },
+        pony: {
+          emoji: '🐎',
+          enTitle: 'Pony Center',
+          zhTitle: '小马中锋',
+          enBody: 'Center: snaps the ball to begin the play.',
+          zhBody: '中锋：负责开球，把球传给四分卫。'
+        },
+        leopard: {
+          emoji: '🐆',
+          enTitle: 'Leopard Rusher',
+          zhTitle: '豹子突袭手',
+          enBody: 'Rusher: runs toward the quarterback and tries to force a quick decision.',
+          zhBody: '突袭手：冲向四分卫，逼迫对方快速处理球。'
+        },
+        giraffe: {
+          emoji: '🦒',
+          enTitle: 'Giraffe DB',
+          zhTitle: '长颈鹿防守后卫',
+          enBody: 'Defensive Back: covers receivers and tries to stop catches.',
+          zhBody: '防守后卫：盯防接球员，阻止完成接球。'
+        },
+        rabbit: {
+          emoji: '🐰',
+          enTitle: 'Rabbit Safety',
+          zhTitle: '兔子安全卫',
+          enBody: 'Safety: stays deeper to help stop long passes.',
+          zhBody: '安全卫：站位更深，帮助防守长传。'
+        },
+        fox: {
+          emoji: '🦊',
+          enTitle: 'Fox Linebacker',
+          zhTitle: '狐狸线卫',
+          enBody: 'Linebacker: helps in the middle, watches runs, and supports coverage.',
+          zhBody: '线卫：协助中路防守、观察跑球并支援传球防守。'
+        }
+      };
+
+      const plays = {
+        slant: {
+          enName: 'Slant Pass',
+          zhName: '斜线传球',
+          enDesc: 'The receiver cuts across the field for a quick pass.',
+          zhDesc: '外接手快速斜切穿过中路接球。',
+          downAdvance: true,
+          score: false
+        },
+        handoff: {
+          enName: 'Handoff Run',
+          zhName: '交接跑球',
+          enDesc: 'The quarterback gives the ball to the running back for a safe run.',
+          zhDesc: '四分卫把球交给跑卫推进。',
+          downAdvance: true,
+          score: false
+        },
+        go: {
+          enName: 'Go Route',
+          zhName: '直线深传',
+          enDesc: 'The receiver runs deep for a long throw.',
+          zhDesc: '外接手直线冲刺，准备接长传。',
+          downAdvance: true,
+          score: true
+        },
+        sweep: {
+          enName: 'Sweep',
+          zhName: '外侧冲跑',
+          enDesc: 'The running back sweeps wide to the outside.',
+          zhDesc: '跑卫向外侧大范围冲跑。',
+          downAdvance: true,
+          score: false
+        }
+      };
 
       const baseAnimals = [
         { id: 'bear', name: 'Bear QB', type: 'bear', team: 'offense', x: 20, y: 50 },
@@ -570,43 +846,61 @@
       let draggingId = null;
       let dragOffset = { x: 0, y: 0 };
       let busy = false;
+      let languageMode = 'both';
+      let selectedPlay = 'slant';
+      let homeScore = 0;
+      let awayScore = 0;
+      let down = 1;
+      let selectedAnimalId = 'bear';
+      let skinStyle = 'classic';
 
       function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
       function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
-      function setStatus(message) {
-        if (statusBox) statusBox.textContent = message;
-      }
-
-      function hasFieldPieces() {
-        return !!(field && routeLayer && footballLayer && burstLayer);
-      }
-
-      function getAnimal(id) {
-        const animal = animalMap[id];
-        return animal && typeof animal.x === 'number' && typeof animal.y === 'number' ? animal : null;
-      }
-
+      function setStatus(message) { if (statusBox) statusBox.textContent = message; }
+      function hasFieldPieces() { return !!(field && routeLayer && footballLayer && burstLayer && confettiLayer); }
+      function getAnimal(id) { const a = animalMap[id]; return a && typeof a.x === 'number' && typeof a.y === 'number' ? a : null; }
       function getRequiredAnimals(ids) {
         const resolved = {};
         for (const id of ids) {
           const animal = getAnimal(id);
-          if (!animal) {
-            console.warn(`Missing animal: ${id}`);
-            return null;
-          }
+          if (!animal) return null;
           resolved[id] = animal;
         }
         return resolved;
       }
 
-      function animalSVG(type, team) {
-        const jerseys = {
-          offense: { main: '#ffd15c', trim: '#17345e' },
-          defense: { main: '#ff7aa8', trim: '#5b1833' }
-        };
-        const j = jerseys[team] || jerseys.offense;
+      function t(en, zh) {
+        if (languageMode === 'en') return en;
+        if (languageMode === 'zh') return zh;
+        return `${en} / ${zh}`;
+      }
 
+      function getSkinPalette(team) {
+        const base = {
+          offense: { main: '#ffd15c', trim: '#17345e', accent: '#ffffff', star: '#17345e' },
+          defense: { main: '#ff7aa8', trim: '#5b1833', accent: '#ffffff', star: '#5b1833' }
+        };
+        const palette = base[team] || base.offense;
+        if (skinStyle === 'superhero') {
+          return team === 'offense'
+            ? { main: '#5cc8ff', trim: '#132f57', accent: '#ffef7d', star: '#ffef7d' }
+            : { main: '#ff6584', trim: '#52162c', accent: '#ffd15c', star: '#ffd15c' };
+        }
+        if (skinStyle === 'space') {
+          return team === 'offense'
+            ? { main: '#8f7cff', trim: '#24164d', accent: '#7dffea', star: '#7dffea' }
+            : { main: '#ff89dd', trim: '#4a1742', accent: '#8fe7ff', star: '#8fe7ff' };
+        }
+        if (skinStyle === 'rainbow') {
+          return team === 'offense'
+            ? { main: '#7dffb2', trim: '#0f5e4e', accent: '#ff8fd5', star: '#ff8fd5' }
+            : { main: '#ffc46d', trim: '#784300', accent: '#78b8ff', star: '#78b8ff' };
+        }
+        return palette;
+      }
+
+      function animalSVG(type, team) {
+        const j = getSkinPalette(team);
         const configs = {
           bear: { fur: '#8b5b34', ear: '#6e4325', belly: '#ecd8b5', muzzle: '#f6ead1' },
           monkey: { fur: '#8d6237', ear: '#6f4929', belly: '#f1d9b5', muzzle: '#f3e6cb' },
@@ -617,15 +911,12 @@
           rabbit: { fur: '#dfe4ec', ear: '#ffb8d4', belly: '#ffffff', muzzle: '#fff3f8' },
           fox: { fur: '#ec9447', ear: '#c66a2b', belly: '#fff0d8', muzzle: '#fff7ea' }
         };
-
         const c = configs[type] || configs.bear;
-
         const spots = type === 'leopard'
           ? '<circle cx="29" cy="37" r="4" fill="#6d3f17"/><circle cx="57" cy="33" r="4" fill="#6d3f17"/><circle cx="68" cy="55" r="4" fill="#6d3f17"/><circle cx="20" cy="60" r="4" fill="#6d3f17"/>'
           : type === 'giraffe'
           ? '<circle cx="28" cy="26" r="5" fill="#b9772f"/><circle cx="55" cy="41" r="5" fill="#b9772f"/><circle cx="24" cy="66" r="5" fill="#b9772f"/><circle cx="64" cy="74" r="5" fill="#b9772f"/>'
           : '';
-
         const tail = type === 'monkey'
           ? '<path d="M78 78 C96 72, 98 94, 84 98" stroke="#6f4929" stroke-width="7" fill="none" stroke-linecap="round"/>'
           : type === 'horse' || type === 'pony'
@@ -633,7 +924,6 @@
           : type === 'fox'
           ? '<path d="M78 82 C95 89, 99 101, 84 106" stroke="#c66a2b" stroke-width="7" fill="none" stroke-linecap="round"/>'
           : '<path d="M78 80 C90 84, 93 96, 82 102" stroke="#6d4323" stroke-width="7" fill="none" stroke-linecap="round"/>';
-
         const ears = type === 'rabbit'
           ? `
             <ellipse cx="28" cy="10" rx="9" ry="22" fill="${c.fur}"/>
@@ -655,6 +945,14 @@
             <circle cx="60" cy="22" r="7" fill="${c.belly}" opacity="0.65"/>
           `;
 
+        const skinDecor = skinStyle === 'superhero'
+          ? `<path d="M23 58 L61 58 L54 68 L30 68 Z" fill="${j.accent}" opacity="0.9"/><path d="M42 52 L49 40 L56 52 Z" fill="${j.accent}" opacity="0.9"/>`
+          : skinStyle === 'space'
+          ? `<circle cx="63" cy="20" r="6" fill="${j.accent}" opacity="0.95"/><circle cx="18" cy="48" r="3" fill="${j.accent}" opacity="0.85"/><circle cx="64" cy="64" r="3" fill="${j.accent}" opacity="0.85"/>`
+          : skinStyle === 'rainbow'
+          ? `<path d="M26 55 Q42 46 58 55" stroke="${j.accent}" stroke-width="6" fill="none"/><circle cx="28" cy="56" r="4" fill="#ff7aa8"/><circle cx="42" cy="50" r="4" fill="#7dd3fc"/><circle cx="56" cy="56" r="4" fill="#ffd15c"/>`
+          : `<circle cx="42" cy="66" r="6" fill="${j.star}" opacity="0.85"/>`;
+
         return `
           <svg viewBox="0 0 84 112" aria-hidden="true">
             <g class="float-bob">
@@ -668,6 +966,7 @@
               <path d="M37 46 Q42 50 47 46" stroke="#6f4a35" stroke-width="2.5" fill="none" stroke-linecap="round"/>
               <rect x="23" y="52" width="38" height="28" rx="12" fill="${j.main}"/>
               <rect x="26" y="55" width="32" height="22" rx="9" fill="${j.main}" stroke="${j.trim}" stroke-width="3"/>
+              ${skinDecor}
               <text x="42" y="71" text-anchor="middle" font-family="Fredoka" font-size="15" font-weight="700" fill="${j.trim}">${team === 'offense' ? 'O' : 'D'}</text>
               <ellipse cx="42" cy="88" rx="20" ry="16" fill="${c.belly}"/>
               <ellipse cx="28" cy="84" rx="8" ry="16" fill="${c.fur}"/>
@@ -682,6 +981,12 @@
         `;
       }
 
+      function getLocalizedPlayerName(id) {
+        const info = playerInfo[id];
+        if (!info) return id;
+        return t(info.enTitle, info.zhTitle);
+      }
+
       function createAnimal(a) {
         const el = document.createElement('div');
         el.className = 'animal';
@@ -692,14 +997,22 @@
           <div class="flag left"></div>
           <div class="flag right"></div>
           ${animalSVG(a.type, a.team)}
-          <div class="label">${a.name}</div>
+          <div class="label">${getLocalizedPlayerName(a.id)}</div>
         `;
-
         el.addEventListener('pointerdown', (e) => startDrag(e, a.id));
         el.addEventListener('click', (e) => handleAnimalClick(e, a.id));
         field.appendChild(el);
-
         return { ...a, el };
+      }
+
+      function refreshAnimalLabels() {
+        animals.forEach(a => {
+          const label = a.el.querySelector('.label');
+          if (label) label.textContent = getLocalizedPlayerName(a.id);
+          const currentSvg = a.el.querySelector('svg');
+          if (currentSvg) currentSvg.outerHTML = animalSVG(a.type, a.team);
+        });
+        highlightSelectedAnimal();
       }
 
       function renderAnimals() {
@@ -707,12 +1020,78 @@
         field.querySelectorAll('.animal').forEach(n => n.remove());
         animals = baseAnimals.map(a => createAnimal({ ...a }));
         animalMap = Object.fromEntries(animals.map(a => [a.id, a]));
+        highlightSelectedAnimal();
       }
 
       function updateAnimalPos(a) {
         if (!a || !a.el) return;
         a.el.style.left = `${a.x}%`;
         a.el.style.top = `${a.y}%`;
+      }
+
+      function highlightSelectedAnimal() {
+        animals.forEach(a => a.el.classList.toggle('selected', a.id === selectedAnimalId));
+      }
+
+      function updateRoleCard(id) {
+        const info = playerInfo[id];
+        if (!info) return;
+        selectedAnimalId = id;
+        roleEmojiEl.textContent = info.emoji;
+        roleTitleEl.textContent = t(info.enTitle, info.zhTitle);
+        roleBodyEl.textContent = t(info.enBody, info.zhBody);
+        highlightSelectedAnimal();
+      }
+
+      function speakSelectedRole() {
+        const info = playerInfo[selectedAnimalId];
+        if (!info) return;
+        const text = t(`${info.enTitle}. ${info.enBody}`, `${info.zhTitle}。${info.zhBody}`);
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.rate = 0.92;
+          window.speechSynthesis.speak(utterance);
+        }
+      }
+
+      function updateHeaderAndTeams() {
+        const school = schoolNameInput.value.trim() || 'Coach Byryden School';
+        const home = teamHomeInput.value.trim() || 'Bears';
+        const away = teamAwayInput.value.trim() || 'Monkeys';
+        topEndzone.textContent = school;
+        bottomEndzone.textContent = school;
+        scoreHomeName.textContent = home;
+        scoreAwayName.textContent = away;
+        heroTitle.textContent = `${school} Flag Football Fun`;
+        heroSubtitle.textContent = t('Cute classroom app for teachers and kids', '适合老师和孩子的可爱课堂 app');
+      }
+
+      function updateScoreboard() {
+        homeScoreEl.textContent = String(homeScore);
+        awayScoreEl.textContent = String(awayScore);
+        downValueEl.textContent = String(down);
+        currentPlayNameEl.textContent = t(plays[selectedPlay].enName, plays[selectedPlay].zhName);
+      }
+
+      function updatePlayDescription() {
+        playDescEl.textContent = t(
+          `${plays[selectedPlay].enName}: ${plays[selectedPlay].enDesc}`,
+          `${plays[selectedPlay].zhName}：${plays[selectedPlay].zhDesc}`
+        );
+      }
+
+      function updateAllTextLabels() {
+        languageMode = languageToggle.value;
+        updateHeaderAndTeams();
+        updatePlayDescription();
+        updateScoreboard();
+        refreshAnimalLabels();
+        updateRoleCard(selectedAnimalId);
+        document.getElementById('down-label').textContent = t('Down', '档');
+        document.getElementById('playbook-mode-label').textContent = t('Play', '战术');
+        document.getElementById('score-home-sub').textContent = t('Home Team', '主队');
+        document.getElementById('score-away-sub').textContent = t('Away Team', '客队');
       }
 
       function startDrag(e, id) {
@@ -727,7 +1106,7 @@
         if (typeof a.el.setPointerCapture === 'function') {
           try { a.el.setPointerCapture(e.pointerId); } catch (_) {}
         }
-        setStatus('Dragging the bear quarterback...');
+        setStatus(t('Dragging the bear quarterback...', '正在拖动小熊四分卫...'));
       }
 
       function stopDrag() {
@@ -735,24 +1114,25 @@
         const a = getAnimal(draggingId);
         if (a) a.el.classList.remove('dragging', 'running');
         draggingId = null;
-        setStatus('Bear moved. Pick a play to watch!');
+        setStatus(t('Bear moved. Pick a play to watch!', '小熊已经移动。选择一个战术吧！'));
       }
 
       function handleAnimalClick(e, id) {
         if (draggingId) return;
         const a = getAnimal(id);
         if (!a) return;
+        updateRoleCard(id);
         if (a.team === 'defense') {
           a.el.classList.add('pulled');
           createBurst(a.x, a.y, '#ffd447');
-          setStatus(`${a.name} flag pulled!`);
+          setStatus(t(`${playerInfo[id].enTitle} flag pulled!`, `${playerInfo[id].zhTitle} 被拉旗了！`));
           setTimeout(() => a.el.classList.remove('pulled'), 600);
+        } else {
+          setStatus(t(`Selected ${playerInfo[id].enTitle}.`, `已选择 ${playerInfo[id].zhTitle}。`));
         }
       }
 
-      function pctToView(x, y) {
-        return { x: x * 10, y: y * 6.2 };
-      }
+      function pctToView(x, y) { return { x: x * 10, y: y * 6.2 }; }
 
       function createPath(points, color) {
         const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -768,74 +1148,67 @@
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', x1); line.setAttribute('y1', y1);
         line.setAttribute('x2', x2); line.setAttribute('y2', y2);
-        line.setAttribute('stroke', color);
-        line.setAttribute('class', 'route-arrow');
+        line.setAttribute('stroke', color); line.setAttribute('class', 'route-arrow');
         const angle = Math.atan2(y2 - y1, x2 - x1);
         const size = 12;
         const wing1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         wing1.setAttribute('x1', x2); wing1.setAttribute('y1', y2);
         wing1.setAttribute('x2', x2 - size * Math.cos(angle - Math.PI / 6));
         wing1.setAttribute('y2', y2 - size * Math.sin(angle - Math.PI / 6));
-        wing1.setAttribute('stroke', color);
-        wing1.setAttribute('class', 'route-arrow');
+        wing1.setAttribute('stroke', color); wing1.setAttribute('class', 'route-arrow');
         const wing2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         wing2.setAttribute('x1', x2); wing2.setAttribute('y1', y2);
         wing2.setAttribute('x2', x2 - size * Math.cos(angle + Math.PI / 6));
         wing2.setAttribute('y2', y2 - size * Math.sin(angle + Math.PI / 6));
-        wing2.setAttribute('stroke', color);
-        wing2.setAttribute('class', 'route-arrow');
+        wing2.setAttribute('stroke', color); wing2.setAttribute('class', 'route-arrow');
         g.append(line, wing1, wing2);
         return g;
       }
 
-      function clearRoutes() {
-        if (routeLayer) routeLayer.innerHTML = '';
-      }
+      function clearRoutes() { if (routeLayer) routeLayer.innerHTML = ''; }
 
       function showPreviewRoutes() {
         if (busy || !routeLayer) return;
         const refs = getRequiredAnimals(['bear', 'monkey', 'horse', 'fox']);
-        if (!refs) {
-          clearRoutes();
-          return;
+        if (!refs) { clearRoutes(); return; }
+        clearRoutes();
+
+        const { bear, monkey, horse, fox } = refs;
+        const b = pctToView(bear.x, bear.y);
+        if (selectedPlay === 'slant') {
+          const m = pctToView(monkey.x + 4, monkey.y - 2);
+          routeLayer.append(
+            createPath([b, { x: b.x + 90, y: b.y - 55 }, { x: m.x - 55, y: m.y - 12 }, m], '#7dd3fc'),
+            createArrow(m.x - 22, m.y - 4, m.x, m.y, '#7dd3fc')
+          );
+        } else if (selectedPlay === 'handoff') {
+          const h = pctToView(horse.x + 12, horse.y - 4);
+          routeLayer.append(
+            createPath([b, h], '#ffd447'),
+            createArrow(h.x - 18, h.y + 2, h.x, h.y, '#ffd447')
+          );
+        } else if (selectedPlay === 'go') {
+          const m = pctToView(monkey.x + 1, monkey.y - 18);
+          routeLayer.append(
+            createPath([pctToView(monkey.x, monkey.y), { x: m.x, y: m.y - 80 }, { x: m.x, y: m.y - 160 }], '#7dd3fc'),
+            createArrow(m.x, m.y - 128, m.x, m.y - 160, '#7dd3fc'),
+            createPath([b, { x: b.x + 130, y: b.y - 80 }, { x: m.x, y: m.y - 160 }], '#aef6ff')
+          );
+        } else if (selectedPlay === 'sweep') {
+          const h = pctToView(horse.x, horse.y);
+          routeLayer.append(
+            createPath([h, { x: h.x + 80, y: h.y + 10 }, { x: h.x + 160, y: h.y - 18 }, { x: h.x + 220, y: h.y - 28 }], '#ffd447'),
+            createArrow(h.x + 190, h.y - 25, h.x + 220, h.y - 28, '#ffd447')
+          );
         }
 
-        clearRoutes();
-        const { bear, monkey, horse, fox } = refs;
-
-        const b = pctToView(bear.x, bear.y);
-        const m = pctToView(monkey.x + 4, monkey.y - 2);
-        const h = pctToView(horse.x + 10, horse.y);
         const f = pctToView(fox.x - 8, fox.y + 6);
-
-        const passPath = createPath([
-          b,
-          { x: b.x + 90, y: b.y - 55 },
-          { x: m.x - 55, y: m.y - 12 },
-          m
-        ], '#7dd3fc');
-
-        const runPath = createPath([
-          pctToView(horse.x, horse.y),
-          { x: h.x + 60, y: h.y },
-          { x: h.x + 120, y: h.y - 28 },
-          { x: h.x + 175, y: h.y - 28 }
-        ], '#ffd447');
-
         const defensePath = createPath([
           pctToView(fox.x, fox.y),
           { x: f.x - 35, y: f.y },
           { x: b.x + 25, y: b.y + 12 }
         ], '#ff9dc0');
-
-        routeLayer.append(
-          passPath,
-          createArrow(m.x - 22, m.y - 4, m.x, m.y, '#7dd3fc'),
-          runPath,
-          createArrow(h.x + 150, h.y - 28, h.x + 175, h.y - 28, '#ffd447'),
-          defensePath,
-          createArrow(b.x + 12, b.y + 10, b.x + 25, b.y + 12, '#ff9dc0')
-        );
+        routeLayer.append(defensePath, createArrow(b.x + 12, b.y + 10, b.x + 25, b.y + 12, '#ff9dc0'));
       }
 
       function createBurst(x, y, color = '#ffd447') {
@@ -851,15 +1224,11 @@
 
       function animateFootball(from, to, duration = 900) {
         return new Promise(resolve => {
-          if (!footballLayer || !from || !to) {
-            resolve();
-            return;
-          }
+          if (!footballLayer || !from || !to) { resolve(); return; }
           const ball = document.createElement('div');
           ball.className = 'football';
           footballLayer.appendChild(ball);
           const start = performance.now();
-
           function frame(now) {
             const t = Math.min((now - start) / duration, 1);
             const x = from.x + (to.x - from.x) * t;
@@ -868,13 +1237,8 @@
             ball.style.left = `${x}%`;
             ball.style.top = `${y}%`;
             ball.style.transform = `translate(-50%, -50%) rotate(${18 + 540 * t}deg)`;
-            if (t < 1) {
-              requestAnimationFrame(frame);
-            } else {
-              ball.remove();
-              createBurst(to.x, to.y, '#fff59b');
-              resolve();
-            }
+            if (t < 1) requestAnimationFrame(frame);
+            else { ball.remove(); createBurst(to.x, to.y, '#fff59b'); resolve(); }
           }
           requestAnimationFrame(frame);
         });
@@ -883,10 +1247,7 @@
       function animateMove(id, points, duration = 1200) {
         return new Promise(resolve => {
           const a = getAnimal(id);
-          if (!a || !Array.isArray(points) || points.length < 2) {
-            resolve();
-            return;
-          }
+          if (!a || !Array.isArray(points) || points.length < 2) { resolve(); return; }
           const start = performance.now();
           a.el.classList.add('running');
           function frame(now) {
@@ -899,142 +1260,186 @@
             a.x = p1.x + (p2.x - p1.x) * local;
             a.y = p1.y + (p2.y - p1.y) * local;
             updateAnimalPos(a);
-            if (t < 1) {
-              requestAnimationFrame(frame);
-            } else {
-              a.el.classList.remove('running');
-              resolve();
-            }
+            if (t < 1) requestAnimationFrame(frame);
+            else { a.el.classList.remove('running'); resolve(); }
           }
           requestAnimationFrame(frame);
         });
       }
 
-      async function runPassPlay() {
-        if (busy) return;
-        const refs = getRequiredAnimals(['bear', 'monkey']);
-        if (!refs) {
-          setStatus('Play unavailable. Reset the field first.');
-          return;
+      function advanceDown() {
+        down = down >= 4 ? 1 : down + 1;
+        updateScoreboard();
+      }
+
+      function showTouchdown() {
+        touchdownBanner.classList.remove('show');
+        void touchdownBanner.offsetWidth;
+        touchdownBanner.classList.add('show');
+        createConfetti();
+      }
+
+      function createConfetti() {
+        if (!confettiLayer) return;
+        confettiLayer.innerHTML = '';
+        const colors = ['#ffd15c', '#ff7aa8', '#7dd3fc', '#7dffb2', '#ffffff'];
+        for (let i = 0; i < 26; i += 1) {
+          const piece = document.createElement('div');
+          piece.className = 'confetti';
+          piece.style.left = `${4 + Math.random() * 92}%`;
+          piece.style.top = `${2 + Math.random() * 8}%`;
+          piece.style.background = colors[i % colors.length];
+          piece.style.animationDelay = `${Math.random() * 0.2}s`;
+          confettiLayer.appendChild(piece);
         }
+        setTimeout(() => { confettiLayer.innerHTML = ''; }, 1700);
+      }
 
-        busy = true;
-        setStatus('Passing to Monkey WR...');
-        clearRoutes();
+      function addTouchdown(team = 'home') {
+        if (team === 'home') homeScore += 6;
+        else awayScore += 6;
+        down = 1;
+        updateScoreboard();
+        showTouchdown();
+        setStatus(t('Touchdown! Great play!', '达阵！精彩进攻！'));
+      }
 
+      async function runSlantPlay() {
+        const refs = getRequiredAnimals(['bear', 'monkey']);
+        if (!refs) return false;
         const { bear, monkey } = refs;
         const startMonkey = { x: monkey.x, y: monkey.y };
         const catchMonkey = { x: startMonkey.x + 14, y: startMonkey.y - 9 };
         const afterCatchMonkey = { x: startMonkey.x + 31, y: startMonkey.y - 16 };
-
-        const path = createPath([
+        clearRoutes();
+        routeLayer.append(createPath([
           pctToView(bear.x, bear.y),
           { x: bear.x * 10 + 90, y: bear.y * 6.2 - 50 },
           { x: catchMonkey.x * 10 - 20, y: catchMonkey.y * 6.2 },
           pctToView(catchMonkey.x, catchMonkey.y)
-        ], '#7dd3fc');
-        routeLayer.append(path);
-
-        await animateMove('monkey', [
-          startMonkey,
-          { x: startMonkey.x + 7, y: startMonkey.y - 5 },
-          catchMonkey
-        ], 900);
-
-        await animateFootball(
-          { x: bear.x + 3, y: bear.y - 7 },
-          { x: catchMonkey.x, y: catchMonkey.y - 6 },
-          950
-        );
-
-        await animateMove('monkey', [
-          catchMonkey,
-          { x: startMonkey.x + 23, y: startMonkey.y - 13 },
-          afterCatchMonkey
-        ], 900);
-
-        busy = false;
-        setStatus('Completed: pass to Monkey WR.');
-        showPreviewRoutes();
+        ], '#7dd3fc'));
+        await animateMove('monkey', [startMonkey, { x: startMonkey.x + 7, y: startMonkey.y - 5 }, catchMonkey], 900);
+        await animateFootball({ x: bear.x + 3, y: bear.y - 7 }, { x: catchMonkey.x, y: catchMonkey.y - 6 }, 950);
+        await animateMove('monkey', [catchMonkey, { x: startMonkey.x + 23, y: startMonkey.y - 13 }, afterCatchMonkey], 900);
+        return true;
       }
 
-      async function runHandoffPlay() {
-        if (busy) return;
+      async function runHandoffPlayAnim() {
         const refs = getRequiredAnimals(['bear', 'horse', 'fox', 'leopard']);
-        if (!refs) {
-          setStatus('Play unavailable. Reset the field first.');
-          return;
-        }
-
-        busy = true;
-        setStatus('Handing off to Horse RB...');
-        clearRoutes();
-
+        if (!refs) return false;
         const { bear, horse, fox, leopard } = refs;
         const startHorse = { x: horse.x, y: horse.y };
         const endHorse = { x: startHorse.x + 23, y: startHorse.y - 8 };
-
+        clearRoutes();
         routeLayer.append(
-          createPath([
-            pctToView(bear.x, bear.y),
-            pctToView(startHorse.x - 2, startHorse.y - 2)
-          ], '#ffd447'),
-          createPath([
-            pctToView(startHorse.x, startHorse.y),
-            { x: startHorse.x * 10 + 70, y: startHorse.y * 6.2 },
-            { x: startHorse.x * 10 + 130, y: startHorse.y * 6.2 - 30 },
-            { x: endHorse.x * 10, y: endHorse.y * 6.2 }
-          ], '#ffd447'),
-          createPath([
-            pctToView(fox.x, fox.y),
-            { x: fox.x * 10 - 40, y: fox.y * 6.2 + 16 },
-            { x: bear.x * 10 + 60, y: bear.y * 6.2 + 12 }
-          ], '#ff9dc0')
+          createPath([pctToView(bear.x, bear.y), pctToView(startHorse.x - 2, startHorse.y - 2)], '#ffd447'),
+          createPath([pctToView(startHorse.x, startHorse.y), { x: startHorse.x * 10 + 70, y: startHorse.y * 6.2 }, { x: startHorse.x * 10 + 130, y: startHorse.y * 6.2 - 30 }, { x: endHorse.x * 10, y: endHorse.y * 6.2 }], '#ffd447'),
+          createPath([pctToView(fox.x, fox.y), { x: fox.x * 10 - 40, y: fox.y * 6.2 + 16 }, { x: bear.x * 10 + 60, y: bear.y * 6.2 + 12 }], '#ff9dc0')
         );
-
-        await animateFootball(
-          { x: bear.x + 2, y: bear.y - 2 },
-          { x: startHorse.x - 2, y: startHorse.y - 3 },
-          420
-        );
-
-        await animateMove('horse', [
-          startHorse,
-          { x: startHorse.x + 8, y: startHorse.y },
-          { x: startHorse.x + 15, y: startHorse.y - 5 },
-          endHorse
-        ], 1200);
-
+        await animateFootball({ x: bear.x + 2, y: bear.y - 2 }, { x: startHorse.x - 2, y: startHorse.y - 3 }, 420);
+        await animateMove('horse', [startHorse, { x: startHorse.x + 8, y: startHorse.y }, { x: startHorse.x + 15, y: startHorse.y - 5 }, endHorse], 1200);
         leopard.el.classList.add('pulled');
         createBurst(leopard.x, leopard.y, '#ffd447');
         setTimeout(() => leopard.el.classList.remove('pulled'), 600);
+        return true;
+      }
 
+      async function runGoRoutePlay() {
+        const refs = getRequiredAnimals(['bear', 'monkey', 'rabbit']);
+        if (!refs) return false;
+        const { bear, monkey, rabbit } = refs;
+        const startMonkey = { x: monkey.x, y: monkey.y };
+        const deepMonkey = { x: startMonkey.x + 2, y: startMonkey.y - 28 };
+        const scoreMonkey = { x: startMonkey.x + 2, y: 11 };
+        clearRoutes();
+        routeLayer.append(
+          createPath([pctToView(startMonkey.x, startMonkey.y), pctToView(deepMonkey.x, deepMonkey.y), pctToView(scoreMonkey.x, scoreMonkey.y)], '#7dd3fc'),
+          createPath([pctToView(bear.x, bear.y), { x: bear.x * 10 + 120, y: bear.y * 6.2 - 120 }, pctToView(scoreMonkey.x, scoreMonkey.y)], '#aef6ff')
+        );
+        await animateMove('monkey', [startMonkey, deepMonkey, scoreMonkey], 1400);
+        await animateFootball({ x: bear.x + 3, y: bear.y - 7 }, { x: scoreMonkey.x, y: scoreMonkey.y + 2 }, 1100);
+        rabbit.el.classList.add('pulled');
+        setTimeout(() => rabbit.el.classList.remove('pulled'), 500);
+        addTouchdown('home');
+        return true;
+      }
+
+      async function runSweepPlay() {
+        const refs = getRequiredAnimals(['horse', 'giraffe']);
+        if (!refs) return false;
+        const { horse, giraffe } = refs;
+        const startHorse = { x: horse.x, y: horse.y };
+        const endHorse = { x: startHorse.x + 30, y: startHorse.y - 18 };
+        clearRoutes();
+        routeLayer.append(createPath([
+          pctToView(startHorse.x, startHorse.y),
+          { x: startHorse.x * 10 + 80, y: startHorse.y * 6.2 + 10 },
+          { x: startHorse.x * 10 + 160, y: startHorse.y * 6.2 - 18 },
+          { x: endHorse.x * 10, y: endHorse.y * 6.2 }
+        ], '#ffd447'));
+        await animateMove('horse', [startHorse, { x: startHorse.x + 10, y: startHorse.y + 2 }, { x: startHorse.x + 20, y: startHorse.y - 10 }, endHorse], 1200);
+        giraffe.el.classList.add('pulled');
+        createBurst(giraffe.x, giraffe.y, '#ffd447');
+        setTimeout(() => giraffe.el.classList.remove('pulled'), 600);
+        return true;
+      }
+
+      async function runSelectedPlay() {
+        if (busy) return;
+        busy = true;
+        setStatus(t(`Running ${plays[selectedPlay].enName}...`, `正在执行 ${plays[selectedPlay].zhName}...`));
+        let ok = false;
+        if (selectedPlay === 'slant') ok = await runSlantPlay();
+        else if (selectedPlay === 'handoff') ok = await runHandoffPlayAnim();
+        else if (selectedPlay === 'go') ok = await runGoRoutePlay();
+        else if (selectedPlay === 'sweep') ok = await runSweepPlay();
+        if (ok && plays[selectedPlay].downAdvance && !plays[selectedPlay].score) advanceDown();
         busy = false;
-        setStatus('Completed: handoff to Horse RB.');
+        if (ok) setStatus(t(`Completed ${plays[selectedPlay].enName}.`, `已完成 ${plays[selectedPlay].zhName}。`));
+        else setStatus(t('Play unavailable. Reset the field first.', '当前无法执行战术，请先重置球场。'));
         showPreviewRoutes();
       }
 
       async function runAutoDemo() {
         if (busy) return;
-        setStatus('Running auto demo...');
-        await runPassPlay();
-        await wait(500);
-        await runHandoffPlay();
-        await wait(300);
-        createBurst(50, 10, '#fff59b');
-        setStatus('Auto demo finished!');
+        const original = selectedPlay;
+        const sequence = ['slant', 'handoff', 'sweep', 'go'];
+        for (const play of sequence) {
+          selectedPlay = play;
+          syncPlayButtons();
+          updatePlayDescription();
+          updateScoreboard();
+          showPreviewRoutes();
+          await runSelectedPlay();
+          await wait(450);
+        }
+        selectedPlay = original;
+        syncPlayButtons();
+        updatePlayDescription();
+        updateScoreboard();
+        showPreviewRoutes();
       }
 
       function resetField() {
         if (!hasFieldPieces()) return;
         busy = false;
         draggingId = null;
+        down = 1;
         renderAnimals();
         clearRoutes();
         footballLayer.innerHTML = '';
         burstLayer.innerHTML = '';
+        confettiLayer.innerHTML = '';
+        updateScoreboard();
+        updateRoleCard('bear');
         showPreviewRoutes();
-        setStatus('Ready! Drag the bear or start a play.');
+        setStatus(t('Ready! Drag the bear or pick a playbook play.', '准备好了！拖动小熊或选择一个战术。'));
+      }
+
+      function syncPlayButtons() {
+        document.querySelectorAll('.playbook-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.play === selectedPlay);
+        });
       }
 
       function runSmokeTests() {
@@ -1044,7 +1449,9 @@
         console.assert(typeof pctToView(20, 50).y === 'number', 'Smoke test failed: pctToView y should be number');
         console.assert(getRequiredAnimals(['bear', 'monkey', 'horse', 'fox']) !== null, 'Smoke test failed: required animals missing after reset');
         console.assert(!!document.getElementById('tab-home'), 'Smoke test failed: home tab missing');
-        console.assert(!!passBtn && !!handoffBtn && !!demoBtn && !!resetBtn, 'Smoke test failed: one or more buttons missing');
+        console.assert(!!runPlayBtn && !!demoBtn && !!scoreBtn && !!resetBtn, 'Smoke test failed: one or more buttons missing');
+        console.assert(typeof plays[selectedPlay].enName === 'string', 'Smoke test failed: playbook data missing');
+        console.assert(typeof playerInfo.bear.enBody === 'string', 'Smoke test failed: player info missing');
       }
 
       if (!hasFieldPieces()) {
@@ -1055,10 +1462,7 @@
       field.addEventListener('pointermove', (e) => {
         if (!draggingId || !field) return;
         const a = getAnimal(draggingId);
-        if (!a) {
-          stopDrag();
-          return;
-        }
+        if (!a) { stopDrag(); return; }
         const rect = field.getBoundingClientRect();
         a.x = clamp(((e.clientX - rect.left) / rect.width) * 100 - dragOffset.x, 8, 92);
         a.y = clamp(((e.clientY - rect.top) / rect.height) * 100 - dragOffset.y, 14, 86);
@@ -1068,11 +1472,30 @@
 
       window.addEventListener('pointerup', stopDrag);
       field.addEventListener('pointerleave', () => { if (draggingId) stopDrag(); });
-
-      passBtn?.addEventListener('click', runPassPlay);
-      handoffBtn?.addEventListener('click', runHandoffPlay);
+      runPlayBtn?.addEventListener('click', runSelectedPlay);
       demoBtn?.addEventListener('click', runAutoDemo);
+      scoreBtn?.addEventListener('click', () => addTouchdown('home'));
       resetBtn?.addEventListener('click', resetField);
+      speakRoleBtn?.addEventListener('click', speakSelectedRole);
+      languageToggle?.addEventListener('change', updateAllTextLabels);
+      schoolNameInput?.addEventListener('input', updateHeaderAndTeams);
+      teamHomeInput?.addEventListener('input', updateHeaderAndTeams);
+      teamAwayInput?.addEventListener('input', updateHeaderAndTeams);
+      skinStyleSelect?.addEventListener('change', () => {
+        skinStyle = skinStyleSelect.value;
+        refreshAnimalLabels();
+      });
+
+      document.querySelectorAll('.playbook-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedPlay = btn.dataset.play;
+          syncPlayButtons();
+          updatePlayDescription();
+          updateScoreboard();
+          showPreviewRoutes();
+          setStatus(t(`Selected ${plays[selectedPlay].enName}.`, `已选择 ${plays[selectedPlay].zhName}。`));
+        });
+      });
 
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1085,7 +1508,12 @@
         });
       });
 
+      updateHeaderAndTeams();
+      syncPlayButtons();
+      updatePlayDescription();
+      updateScoreboard();
       resetField();
+      updateAllTextLabels();
       runSmokeTests();
     });
   </script>
