@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flag Football Fun - Coach Byryden Edition V2</title>
+  <title>Flag Football Fun - Coach Byryden Edition V3</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;700;800&display=swap');
@@ -11,8 +11,10 @@
     :root {
       --navy: #17345e;
       --gold: #ffd15c;
-      --line: rgba(255,255,255,0.82);
-      --shadow: 0 18px 45px rgba(0,0,0,0.18);
+      --line: rgba(255,255,255,0.7);
+      --shadow: 0 18px 45px rgba(0,0,0,0.22);
+      --panel-bg: linear-gradient(180deg, rgba(6,18,36,0.9) 0%, rgba(10,34,58,0.85) 100%);
+      --glass-bg: linear-gradient(rgba(8,22,40,0.45), rgba(8,22,40,0.32));
     }
 
     * { box-sizing: border-box; }
@@ -23,31 +25,39 @@
       color: #fff;
       background:
         radial-gradient(circle at top,
-          #5aaed6 0%,
-          #3b8ec4 20%,
-          #1f6fa5 35%,
-          #1b7a4f 60%,
-          #064a2a 100%),
+          #3f88b8 0%,
+          #266fa4 22%,
+          #155886 40%,
+          #166543 68%,
+          #083f25 100%),
         radial-gradient(circle at center,
-          rgba(0,0,0,0.35) 0%,
-          rgba(0,0,0,0.6) 100%);
+          rgba(0,0,0,0.28) 0%,
+          rgba(0,0,0,0.5) 100%);
       min-height: 100vh;
       overflow-x: hidden;
     }
 
     .title-font { font-family: 'Fredoka', sans-serif; }
+
     .glass {
-      background: linear-gradient(rgba(10,20,40,0.55), rgba(10,20,40,0.45));
-      border: 2px solid rgba(255,255,255,0.15);
+      background: var(--glass-bg);
+      border: 2px solid rgba(255,255,255,0.14);
       backdrop-filter: blur(10px);
       box-shadow: var(--shadow);
     }
 
+    .dark-panel {
+      background: var(--panel-bg);
+      border: 2px solid rgba(255,255,255,0.1);
+      box-shadow: inset 0 0 22px rgba(255,255,255,0.04), 0 18px 32px rgba(0,0,0,0.22);
+      border-radius: 30px;
+    }
+
     .field-card {
-      background: linear-gradient(180deg, #21a95f 0%, #0d7a40 100%);
-      border: 10px solid #ffdc6c;
-      border-radius: 28px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.24);
+      background: linear-gradient(180deg, #1a6d45 0%, #0b4d2d 100%);
+      border: 12px solid #f0c650;
+      border-radius: 34px;
+      box-shadow: 0 28px 60px rgba(0,0,0,0.26);
       overflow: hidden;
       position: relative;
     }
@@ -55,13 +65,14 @@
     .field {
       position: relative;
       width: 100%;
-      aspect-ratio: 16 / 10;
-      min-height: 460px;
+      aspect-ratio: 3 / 4;
+      min-height: 620px;
       background:
+        linear-gradient(90deg, rgba(255,255,255,0.03) 0 100%),
         repeating-linear-gradient(
           90deg,
-          rgba(255,255,255,0.02) 0 72px,
-          rgba(255,255,255,0.05) 72px 144px
+          rgba(255,255,255,0.02) 0 78px,
+          rgba(255,255,255,0.05) 78px 156px
         );
     }
 
@@ -76,31 +87,40 @@
     .field::before {
       background:
         linear-gradient(to bottom,
-          transparent 0%, transparent 9%, var(--line) 9.4%, transparent 10%,
-          transparent 19%, var(--line) 19.4%, transparent 20%,
-          transparent 29%, var(--line) 29.4%, transparent 30%,
-          transparent 39%, var(--line) 39.4%, transparent 40%,
-          transparent 49%, var(--line) 49.4%, transparent 50%,
-          transparent 59%, var(--line) 59.4%, transparent 60%,
-          transparent 69%, var(--line) 69.4%, transparent 70%,
-          transparent 79%, var(--line) 79.4%, transparent 80%,
-          transparent 89%, var(--line) 89.4%, transparent 90%);
-      opacity: 0.9;
+          transparent 0%, transparent 8.5%, var(--line) 9%, transparent 9.5%,
+          transparent 17.5%, var(--line) 18%, transparent 18.5%,
+          transparent 26.5%, var(--line) 27%, transparent 27.5%,
+          transparent 35.5%, var(--line) 36%, transparent 36.5%,
+          transparent 44.5%, var(--line) 45%, transparent 45.5%,
+          transparent 53.5%, var(--line) 54%, transparent 54.5%,
+          transparent 62.5%, var(--line) 63%, transparent 63.5%,
+          transparent 71.5%, var(--line) 72%, transparent 72.5%,
+          transparent 80.5%, var(--line) 81%, transparent 81.5%,
+          transparent 89%, var(--line) 89.5%, transparent 90%);
+      opacity: 0.72;
     }
 
     .field::after {
+      inset: 8px;
       border-left: 8px solid rgba(255,255,255,0.9);
       border-right: 8px solid rgba(255,255,255,0.9);
-      inset: 18px;
-      border-radius: 16px;
+      border-radius: 22px;
+    }
+
+    .field-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.18) 100%);
+      pointer-events: none;
+      z-index: 1;
     }
 
     .endzone {
       position: absolute;
-      left: 12px;
-      right: 12px;
-      height: 54px;
-      border-radius: 14px;
+      left: 8px;
+      right: 8px;
+      height: 36px;
+      border-radius: 12px;
       background: repeating-linear-gradient(
         45deg,
         rgba(255,255,255,0.18) 0 14px,
@@ -110,49 +130,52 @@
       align-items: center;
       justify-content: center;
       font-family: 'Fredoka', sans-serif;
-      font-size: 22px;
-      letter-spacing: 1px;
-      color: rgba(255,255,255,0.88);
-      text-shadow: 0 3px 12px rgba(0,0,0,0.25);
+      font-size: 16px;
+      letter-spacing: 0.3px;
+      color: rgba(255,255,255,0.9);
+      text-shadow: 0 3px 10px rgba(0,0,0,0.22);
       pointer-events: none;
       text-align: center;
-      padding: 0 12px;
+      padding: 0 10px;
+      z-index: 2;
     }
 
-    .endzone.top { top: 12px; }
-    .endzone.bottom { bottom: 12px; }
+    .endzone.top { top: 8px; }
+    .endzone.bottom { bottom: 8px; }
 
     .route-layer, .football-layer, .burst-layer, .confetti-layer, .custom-playbook-layer {
       position: absolute;
       inset: 0;
       pointer-events: none;
+      z-index: 3;
     }
 
     .animal {
       position: absolute;
-      width: 92px;
-      height: 118px;
+      width: 110px;
+      height: 140px;
       transform: translate(-50%, -50%);
       cursor: pointer;
       user-select: none;
       touch-action: none;
       transition: filter 0.18s ease, transform 0.18s ease;
-      z-index: 4;
+      z-index: 5;
     }
 
-    .animal:hover { filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18)); }
-    .animal.dragging { z-index: 7; transform: translate(-50%, -50%) scale(1.06); }
-    .animal.selected { filter: drop-shadow(0 0 20px rgba(255,255,255,0.65)); }
+    .animal:hover { filter: drop-shadow(0 12px 22px rgba(0,0,0,0.22)); }
+    .animal.dragging { z-index: 8; transform: translate(-50%, -50%) scale(1.06); }
+    .animal.selected { filter: drop-shadow(0 0 20px rgba(255,255,255,0.58)); }
+
     .animal .label {
       position: absolute;
       left: 50%;
-      bottom: -28px;
+      bottom: -24px;
       transform: translateX(-50%);
-      background: rgba(23,52,94,0.88);
+      background: rgba(17,46,82,0.95);
       color: #fff;
-      border: 2px solid rgba(255,255,255,0.25);
+      border: 2px solid rgba(255,255,255,0.2);
       border-radius: 999px;
-      padding: 4px 10px;
+      padding: 5px 12px;
       white-space: nowrap;
       font-size: 12px;
       font-weight: 800;
@@ -161,10 +184,10 @@
 
     .animal .flag {
       position: absolute;
-      width: 15px;
-      height: 26px;
+      width: 16px;
+      height: 28px;
       border-radius: 8px;
-      top: 56px;
+      top: 67px;
       box-shadow: 0 3px 0 rgba(0,0,0,0.1);
       transition: transform 0.18s ease, opacity 0.18s ease;
     }
@@ -204,7 +227,7 @@
       border: 2px solid #4a230c;
       box-shadow: 0 6px 16px rgba(0,0,0,0.28);
       transform: translate(-50%, -50%) rotate(18deg);
-      z-index: 6;
+      z-index: 7;
     }
 
     .football::before,
@@ -238,7 +261,7 @@
       transform: translate(-50%, -50%) scale(0.3);
       background: radial-gradient(circle, rgba(255,243,123,0.95) 0%, rgba(255,170,42,0.68) 46%, rgba(255,170,42,0) 74%);
       animation: burst 0.55s ease-out forwards;
-      z-index: 5;
+      z-index: 6;
     }
 
     @keyframes burst {
@@ -283,19 +306,6 @@
       box-shadow: 0 10px 25px rgba(255,209,92,0.35);
     }
 
-    .mini-card {
-      background: rgba(255,255,255,0.14);
-      border: 2px solid rgba(255,255,255,0.2);
-      border-radius: 24px;
-      padding: 18px;
-    }
-
-    .lineup-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 14px;
-    }
-
     .pill {
       display: inline-flex;
       align-items: center;
@@ -303,8 +313,8 @@
       padding: 8px 12px;
       border-radius: 999px;
       font-weight: 800;
-      background: rgba(255,255,255,0.16);
-      border: 2px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.12);
+      border: 2px solid rgba(255,255,255,0.14);
     }
 
     .legend-dot {
@@ -349,8 +359,8 @@
       margin-top: 14px;
       padding: 12px 14px;
       border-radius: 18px;
-      background: rgba(255,255,255,0.12);
-      border: 2px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.12);
       font-weight: 800;
       min-height: 54px;
     }
@@ -400,22 +410,15 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255,255,255,0.13);
-      border: 2px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.12);
+      border: 2px solid rgba(255,255,255,0.14);
       border-radius: 999px;
       padding: 8px 12px;
       font-weight: 800;
     }
 
-    .playbook-btn.active, .draw-toggle.active {
-      background: #ffd15c;
-      color: #17345e;
-    }
-
-    .saved-play-btn.active {
-      background: #7dd3fc;
-      color: #17345e;
-    }
+    .playbook-btn.active, .draw-toggle.active { background: #ffd15c; color: #17345e; }
+    .saved-play-btn.active { background: #7dd3fc; color: #17345e; }
 
     .play-list {
       max-height: 220px;
@@ -426,16 +429,19 @@
 
     .small-note { color: #eaf7ff; opacity: 0.92; }
 
-    @media (max-width: 900px) {
-      .field { min-height: 360px; }
-      .animal { width: 80px; height: 104px; }
-      .lineup-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 1200px) {
+      .field { min-height: 560px; }
+      .animal { width: 98px; height: 126px; }
+    }
+
+    @media (max-width: 1024px) {
       .scoreboard { grid-template-columns: 1fr; }
+      .field { min-height: 540px; }
     }
 
     @media (max-width: 640px) {
-      .field { min-height: 320px; }
-      .animal { width: 74px; height: 98px; }
+      .field { min-height: 460px; }
+      .animal { width: 84px; height: 110px; }
       .touchdown-banner { font-size: 26px; width: calc(100% - 40px); text-align: center; }
     }
   </style>
@@ -448,15 +454,15 @@
       <div class="flex flex-col gap-5">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
           <div class="flex items-center gap-4">
-            <div class="w-20 h-20 rounded-[26px] bg-white/20 flex items-center justify-center text-5xl shadow-xl">🏈</div>
+            <div class="w-20 h-20 rounded-[26px] bg-white/10 flex items-center justify-center text-5xl shadow-xl">🏈</div>
             <div>
               <div class="title-font text-3xl sm:text-5xl font-bold leading-tight" id="hero-title">Flag Football Fun</div>
               <div class="text-yellow-200 font-extrabold text-base sm:text-lg" id="hero-subtitle">Coach Byryden classroom app • cute cartoon animals • American flag football</div>
             </div>
           </div>
-          <div class="glass rounded-[28px] px-5 py-4 max-w-xl">
-            <div class="font-extrabold text-yellow-200 mb-1">Version 2 Upgrade</div>
-            <div class="text-sm sm:text-base">Softer background, teacher draw-and-save playbook mode, bilingual labels, scoreboard, touchdown effects, and cute character skins.</div>
+          <div class="dark-panel px-5 py-4 max-w-xl">
+            <div class="font-extrabold text-yellow-200 mb-1">Version 3 Layout Upgrade</div>
+            <div class="text-sm sm:text-base text-white/90">Taller field, tighter top and bottom spacing, deeper panels, and a layout that matches the right-side cards much better.</div>
           </div>
         </div>
 
@@ -517,23 +523,23 @@
     <main>
       <section id="tab-home" class="tab-panel">
         <div class="grid lg:grid-cols-12 gap-6 items-start">
-          <div class="lg:col-span-4 space-y-5">
-            <div class="glass rounded-[30px] p-6">
-              <h2 class="title-font text-4xl font-bold mb-3">Interactive Field</h2>
-              <p class="text-lg leading-8">Drag the bear quarterback. Pick a playbook play. Click a player to learn the role in English + Chinese. Now teachers can also draw and save their own plays.</p>
+          <div class="lg:col-span-3 space-y-5">
+            <div class="dark-panel p-6">
+              <h2 class="title-font text-4xl font-bold mb-3">Playbook</h2>
+              <p class="text-lg leading-8 text-white/92">The field is now taller and tighter so the animals fill the space better and match the right-side panels.</p>
             </div>
 
-            <div class="glass rounded-[30px] p-6">
-              <div class="font-extrabold text-yellow-200 text-xl mb-3">Built-in Playbook</div>
+            <div class="dark-panel p-6">
+              <div class="font-extrabold text-yellow-200 text-xl mb-3">Built-in Plays</div>
               <div class="grid gap-3">
-                <button class="playbook-btn active rounded-2xl px-4 py-3 bg-white/15 font-extrabold text-left" data-play="slant">🏈 Slant Pass / 斜线传球</button>
+                <button class="playbook-btn active rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="slant">🏈 Slant Pass / 斜线传球</button>
                 <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="handoff">🤝 Handoff Run / 交接跑球</button>
                 <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="go">⚡ Go Route / 直线深传</button>
                 <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="sweep">🌪️ Sweep / 外侧冲跑</button>
               </div>
             </div>
 
-            <div class="glass rounded-[30px] p-6">
+            <div class="dark-panel p-6">
               <div class="font-extrabold text-yellow-200 text-xl mb-4">Teacher Draw Playbook</div>
               <div class="grid gap-3">
                 <button id="draw-toggle" class="draw-toggle rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left">✏️ Draw Mode Off</button>
@@ -550,38 +556,28 @@
                 <input id="custom-play-name" class="w-full rounded-xl px-3 py-3 text-slate-900 font-bold" value="Coach Bryden Play 1" />
                 <div class="grid grid-cols-2 gap-3">
                   <button id="save-custom-play" class="rounded-2xl px-4 py-3 bg-yellow-300 text-slate-900 font-extrabold">💾 Save Play</button>
-                  <button id="clear-drawing" class="rounded-2xl px-4 py-3 bg-white/15 text-white font-extrabold border-2 border-white/20">🧹 Clear Draw</button>
+                  <button id="clear-drawing" class="rounded-2xl px-4 py-3 bg-white/10 text-white font-extrabold border-2 border-white/14">🧹 Clear Draw</button>
                 </div>
               </div>
               <div class="small-note mt-3">Turn on Draw Mode, click the field to place points, then save the route.</div>
             </div>
 
-            <div class="glass rounded-[30px] p-6">
+            <div class="dark-panel p-6">
               <div class="font-extrabold text-yellow-200 text-xl mb-4">Controls</div>
               <div class="grid gap-3">
-                <button id="btn-run-play" class="rounded-2xl px-4 py-4 bg-yellow-300 text-slate-900 font-extrabold text-lg hover:scale-[1.02] transition">▶️ Run Selected Play</button>
-                <button id="btn-demo" class="rounded-2xl px-4 py-4 bg-cyan-300 text-slate-900 font-extrabold text-lg hover:scale-[1.02] transition">🎬 Auto Demo Series</button>
-                <button id="btn-score" class="rounded-2xl px-4 py-4 bg-pink-300 text-slate-900 font-extrabold text-lg hover:scale-[1.02] transition">🏁 Add Touchdown</button>
-                <button id="btn-reset" class="rounded-2xl px-4 py-4 bg-white/15 text-white font-extrabold text-lg border-2 border-white/20 hover:bg-white/20 transition">🔄 Reset Field</button>
+                <button id="btn-run-play" class="rounded-2xl px-4 py-4 bg-yellow-300 text-slate-900 font-extrabold text-lg">▶️ Run Selected Play</button>
+                <button id="btn-demo" class="rounded-2xl px-4 py-4 bg-cyan-300 text-slate-900 font-extrabold text-lg">🎬 Auto Demo Series</button>
+                <button id="btn-score" class="rounded-2xl px-4 py-4 bg-pink-300 text-slate-900 font-extrabold text-lg">🏁 Add Touchdown</button>
+                <button id="btn-reset" class="rounded-2xl px-4 py-4 bg-white/10 text-white font-extrabold text-lg border-2 border-white/14">🔄 Reset Field</button>
               </div>
               <div id="status-box" class="status-box mt-4">Ready! Drag the bear or pick a playbook play.</div>
             </div>
-
-            <div class="glass rounded-[30px] p-6">
-              <div class="font-extrabold text-yellow-200 text-xl mb-4">Cute Skins</div>
-              <select id="skin-style" class="w-full rounded-xl px-3 py-3 text-slate-900 font-bold mb-3">
-                <option value="classic">Classic Team</option>
-                <option value="superhero">Superhero</option>
-                <option value="space">Space</option>
-                <option value="rainbow">Rainbow</option>
-              </select>
-              <div class="small-note">Changes the animal outfit style so kids can have more fun.</div>
-            </div>
           </div>
 
-          <div class="lg:col-span-5">
+          <div class="lg:col-span-5 space-y-4">
             <div class="field-card">
               <div class="field" id="field">
+                <div class="field-overlay"></div>
                 <div class="endzone top" id="top-endzone">Coach Byryden School</div>
                 <div class="endzone bottom" id="bottom-endzone">Coach Byryden School</div>
                 <svg class="route-layer" id="route-layer" viewBox="0 0 1000 620" preserveAspectRatio="none"></svg>
@@ -591,15 +587,15 @@
                 <div class="confetti-layer" id="confetti-layer"></div>
               </div>
             </div>
-            <div class="mt-4 flex flex-wrap gap-3 text-sm sm:text-base font-bold">
+            <div class="flex flex-wrap gap-3 text-sm sm:text-base font-bold">
               <span class="pill"><span class="legend-dot" style="background:#ffd447"></span>Offense routes</span>
               <span class="pill"><span class="legend-dot" style="background:#ff6d9b"></span>Defense / flag pull</span>
               <span class="pill"><span class="legend-dot" style="background:#fff59b"></span>Teacher custom routes</span>
             </div>
           </div>
 
-          <div class="lg:col-span-3 space-y-5">
-            <div class="glass rounded-[30px] p-6">
+          <div class="lg:col-span-4 space-y-5">
+            <div class="dark-panel p-6">
               <div class="flex items-center justify-between gap-3 mb-3">
                 <h3 class="title-font text-3xl font-bold">Player Coach Card</h3>
                 <button id="speak-role" class="speak-btn">🔊 Speak</button>
@@ -610,12 +606,23 @@
               <div class="mt-3 text-sm text-yellow-200 font-bold">Click any player on the field to learn the role.</div>
             </div>
 
-            <div class="glass rounded-[30px] p-6">
+            <div class="dark-panel p-6">
               <h3 class="title-font text-3xl font-bold mb-3">Selected Play</h3>
               <div id="play-desc" class="text-lg leading-8">Slant Pass: the receiver cuts across the field for a quick pass. 斜线传球：外接手斜切进入空档接球。</div>
             </div>
 
-            <div class="glass rounded-[30px] p-6">
+            <div class="dark-panel p-6">
+              <div class="font-extrabold text-yellow-200 text-xl mb-4">Cute Skins</div>
+              <select id="skin-style" class="w-full rounded-xl px-3 py-3 text-slate-900 font-bold mb-3">
+                <option value="classic">Classic Team</option>
+                <option value="superhero">Superhero</option>
+                <option value="space">Space</option>
+                <option value="rainbow">Rainbow</option>
+              </select>
+              <div class="small-note">Changes the animal outfit style so kids can have more fun.</div>
+            </div>
+
+            <div class="dark-panel p-6">
               <div class="flex items-center justify-between gap-3 mb-3">
                 <h3 class="title-font text-3xl font-bold">Saved Plays</h3>
                 <button id="delete-saved-play" class="small-action-btn">🗑️ Delete</button>
@@ -628,68 +635,33 @@
 
       <section id="tab-about" class="tab-panel hidden-tab">
         <div class="grid lg:grid-cols-12 gap-6">
-          <div class="lg:col-span-7 glass rounded-[30px] p-7">
+          <div class="lg:col-span-7 dark-panel p-7">
             <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">What is Flag Football?</h2>
             <p class="text-lg sm:text-xl leading-9 mb-5">Flag football is a safe, non-contact version of American football. Instead of tackling, defenders pull a player’s flag belt to stop the play. Teams try to move the ball down the field and score a touchdown in the end zone. 夺旗橄榄球是美式橄榄球的安全版，不用擒抱，而是通过拉旗来停止进攻。</p>
-            <div class="grid sm:grid-cols-2 gap-4">
-              <div class="mini-card"><div class="text-3xl mb-2">🏈</div><div class="font-extrabold text-xl mb-1">What players do / 球员做什么</div><div>Throw, catch, run, defend, and pull flags. 传球、接球、跑动、防守、拉旗。</div></div>
-              <div class="mini-card"><div class="text-3xl mb-2">🚩</div><div class="font-extrabold text-xl mb-1">How a play stops / 何时停止</div><div>A flag gets pulled, the pass is incomplete, or a score happens. 拉旗、传球未完成或得分。</div></div>
-              <div class="mini-card"><div class="text-3xl mb-2">🧠</div><div class="font-extrabold text-xl mb-1">What kids learn / 学到什么</div><div>Teamwork, spacing, passing timing, and sportsmanship. 团队合作、站位、传球时机和体育精神。</div></div>
-              <div class="mini-card"><div class="text-3xl mb-2">😊</div><div class="font-extrabold text-xl mb-1">Why it’s fun / 为什么好玩</div><div>Fast plays, safer rules, and everyone can join. 节奏快、更安全、人人都能参与。</div></div>
-            </div>
           </div>
-          <div class="lg:col-span-5 glass rounded-[30px] p-7">
+          <div class="lg:col-span-5 dark-panel p-7">
             <h3 class="title-font text-3xl font-bold mb-4">Simple game flow / 简单流程</h3>
             <div class="space-y-4 text-lg leading-8">
-              <div class="mini-card"><strong>1. Start the play / 开球</strong><br />The center snaps the ball to the quarterback. 中锋把球传给四分卫。</div>
-              <div class="mini-card"><strong>2. Choose a move / 选择战术</strong><br />The offense can pass, hand off, or run. 进攻方可以传球、交接球或自己跑。</div>
-              <div class="mini-card"><strong>3. Defend safely / 安全防守</strong><br />The defense covers players and tries to pull the flag. 防守方盯防并尝试拉旗。</div>
-              <div class="mini-card"><strong>4. Score / 得分</strong><br />Reach the end zone for a touchdown. 跑到达阵区就得分。</div>
+              <div><strong>1. Start the play / 开球</strong><br />The center snaps the ball to the quarterback. 中锋把球传给四分卫。</div>
+              <div><strong>2. Choose a move / 选择战术</strong><br />The offense can pass, hand off, or run. 进攻方可以传球、交接球或自己跑。</div>
+              <div><strong>3. Defend safely / 安全防守</strong><br />The defense covers players and tries to pull the flag. 防守方盯防并尝试拉旗。</div>
+              <div><strong>4. Score / 得分</strong><br />Reach the end zone for a touchdown. 跑到达阵区就得分。</div>
             </div>
           </div>
         </div>
       </section>
 
       <section id="tab-fouls" class="tab-panel hidden-tab">
-        <div class="glass rounded-[30px] p-7">
+        <div class="dark-panel p-7">
           <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">Common Fouls / 常见犯规</h2>
           <p class="text-lg sm:text-xl leading-8 mb-6">These are kid-friendly teaching examples. Exact penalties can change by league. 这些是适合课堂教学的示例，不同学校或联赛的处罚距离可能不同。</p>
-          <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-            <div class="mini-card"><div class="text-4xl mb-3">🚫🖐️</div><div class="font-extrabold text-2xl mb-2">Flag Guarding / 护旗</div><div>Using your hands or the ball to stop someone from pulling your flag. 用手或球挡住别人拉旗。</div></div>
-            <div class="mini-card"><div class="text-4xl mb-3">🚫💥</div><div class="font-extrabold text-2xl mb-2">Illegal Contact / 非法身体接触</div><div>Pushing, tackling, or rough contact. 推人、擒抱或粗暴碰撞。</div></div>
-            <div class="mini-card"><div class="text-4xl mb-3">🚫⏱️</div><div class="font-extrabold text-2xl mb-2">Offside / 越位</div><div>Crossing the line too early before the snap. 开球前太早越过开球线。</div></div>
-            <div class="mini-card"><div class="text-4xl mb-3">🚫🌀</div><div class="font-extrabold text-2xl mb-2">Dangerous Spin / 危险转身</div><div>Spinning or jumping into contact unsafely. 不安全地转身或跳向对手。</div></div>
-            <div class="mini-card"><div class="text-4xl mb-3">🚫🤾</div><div class="font-extrabold text-2xl mb-2">Illegal Block / 非法阻挡</div><div>Using your body to block when the rule does not allow it. 规则不允许时用身体阻挡。</div></div>
-            <div class="mini-card"><div class="text-4xl mb-3">🚫🎯</div><div class="font-extrabold text-2xl mb-2">Pass Interference / 传球干扰</div><div>Grabbing or bumping a receiver too early. 球还没到就拉拽或撞击接球员。</div></div>
-          </div>
         </div>
       </section>
 
       <section id="tab-positions" class="tab-panel hidden-tab">
-        <div class="grid lg:grid-cols-12 gap-6">
-          <div class="lg:col-span-5 glass rounded-[30px] p-7">
-            <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">5v5 Positions / 五人制位置</h2>
-            <p class="text-lg sm:text-xl leading-8 mb-5">Click the same positions on the home field too. 你也可以在主页点击这些角色来听和看说明。</p>
-            <div class="space-y-3 text-lg">
-              <div class="mini-card"><strong>Quarterback (QB) / 四分卫</strong><br />Throws or runs the ball and leads the play.</div>
-              <div class="mini-card"><strong>Center / 中锋</strong><br />Snaps the ball to start the play.</div>
-              <div class="mini-card"><strong>Wide Receiver (WR) / 外接手</strong><br />Runs routes and catches passes.</div>
-              <div class="mini-card"><strong>Running Back (RB) / 跑卫</strong><br />Takes handoffs or catches short passes.</div>
-              <div class="mini-card"><strong>Rusher / Defensive Back / Safety / Linebacker</strong><br />Rush, cover, help in the middle, and protect deep.</div>
-            </div>
-          </div>
-
-          <div class="lg:col-span-7 space-y-6">
-            <div class="glass rounded-[30px] p-6">
-              <div class="lineup-grid text-slate-900">
-                <div class="rounded-3xl bg-yellow-300 p-4"><div class="font-extrabold text-xl">QB</div><div>Leader with the ball</div></div>
-                <div class="rounded-3xl bg-yellow-300 p-4"><div class="font-extrabold text-xl">Center</div><div>Snaps the ball</div></div>
-                <div class="rounded-3xl bg-yellow-300 p-4"><div class="font-extrabold text-xl">WR</div><div>Catches passes</div></div>
-                <div class="rounded-3xl bg-pink-300 p-4"><div class="font-extrabold text-xl">Rusher</div><div>Runs at the QB</div></div>
-                <div class="rounded-3xl bg-pink-300 p-4"><div class="font-extrabold text-xl">Safety</div><div>Helps deep</div></div>
-              </div>
-            </div>
-          </div>
+        <div class="dark-panel p-7">
+          <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">5v5 Positions / 五人制位置</h2>
+          <p class="text-lg sm:text-xl leading-8 mb-5">Click the same positions on the home field too. 你也可以在主页点击这些角色来听和看说明。</p>
         </div>
       </section>
     </main>
@@ -756,14 +728,14 @@
       };
 
       const baseAnimals = [
-        { id: 'bear', name: 'Bear QB', type: 'bear', team: 'offense', x: 20, y: 50 },
-        { id: 'monkey', name: 'Monkey WR', type: 'monkey', team: 'offense', x: 36, y: 29 },
-        { id: 'horse', name: 'Horse RB', type: 'horse', team: 'offense', x: 42, y: 71 },
-        { id: 'pony', name: 'Pony Center', type: 'pony', team: 'offense', x: 13, y: 50 },
-        { id: 'leopard', name: 'Leopard Rusher', type: 'leopard', team: 'defense', x: 80, y: 36 },
-        { id: 'giraffe', name: 'Giraffe DB', type: 'giraffe', team: 'defense', x: 78, y: 68 },
-        { id: 'rabbit', name: 'Rabbit Safety', type: 'rabbit', team: 'defense', x: 89, y: 24 },
-        { id: 'fox', name: 'Fox Linebacker', type: 'fox', team: 'defense', x: 69, y: 50 }
+        { id: 'bear', type: 'bear', team: 'offense', x: 18, y: 20 },
+        { id: 'monkey', type: 'monkey', team: 'offense', x: 36, y: 34 },
+        { id: 'horse', type: 'horse', team: 'offense', x: 45, y: 76 },
+        { id: 'pony', type: 'pony', team: 'offense', x: 12, y: 52 },
+        { id: 'leopard', type: 'leopard', team: 'defense', x: 77, y: 38 },
+        { id: 'giraffe', type: 'giraffe', team: 'defense', x: 77, y: 74 },
+        { id: 'rabbit', type: 'rabbit', team: 'defense', x: 86, y: 16 },
+        { id: 'fox', type: 'fox', team: 'defense', x: 72, y: 58 }
       ];
 
       let animals = [];
@@ -820,17 +792,12 @@
         const c = configs[type] || configs.bear;
         const spots = type === 'leopard' ? '<circle cx="29" cy="37" r="4" fill="#6d3f17"/><circle cx="57" cy="33" r="4" fill="#6d3f17"/><circle cx="68" cy="55" r="4" fill="#6d3f17"/><circle cx="20" cy="60" r="4" fill="#6d3f17"/>' : type === 'giraffe' ? '<circle cx="28" cy="26" r="5" fill="#b9772f"/><circle cx="55" cy="41" r="5" fill="#b9772f"/><circle cx="24" cy="66" r="5" fill="#b9772f"/><circle cx="64" cy="74" r="5" fill="#b9772f"/>' : '';
         const tail = type === 'monkey' ? '<path d="M78 78 C96 72, 98 94, 84 98" stroke="#6f4929" stroke-width="7" fill="none" stroke-linecap="round"/>' : type === 'horse' || type === 'pony' ? '<path d="M78 78 C92 82, 95 95, 84 103" stroke="#7b4b2c" stroke-width="7" fill="none" stroke-linecap="round"/>' : type === 'fox' ? '<path d="M78 82 C95 89, 99 101, 84 106" stroke="#c66a2b" stroke-width="7" fill="none" stroke-linecap="round"/>' : '<path d="M78 80 C90 84, 93 96, 82 102" stroke="#6d4323" stroke-width="7" fill="none" stroke-linecap="round"/>';
-        const ears = type === 'rabbit'
-          ? `<ellipse cx="28" cy="10" rx="9" ry="22" fill="${c.fur}"/><ellipse cx="28" cy="11" rx="4" ry="16" fill="${c.ear}"/><ellipse cx="56" cy="10" rx="9" ry="22" fill="${c.fur}"/><ellipse cx="56" cy="11" rx="4" ry="16" fill="${c.ear}"/>`
-          : type === 'giraffe'
-          ? `<rect x="28" y="4" width="5" height="16" rx="3" fill="#a66d32"/><rect x="52" y="4" width="5" height="16" rx="3" fill="#a66d32"/><circle cx="30.5" cy="4" r="4" fill="#a66d32"/><circle cx="54.5" cy="4" r="4" fill="#a66d32"/>`
-          : `<circle cx="24" cy="22" r="12" fill="${c.ear}"/><circle cx="60" cy="22" r="12" fill="${c.ear}"/><circle cx="24" cy="22" r="7" fill="${c.belly}" opacity="0.65"/><circle cx="60" cy="22" r="7" fill="${c.belly}" opacity="0.65"/>`;
+        const ears = type === 'rabbit' ? `<ellipse cx="28" cy="10" rx="9" ry="22" fill="${c.fur}"/><ellipse cx="28" cy="11" rx="4" ry="16" fill="${c.ear}"/><ellipse cx="56" cy="10" rx="9" ry="22" fill="${c.fur}"/><ellipse cx="56" cy="11" rx="4" ry="16" fill="${c.ear}"/>` : type === 'giraffe' ? `<rect x="28" y="4" width="5" height="16" rx="3" fill="#a66d32"/><rect x="52" y="4" width="5" height="16" rx="3" fill="#a66d32"/><circle cx="30.5" cy="4" r="4" fill="#a66d32"/><circle cx="54.5" cy="4" r="4" fill="#a66d32"/>` : `<circle cx="24" cy="22" r="12" fill="${c.ear}"/><circle cx="60" cy="22" r="12" fill="${c.ear}"/><circle cx="24" cy="22" r="7" fill="${c.belly}" opacity="0.65"/><circle cx="60" cy="22" r="7" fill="${c.belly}" opacity="0.65"/>`;
         const skinDecor = skinStyle === 'superhero' ? `<path d="M23 58 L61 58 L54 68 L30 68 Z" fill="${j.accent}" opacity="0.9"/><path d="M42 52 L49 40 L56 52 Z" fill="${j.accent}" opacity="0.9"/>` : skinStyle === 'space' ? `<circle cx="63" cy="20" r="6" fill="${j.accent}" opacity="0.95"/><circle cx="18" cy="48" r="3" fill="${j.accent}" opacity="0.85"/><circle cx="64" cy="64" r="3" fill="${j.accent}" opacity="0.85"/>` : skinStyle === 'rainbow' ? `<path d="M26 55 Q42 46 58 55" stroke="${j.accent}" stroke-width="6" fill="none"/><circle cx="28" cy="56" r="4" fill="#ff7aa8"/><circle cx="42" cy="50" r="4" fill="#7dd3fc"/><circle cx="56" cy="56" r="4" fill="#ffd15c"/>` : `<circle cx="42" cy="66" r="6" fill="${j.star}" opacity="0.85"/>`;
         return `<svg viewBox="0 0 84 112" aria-hidden="true"><g class="float-bob">${tail}${ears}<ellipse cx="42" cy="34" rx="26" ry="22" fill="${c.fur}"/><ellipse cx="42" cy="43" rx="18" ry="13" fill="${c.muzzle}"/><circle cx="33" cy="32" r="3.2" fill="#1e2334"/><circle cx="51" cy="32" r="3.2" fill="#1e2334"/><ellipse cx="42" cy="41" rx="4.5" ry="3.6" fill="#2d1c12"/><path d="M37 46 Q42 50 47 46" stroke="#6f4a35" stroke-width="2.5" fill="none" stroke-linecap="round"/><rect x="23" y="52" width="38" height="28" rx="12" fill="${j.main}"/><rect x="26" y="55" width="32" height="22" rx="9" fill="${j.main}" stroke="${j.trim}" stroke-width="3"/>${skinDecor}<text x="42" y="71" text-anchor="middle" font-family="Fredoka" font-size="15" font-weight="700" fill="${j.trim}">${team === 'offense' ? 'O' : 'D'}</text><ellipse cx="42" cy="88" rx="20" ry="16" fill="${c.belly}"/><ellipse cx="28" cy="84" rx="8" ry="16" fill="${c.fur}"/><ellipse cx="56" cy="84" rx="8" ry="16" fill="${c.fur}"/><rect x="24" y="95" width="9" height="14" rx="5" fill="${c.fur}"/><rect x="51" y="95" width="9" height="14" rx="5" fill="${c.fur}"/><ellipse cx="28.5" cy="109" rx="9" ry="4" fill="#3c2a1f" opacity="0.85"/><ellipse cx="55.5" cy="109" rx="9" ry="4" fill="#3c2a1f" opacity="0.85"/>${spots}</g></svg>`;
       }
 
       function getLocalizedPlayerName(id) { const info = playerInfo[id]; if (!info) return id; return t(info.enTitle, info.zhTitle); }
-
       function createAnimal(a) {
         const el = document.createElement('div');
         el.className = 'animal';
@@ -843,559 +810,52 @@
         field.appendChild(el);
         return { ...a, el };
       }
-
-      function renderAnimals() {
-        if (!field) return;
-        field.querySelectorAll('.animal').forEach(n => n.remove());
-        animals = baseAnimals.map(a => createAnimal({ ...a }));
-        animalMap = Object.fromEntries(animals.map(a => [a.id, a]));
-        highlightSelectedAnimal();
-      }
-
-      function refreshAnimalLabels() {
-        animals.forEach(a => {
-          const label = a.el.querySelector('.label');
-          if (label) label.textContent = getLocalizedPlayerName(a.id);
-          const currentSvg = a.el.querySelector('svg');
-          if (currentSvg) currentSvg.outerHTML = animalSVG(a.type, a.team);
-        });
-        highlightSelectedAnimal();
-      }
-
+      function renderAnimals() { if (!field) return; field.querySelectorAll('.animal').forEach(n => n.remove()); animals = baseAnimals.map(a => createAnimal({ ...a })); animalMap = Object.fromEntries(animals.map(a => [a.id, a])); highlightSelectedAnimal(); }
+      function refreshAnimalLabels() { animals.forEach(a => { const label = a.el.querySelector('.label'); if (label) label.textContent = getLocalizedPlayerName(a.id); const currentSvg = a.el.querySelector('svg'); if (currentSvg) currentSvg.outerHTML = animalSVG(a.type, a.team); }); highlightSelectedAnimal(); }
       function updateAnimalPos(a) { if (!a || !a.el) return; a.el.style.left = `${a.x}%`; a.el.style.top = `${a.y}%`; }
       function highlightSelectedAnimal() { animals.forEach(a => a.el.classList.toggle('selected', a.id === selectedAnimalId)); }
-
-      function updateRoleCard(id) {
-        const info = playerInfo[id];
-        if (!info) return;
-        selectedAnimalId = id;
-        roleEmojiEl.textContent = info.emoji;
-        roleTitleEl.textContent = t(info.enTitle, info.zhTitle);
-        roleBodyEl.textContent = t(info.enBody, info.zhBody);
-        highlightSelectedAnimal();
-      }
-
-      function speakSelectedRole() {
-        const info = playerInfo[selectedAnimalId];
-        if (!info) return;
-        const text = t(`${info.enTitle}. ${info.enBody}`, `${info.zhTitle}。${info.zhBody}`);
-        if ('speechSynthesis' in window) {
-          window.speechSynthesis.cancel();
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.rate = 0.92;
-          window.speechSynthesis.speak(utterance);
-        }
-      }
-
-      function updateHeaderAndTeams() {
-        const school = schoolNameInput.value.trim() || 'Coach Byryden School';
-        const home = teamHomeInput.value.trim() || 'Bears';
-        const away = teamAwayInput.value.trim() || 'Monkeys';
-        topEndzone.textContent = school;
-        bottomEndzone.textContent = school;
-        scoreHomeName.textContent = home;
-        scoreAwayName.textContent = away;
-        heroTitle.textContent = `${school} Flag Football Fun`;
-        heroSubtitle.textContent = t('Cute classroom app for teachers and kids', '适合老师和孩子的可爱课堂 app');
-      }
-
-      function updateScoreboard() {
-        homeScoreEl.textContent = String(homeScore);
-        awayScoreEl.textContent = String(awayScore);
-        downValueEl.textContent = String(down);
-        currentPlayNameEl.textContent = selectedSavedPlayId ? getSavedPlayById(selectedSavedPlayId)?.name || t(plays[selectedPlay].enName, plays[selectedPlay].zhName) : t(plays[selectedPlay].enName, plays[selectedPlay].zhName);
-      }
-
-      function updatePlayDescription() {
-        if (selectedSavedPlayId) {
-          const play = getSavedPlayById(selectedSavedPlayId);
-          playDescEl.textContent = play ? t(`Custom Play: ${play.name}`, `自定义战术：${play.name}`) : t(`${plays[selectedPlay].enName}: ${plays[selectedPlay].enDesc}`, `${plays[selectedPlay].zhName}：${plays[selectedPlay].zhDesc}`);
-        } else {
-          playDescEl.textContent = t(`${plays[selectedPlay].enName}: ${plays[selectedPlay].enDesc}`, `${plays[selectedPlay].zhName}：${plays[selectedPlay].zhDesc}`);
-        }
-      }
-
-      function updateAllTextLabels() {
-        languageMode = languageToggle.value;
-        updateHeaderAndTeams();
-        updatePlayDescription();
-        updateScoreboard();
-        refreshAnimalLabels();
-        updateRoleCard(selectedAnimalId);
-        document.getElementById('down-label').textContent = t('Down', '档');
-        document.getElementById('playbook-mode-label').textContent = t('Play', '战术');
-        document.getElementById('score-home-sub').textContent = t('Home Team', '主队');
-        document.getElementById('score-away-sub').textContent = t('Away Team', '客队');
-        drawToggleBtn.textContent = drawMode ? t('✏️ Draw Mode On', '✏️ 绘制模式开启') : t('✏️ Draw Mode Off', '✏️ 绘制模式关闭');
-      }
-
-      function startDrag(e, id) {
-        if (busy || drawMode || id !== 'bear') return;
-        const a = getAnimal(id);
-        if (!a || !field) return;
-        draggingId = id;
-        a.el.classList.add('dragging', 'running');
-        const rect = field.getBoundingClientRect();
-        dragOffset.x = ((e.clientX - rect.left) / rect.width) * 100 - a.x;
-        dragOffset.y = ((e.clientY - rect.top) / rect.height) * 100 - a.y;
-        if (typeof a.el.setPointerCapture === 'function') { try { a.el.setPointerCapture(e.pointerId); } catch (_) {} }
-        setStatus(t('Dragging the bear quarterback...', '正在拖动小熊四分卫...'));
-      }
-
-      function stopDrag() {
-        if (!draggingId) return;
-        const a = getAnimal(draggingId);
-        if (a) a.el.classList.remove('dragging', 'running');
-        draggingId = null;
-        setStatus(t('Bear moved. Pick a play to watch!', '小熊已经移动。选择一个战术吧！'));
-      }
-
-      function handleAnimalClick(id) {
-        const a = getAnimal(id);
-        if (!a) return;
-        updateRoleCard(id);
-        if (drawMode) {
-          drawPlayerSelect.value = id;
-          setStatus(t(`Now drawing for ${playerInfo[id].enTitle}.`, `现在正在为 ${playerInfo[id].zhTitle} 画路线。`));
-          return;
-        }
-        if (a.team === 'defense') {
-          a.el.classList.add('pulled');
-          createBurst(a.x, a.y, '#ffd447');
-          setStatus(t(`${playerInfo[id].enTitle} flag pulled!`, `${playerInfo[id].zhTitle} 被拉旗了！`));
-          setTimeout(() => a.el.classList.remove('pulled'), 600);
-        } else {
-          setStatus(t(`Selected ${playerInfo[id].enTitle}.`, `已选择 ${playerInfo[id].zhTitle}。`));
-        }
-      }
-
-      function createPath(points, color, customClass = 'route-line') {
-        const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        const d = points.map((pt, idx) => `${idx === 0 ? 'M' : 'L'} ${pt.x} ${pt.y}`).join(' ');
-        p.setAttribute('d', d);
-        p.setAttribute('class', customClass);
-        if (color) p.setAttribute('stroke', color);
-        return p;
-      }
-
-      function createArrow(x1, y1, x2, y2, color) {
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', x1); line.setAttribute('y1', y1); line.setAttribute('x2', x2); line.setAttribute('y2', y2); line.setAttribute('stroke', color); line.setAttribute('class', 'route-arrow');
-        const angle = Math.atan2(y2 - y1, x2 - x1);
-        const size = 12;
-        const wing1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        wing1.setAttribute('x1', x2); wing1.setAttribute('y1', y2); wing1.setAttribute('x2', x2 - size * Math.cos(angle - Math.PI / 6)); wing1.setAttribute('y2', y2 - size * Math.sin(angle - Math.PI / 6)); wing1.setAttribute('stroke', color); wing1.setAttribute('class', 'route-arrow');
-        const wing2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        wing2.setAttribute('x1', x2); wing2.setAttribute('y1', y2); wing2.setAttribute('x2', x2 - size * Math.cos(angle + Math.PI / 6)); wing2.setAttribute('y2', y2 - size * Math.sin(angle + Math.PI / 6)); wing2.setAttribute('stroke', color); wing2.setAttribute('class', 'route-arrow');
-        g.append(line, wing1, wing2);
-        return g;
-      }
-
+      function updateRoleCard(id) { const info = playerInfo[id]; if (!info) return; selectedAnimalId = id; roleEmojiEl.textContent = info.emoji; roleTitleEl.textContent = t(info.enTitle, info.zhTitle); roleBodyEl.textContent = t(info.enBody, info.zhBody); highlightSelectedAnimal(); }
+      function speakSelectedRole() { const info = playerInfo[selectedAnimalId]; if (!info) return; const text = t(`${info.enTitle}. ${info.enBody}`, `${info.zhTitle}。${info.zhBody}`); if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(text); utterance.rate = 0.92; window.speechSynthesis.speak(utterance); } }
+      function updateHeaderAndTeams() { const school = schoolNameInput.value.trim() || 'Coach Byryden School'; const home = teamHomeInput.value.trim() || 'Bears'; const away = teamAwayInput.value.trim() || 'Monkeys'; topEndzone.textContent = school; bottomEndzone.textContent = school; scoreHomeName.textContent = home; scoreAwayName.textContent = away; heroTitle.textContent = `${school} Flag Football Fun`; heroSubtitle.textContent = t('Cute classroom app for teachers and kids', '适合老师和孩子的可爱课堂 app'); }
+      function getSavedPlayById(id) { return savedCustomPlays.find(play => play.id === id) || null; }
+      function updateScoreboard() { homeScoreEl.textContent = String(homeScore); awayScoreEl.textContent = String(awayScore); downValueEl.textContent = String(down); currentPlayNameEl.textContent = selectedSavedPlayId ? getSavedPlayById(selectedSavedPlayId)?.name || t(plays[selectedPlay].enName, plays[selectedPlay].zhName) : t(plays[selectedPlay].enName, plays[selectedPlay].zhName); }
+      function updatePlayDescription() { if (selectedSavedPlayId) { const play = getSavedPlayById(selectedSavedPlayId); playDescEl.textContent = play ? t(`Custom Play: ${play.name}`, `自定义战术：${play.name}`) : t(`${plays[selectedPlay].enName}: ${plays[selectedPlay].enDesc}`, `${plays[selectedPlay].zhName}：${plays[selectedPlay].zhDesc}`); } else { playDescEl.textContent = t(`${plays[selectedPlay].enName}: ${plays[selectedPlay].enDesc}`, `${plays[selectedPlay].zhName}：${plays[selectedPlay].zhDesc}`); } }
+      function updateAllTextLabels() { languageMode = languageToggle.value; updateHeaderAndTeams(); updatePlayDescription(); updateScoreboard(); refreshAnimalLabels(); updateRoleCard(selectedAnimalId); document.getElementById('down-label').textContent = t('Down', '档'); document.getElementById('playbook-mode-label').textContent = t('Play', '战术'); document.getElementById('score-home-sub').textContent = t('Home Team', '主队'); document.getElementById('score-away-sub').textContent = t('Away Team', '客队'); drawToggleBtn.textContent = drawMode ? t('✏️ Draw Mode On', '✏️ 绘制模式开启') : t('✏️ Draw Mode Off', '✏️ 绘制模式关闭'); }
+      function startDrag(e, id) { if (busy || drawMode || id !== 'bear') return; const a = getAnimal(id); if (!a || !field) return; draggingId = id; a.el.classList.add('dragging', 'running'); const rect = field.getBoundingClientRect(); dragOffset.x = ((e.clientX - rect.left) / rect.width) * 100 - a.x; dragOffset.y = ((e.clientY - rect.top) / rect.height) * 100 - a.y; if (typeof a.el.setPointerCapture === 'function') { try { a.el.setPointerCapture(e.pointerId); } catch (_) {} } setStatus(t('Dragging the bear quarterback...', '正在拖动小熊四分卫...')); }
+      function stopDrag() { if (!draggingId) return; const a = getAnimal(draggingId); if (a) a.el.classList.remove('dragging', 'running'); draggingId = null; setStatus(t('Bear moved. Pick a play to watch!', '小熊已经移动。选择一个战术吧！')); }
+      function handleAnimalClick(id) { const a = getAnimal(id); if (!a) return; updateRoleCard(id); if (drawMode) { drawPlayerSelect.value = id; setStatus(t(`Now drawing for ${playerInfo[id].enTitle}.`, `现在正在为 ${playerInfo[id].zhTitle} 画路线。`)); return; } if (a.team === 'defense') { a.el.classList.add('pulled'); createBurst(a.x, a.y, '#ffd447'); setStatus(t(`${playerInfo[id].enTitle} flag pulled!`, `${playerInfo[id].zhTitle} 被拉旗了！`)); setTimeout(() => a.el.classList.remove('pulled'), 600); } else { setStatus(t(`Selected ${playerInfo[id].enTitle}.`, `已选择 ${playerInfo[id].zhTitle}。`)); } }
+      function createPath(points, color, customClass = 'route-line') { const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); const d = points.map((pt, idx) => `${idx === 0 ? 'M' : 'L'} ${pt.x} ${pt.y}`).join(' '); p.setAttribute('d', d); p.setAttribute('class', customClass); if (color) p.setAttribute('stroke', color); return p; }
+      function createArrow(x1, y1, x2, y2, color) { const g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); const line = document.createElementNS('http://www.w3.org/2000/svg', 'line'); line.setAttribute('x1', x1); line.setAttribute('y1', y1); line.setAttribute('x2', x2); line.setAttribute('y2', y2); line.setAttribute('stroke', color); line.setAttribute('class', 'route-arrow'); const angle = Math.atan2(y2 - y1, x2 - x1); const size = 12; const wing1 = document.createElementNS('http://www.w3.org/2000/svg', 'line'); wing1.setAttribute('x1', x2); wing1.setAttribute('y1', y2); wing1.setAttribute('x2', x2 - size * Math.cos(angle - Math.PI / 6)); wing1.setAttribute('y2', y2 - size * Math.sin(angle - Math.PI / 6)); wing1.setAttribute('stroke', color); wing1.setAttribute('class', 'route-arrow'); const wing2 = document.createElementNS('http://www.w3.org/2000/svg', 'line'); wing2.setAttribute('x1', x2); wing2.setAttribute('y1', y2); wing2.setAttribute('x2', x2 - size * Math.cos(angle + Math.PI / 6)); wing2.setAttribute('y2', y2 - size * Math.sin(angle + Math.PI / 6)); wing2.setAttribute('stroke', color); wing2.setAttribute('class', 'route-arrow'); g.append(line, wing1, wing2); return g; }
       function clearRoutes() { if (routeLayer) routeLayer.innerHTML = ''; }
       function clearDrawing() { currentDrawPoints = []; renderCustomPlaybookLayer(); }
-
-      function renderCustomPlaybookLayer() {
-        if (!customPlaybookLayer) return;
-        customPlaybookLayer.innerHTML = '';
-
-        savedCustomPlays.forEach(play => {
-          const player = getAnimal(play.playerId);
-          if (!player) return;
-          const start = pctToView(player.x, player.y);
-          const points = [start, ...play.points.map(pt => pctToView(pt.x, pt.y))];
-          const path = createPath(points, null, 'custom-route-line');
-          path.setAttribute('stroke', play.id === selectedSavedPlayId ? '#fff59b' : 'rgba(255,245,155,0.62)');
-          path.setAttribute('stroke-width', play.id === selectedSavedPlayId ? '8' : '6');
-          customPlaybookLayer.append(path);
-        });
-
-        if (currentDrawPoints.length > 0) {
-          const player = getAnimal(drawPlayerSelect.value);
-          if (player) {
-            const start = pctToView(player.x, player.y);
-            const points = [start, ...currentDrawPoints.map(pt => pctToView(pt.x, pt.y))];
-            const path = createPath(points, null, 'custom-route-line');
-            customPlaybookLayer.append(path);
-            currentDrawPoints.forEach(pt => {
-              const view = pctToView(pt.x, pt.y);
-              const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-              dot.setAttribute('cx', view.x);
-              dot.setAttribute('cy', view.y);
-              dot.setAttribute('r', '7');
-              dot.setAttribute('class', 'draw-dot');
-              customPlaybookLayer.append(dot);
-            });
-          }
-        }
-      }
-
-      function showPreviewRoutes() {
-        if (busy || !routeLayer || selectedSavedPlayId) { clearRoutes(); return; }
-        const refs = getRequiredAnimals(['bear', 'monkey', 'horse', 'fox']);
-        if (!refs) { clearRoutes(); return; }
-        clearRoutes();
-        const { bear, monkey, horse, fox } = refs;
-        const b = pctToView(bear.x, bear.y);
-        if (selectedPlay === 'slant') {
-          const m = pctToView(monkey.x + 4, monkey.y - 2);
-          routeLayer.append(createPath([b, { x: b.x + 90, y: b.y - 55 }, { x: m.x - 55, y: m.y - 12 }, m], '#7dd3fc'), createArrow(m.x - 22, m.y - 4, m.x, m.y, '#7dd3fc'));
-        } else if (selectedPlay === 'handoff') {
-          const h = pctToView(horse.x + 12, horse.y - 4);
-          routeLayer.append(createPath([b, h], '#ffd447'), createArrow(h.x - 18, h.y + 2, h.x, h.y, '#ffd447'));
-        } else if (selectedPlay === 'go') {
-          const m = pctToView(monkey.x + 1, monkey.y - 18);
-          routeLayer.append(createPath([pctToView(monkey.x, monkey.y), { x: m.x, y: m.y - 80 }, { x: m.x, y: m.y - 160 }], '#7dd3fc'), createArrow(m.x, m.y - 128, m.x, m.y - 160, '#7dd3fc'), createPath([b, { x: b.x + 130, y: b.y - 80 }, { x: m.x, y: m.y - 160 }], '#aef6ff'));
-        } else if (selectedPlay === 'sweep') {
-          const h = pctToView(horse.x, horse.y);
-          routeLayer.append(createPath([h, { x: h.x + 80, y: h.y + 10 }, { x: h.x + 160, y: h.y - 18 }, { x: h.x + 220, y: h.y - 28 }], '#ffd447'), createArrow(h.x + 190, h.y - 25, h.x + 220, h.y - 28, '#ffd447'));
-        }
-        const f = pctToView(fox.x - 8, fox.y + 6);
-        const defensePath = createPath([pctToView(fox.x, fox.y), { x: f.x - 35, y: f.y }, { x: b.x + 25, y: b.y + 12 }], '#ff9dc0');
-        routeLayer.append(defensePath, createArrow(b.x + 12, b.y + 10, b.x + 25, b.y + 12, '#ff9dc0'));
-      }
-
-      function createBurst(x, y, color = '#ffd447') {
-        if (!burstLayer) return;
-        const burst = document.createElement('div');
-        burst.className = 'burst';
-        burst.style.left = `${x}%`;
-        burst.style.top = `${y}%`;
-        burst.style.background = `radial-gradient(circle, ${color} 0%, rgba(255,170,42,0.68) 46%, rgba(255,170,42,0) 74%)`;
-        burstLayer.appendChild(burst);
-        setTimeout(() => burst.remove(), 600);
-      }
-
-      function animateFootball(from, to, duration = 900) {
-        return new Promise(resolve => {
-          if (!footballLayer || !from || !to) { resolve(); return; }
-          const ball = document.createElement('div');
-          ball.className = 'football';
-          footballLayer.appendChild(ball);
-          const start = performance.now();
-          function frame(now) {
-            const t = Math.min((now - start) / duration, 1);
-            const x = from.x + (to.x - from.x) * t;
-            const curve = Math.sin(Math.PI * t) * -9;
-            const y = from.y + (to.y - from.y) * t + curve;
-            ball.style.left = `${x}%`;
-            ball.style.top = `${y}%`;
-            ball.style.transform = `translate(-50%, -50%) rotate(${18 + 540 * t}deg)`;
-            if (t < 1) requestAnimationFrame(frame);
-            else { ball.remove(); createBurst(to.x, to.y, '#fff59b'); resolve(); }
-          }
-          requestAnimationFrame(frame);
-        });
-      }
-
-      function animateMove(id, points, duration = 1200) {
-        return new Promise(resolve => {
-          const a = getAnimal(id);
-          if (!a || !Array.isArray(points) || points.length < 2) { resolve(); return; }
-          const start = performance.now();
-          a.el.classList.add('running');
-          function frame(now) {
-            const t = Math.min((now - start) / duration, 1);
-            const seg = (points.length - 1) * t;
-            const i = Math.min(points.length - 2, Math.floor(seg));
-            const local = seg - i;
-            const p1 = points[i];
-            const p2 = points[i + 1];
-            a.x = p1.x + (p2.x - p1.x) * local;
-            a.y = p1.y + (p2.y - p1.y) * local;
-            updateAnimalPos(a);
-            if (t < 1) requestAnimationFrame(frame);
-            else { a.el.classList.remove('running'); resolve(); }
-          }
-          requestAnimationFrame(frame);
-        });
-      }
-
+      function renderCustomPlaybookLayer() { if (!customPlaybookLayer) return; customPlaybookLayer.innerHTML = ''; savedCustomPlays.forEach(play => { const player = getAnimal(play.playerId); if (!player) return; const start = pctToView(player.x, player.y); const points = [start, ...play.points.map(pt => pctToView(pt.x, pt.y))]; const path = createPath(points, null, 'custom-route-line'); path.setAttribute('stroke', play.id === selectedSavedPlayId ? '#fff59b' : 'rgba(255,245,155,0.62)'); path.setAttribute('stroke-width', play.id === selectedSavedPlayId ? '8' : '6'); customPlaybookLayer.append(path); }); if (currentDrawPoints.length > 0) { const player = getAnimal(drawPlayerSelect.value); if (player) { const start = pctToView(player.x, player.y); const points = [start, ...currentDrawPoints.map(pt => pctToView(pt.x, pt.y))]; const path = createPath(points, null, 'custom-route-line'); customPlaybookLayer.append(path); currentDrawPoints.forEach(pt => { const view = pctToView(pt.x, pt.y); const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); dot.setAttribute('cx', view.x); dot.setAttribute('cy', view.y); dot.setAttribute('r', '7'); dot.setAttribute('class', 'draw-dot'); customPlaybookLayer.append(dot); }); } } }
+      function showPreviewRoutes() { if (busy || !routeLayer || selectedSavedPlayId) { clearRoutes(); return; } const refs = getRequiredAnimals(['bear', 'monkey', 'horse', 'fox']); if (!refs) { clearRoutes(); return; } clearRoutes(); const { bear, monkey, horse, fox } = refs; const b = pctToView(bear.x, bear.y); if (selectedPlay === 'slant') { const m = pctToView(monkey.x + 4, monkey.y - 2); routeLayer.append(createPath([b, { x: b.x + 90, y: b.y - 55 }, { x: m.x - 55, y: m.y - 12 }, m], '#7dd3fc'), createArrow(m.x - 22, m.y - 4, m.x, m.y, '#7dd3fc')); } else if (selectedPlay === 'handoff') { const h = pctToView(horse.x + 12, horse.y - 4); routeLayer.append(createPath([b, h], '#ffd447'), createArrow(h.x - 18, h.y + 2, h.x, h.y, '#ffd447')); } else if (selectedPlay === 'go') { const m = pctToView(monkey.x + 1, monkey.y - 18); routeLayer.append(createPath([pctToView(monkey.x, monkey.y), { x: m.x, y: m.y - 80 }, { x: m.x, y: m.y - 160 }], '#7dd3fc'), createArrow(m.x, m.y - 128, m.x, m.y - 160, '#7dd3fc'), createPath([b, { x: b.x + 130, y: b.y - 80 }, { x: m.x, y: m.y - 160 }], '#aef6ff')); } else if (selectedPlay === 'sweep') { const h = pctToView(horse.x, horse.y); routeLayer.append(createPath([h, { x: h.x + 80, y: h.y + 10 }, { x: h.x + 160, y: h.y - 18 }, { x: h.x + 220, y: h.y - 28 }], '#ffd447'), createArrow(h.x + 190, h.y - 25, h.x + 220, h.y - 28, '#ffd447')); } const f = pctToView(fox.x - 8, fox.y + 6); const defensePath = createPath([pctToView(fox.x, fox.y), { x: f.x - 35, y: f.y }, { x: b.x + 25, y: b.y + 12 }], '#ff6d9b'); routeLayer.append(defensePath, createArrow(b.x + 12, b.y + 10, b.x + 25, b.y + 12, '#ff6d9b')); }
+      function createBurst(x, y, color = '#ffd447') { if (!burstLayer) return; const burst = document.createElement('div'); burst.className = 'burst'; burst.style.left = `${x}%`; burst.style.top = `${y}%`; burst.style.background = `radial-gradient(circle, ${color} 0%, rgba(255,170,42,0.68) 46%, rgba(255,170,42,0) 74%)`; burstLayer.appendChild(burst); setTimeout(() => burst.remove(), 600); }
+      function animateFootball(from, to, duration = 900) { return new Promise(resolve => { if (!footballLayer || !from || !to) { resolve(); return; } const ball = document.createElement('div'); ball.className = 'football'; footballLayer.appendChild(ball); const start = performance.now(); function frame(now) { const t = Math.min((now - start) / duration, 1); const x = from.x + (to.x - from.x) * t; const curve = Math.sin(Math.PI * t) * -9; const y = from.y + (to.y - from.y) * t + curve; ball.style.left = `${x}%`; ball.style.top = `${y}%`; ball.style.transform = `translate(-50%, -50%) rotate(${18 + 540 * t}deg)`; if (t < 1) requestAnimationFrame(frame); else { ball.remove(); createBurst(to.x, to.y, '#fff59b'); resolve(); } } requestAnimationFrame(frame); }); }
+      function animateMove(id, points, duration = 1200) { return new Promise(resolve => { const a = getAnimal(id); if (!a || !Array.isArray(points) || points.length < 2) { resolve(); return; } const start = performance.now(); a.el.classList.add('running'); function frame(now) { const t = Math.min((now - start) / duration, 1); const seg = (points.length - 1) * t; const i = Math.min(points.length - 2, Math.floor(seg)); const local = seg - i; const p1 = points[i]; const p2 = points[i + 1]; a.x = p1.x + (p2.x - p1.x) * local; a.y = p1.y + (p2.y - p1.y) * local; updateAnimalPos(a); if (t < 1) requestAnimationFrame(frame); else { a.el.classList.remove('running'); resolve(); } } requestAnimationFrame(frame); }); }
       function advanceDown() { down = down >= 4 ? 1 : down + 1; updateScoreboard(); }
       function showTouchdown() { touchdownBanner.classList.remove('show'); void touchdownBanner.offsetWidth; touchdownBanner.classList.add('show'); createConfetti(); }
+      function createConfetti() { if (!confettiLayer) return; confettiLayer.innerHTML = ''; const colors = ['#ffd15c', '#ff7aa8', '#7dd3fc', '#7dffb2', '#ffffff']; for (let i = 0; i < 26; i += 1) { const piece = document.createElement('div'); piece.className = 'confetti'; piece.style.left = `${4 + Math.random() * 92}%`; piece.style.top = `${2 + Math.random() * 8}%`; piece.style.background = colors[i % colors.length]; piece.style.animationDelay = `${Math.random() * 0.2}s`; confettiLayer.appendChild(piece); } setTimeout(() => { confettiLayer.innerHTML = ''; }, 1700); }
+      function addTouchdown(team = 'home') { if (team === 'home') homeScore += 6; else awayScore += 6; down = 1; updateScoreboard(); showTouchdown(); setStatus(t('Touchdown! Great play!', '达阵！精彩进攻！')); }
+      async function runSlantPlay() { const refs = getRequiredAnimals(['bear', 'monkey']); if (!refs) return false; const { bear, monkey } = refs; const startMonkey = { x: monkey.x, y: monkey.y }; const catchMonkey = { x: startMonkey.x + 14, y: startMonkey.y - 9 }; const afterCatchMonkey = { x: startMonkey.x + 31, y: startMonkey.y - 16 }; clearRoutes(); routeLayer.append(createPath([pctToView(bear.x, bear.y), { x: bear.x * 10 + 90, y: bear.y * 6.2 - 50 }, { x: catchMonkey.x * 10 - 20, y: catchMonkey.y * 6.2 }, pctToView(catchMonkey.x, catchMonkey.y)], '#7dd3fc')); await animateMove('monkey', [startMonkey, { x: startMonkey.x + 7, y: startMonkey.y - 5 }, catchMonkey], 900); await animateFootball({ x: bear.x + 3, y: bear.y - 7 }, { x: catchMonkey.x, y: catchMonkey.y - 6 }, 950); await animateMove('monkey', [catchMonkey, { x: startMonkey.x + 23, y: startMonkey.y - 13 }, afterCatchMonkey], 900); return true; }
+      async function runHandoffPlayAnim() { const refs = getRequiredAnimals(['bear', 'horse', 'fox', 'leopard']); if (!refs) return false; const { bear, horse, fox, leopard } = refs; const startHorse = { x: horse.x, y: horse.y }; const endHorse = { x: startHorse.x + 23, y: startHorse.y - 8 }; clearRoutes(); routeLayer.append(createPath([pctToView(bear.x, bear.y), pctToView(startHorse.x - 2, startHorse.y - 2)], '#ffd447'), createPath([pctToView(startHorse.x, startHorse.y), { x: startHorse.x * 10 + 70, y: startHorse.y * 6.2 }, { x: startHorse.x * 10 + 130, y: startHorse.y * 6.2 - 30 }, { x: endHorse.x * 10, y: endHorse.y * 6.2 }], '#ffd447'), createPath([pctToView(fox.x, fox.y), { x: fox.x * 10 - 40, y: fox.y * 6.2 + 16 }, { x: bear.x * 10 + 60, y: bear.y * 6.2 + 12 }], '#ff6d9b')); await animateFootball({ x: bear.x + 2, y: bear.y - 2 }, { x: startHorse.x - 2, y: startHorse.y - 3 }, 420); await animateMove('horse', [startHorse, { x: startHorse.x + 8, y: startHorse.y }, { x: startHorse.x + 15, y: startHorse.y - 5 }, endHorse], 1200); leopard.el.classList.add('pulled'); createBurst(leopard.x, leopard.y, '#ffd447'); setTimeout(() => leopard.el.classList.remove('pulled'), 600); return true; }
+      async function runGoRoutePlay() { const refs = getRequiredAnimals(['bear', 'monkey', 'rabbit']); if (!refs) return false; const { bear, monkey, rabbit } = refs; const startMonkey = { x: monkey.x, y: monkey.y }; const deepMonkey = { x: startMonkey.x + 2, y: startMonkey.y - 28 }; const scoreMonkey = { x: startMonkey.x + 2, y: 11 }; clearRoutes(); routeLayer.append(createPath([pctToView(startMonkey.x, startMonkey.y), pctToView(deepMonkey.x, deepMonkey.y), pctToView(scoreMonkey.x, scoreMonkey.y)], '#7dd3fc'), createPath([pctToView(bear.x, bear.y), { x: bear.x * 10 + 120, y: bear.y * 6.2 - 120 }, pctToView(scoreMonkey.x, scoreMonkey.y)], '#aef6ff')); await animateMove('monkey', [startMonkey, deepMonkey, scoreMonkey], 1400); await animateFootball({ x: bear.x + 3, y: bear.y - 7 }, { x: scoreMonkey.x, y: scoreMonkey.y + 2 }, 1100); rabbit.el.classList.add('pulled'); setTimeout(() => rabbit.el.classList.remove('pulled'), 500); addTouchdown('home'); return true; }
+      async function runSweepPlay() { const refs = getRequiredAnimals(['horse', 'giraffe']); if (!refs) return false; const { horse, giraffe } = refs; const startHorse = { x: horse.x, y: horse.y }; const endHorse = { x: startHorse.x + 30, y: startHorse.y - 18 }; clearRoutes(); routeLayer.append(createPath([pctToView(startHorse.x, startHorse.y), { x: startHorse.x * 10 + 80, y: startHorse.y * 6.2 + 10 }, { x: startHorse.x * 10 + 160, y: startHorse.y * 6.2 - 18 }, { x: endHorse.x * 10, y: endHorse.y * 6.2 }], '#ffd447')); await animateMove('horse', [startHorse, { x: startHorse.x + 10, y: startHorse.y + 2 }, { x: startHorse.x + 20, y: startHorse.y - 10 }, endHorse], 1200); giraffe.el.classList.add('pulled'); createBurst(giraffe.x, giraffe.y, '#ffd447'); setTimeout(() => giraffe.el.classList.remove('pulled'), 600); return true; }
+      async function runSavedCustomPlay(play) { const animal = getAnimal(play.playerId); if (!animal || !play.points || play.points.length === 0) return false; clearRoutes(); const start = { x: animal.x, y: animal.y }; const points = [start, ...play.points]; await animateMove(play.playerId, points, 1400); if (play.playerId === 'bear' && play.points.length > 0) { const last = play.points[play.points.length - 1]; createBurst(last.x, last.y, '#fff59b'); } return true; }
+      async function runSelectedPlay() { if (busy) return; busy = true; if (selectedSavedPlayId) { const customPlay = getSavedPlayById(selectedSavedPlayId); setStatus(t(`Running custom play ${customPlay?.name || ''}...`, `正在执行自定义战术 ${customPlay?.name || ''}...`)); const ok = customPlay ? await runSavedCustomPlay(customPlay) : false; if (ok) advanceDown(); busy = false; setStatus(ok ? t('Completed custom play.', '已完成自定义战术。') : t('Custom play unavailable.', '当前无法执行自定义战术。')); renderCustomPlaybookLayer(); return; } setStatus(t(`Running ${plays[selectedPlay].enName}...`, `正在执行 ${plays[selectedPlay].zhName}...`)); let ok = false; if (selectedPlay === 'slant') ok = await runSlantPlay(); else if (selectedPlay === 'handoff') ok = await runHandoffPlayAnim(); else if (selectedPlay === 'go') ok = await runGoRoutePlay(); else if (selectedPlay === 'sweep') ok = await runSweepPlay(); if (ok && plays[selectedPlay].downAdvance && !plays[selectedPlay].score) advanceDown(); busy = false; setStatus(ok ? t(`Completed ${plays[selectedPlay].enName}.`, `已完成 ${plays[selectedPlay].zhName}。`) : t('Play unavailable. Reset the field first.', '当前无法执行战术，请先重置球场。')); showPreviewRoutes(); }
+      async function runAutoDemo() { if (busy) return; const original = selectedPlay; const originalSaved = selectedSavedPlayId; selectedSavedPlayId = null; const sequence = ['slant', 'handoff', 'sweep', 'go']; for (const play of sequence) { selectedPlay = play; syncPlayButtons(); updatePlayDescription(); updateScoreboard(); showPreviewRoutes(); await runSelectedPlay(); await wait(450); } selectedPlay = original; selectedSavedPlayId = originalSaved; syncPlayButtons(); updatePlayDescription(); updateScoreboard(); showPreviewRoutes(); }
+      function syncPlayButtons() { document.querySelectorAll('.playbook-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.play === selectedPlay && !selectedSavedPlayId)); }
+      function toggleDrawMode() { drawMode = !drawMode; drawToggleBtn.classList.toggle('active', drawMode); drawToggleBtn.textContent = drawMode ? t('✏️ Draw Mode On', '✏️ 绘制模式开启') : t('✏️ Draw Mode Off', '✏️ 绘制模式关闭'); setStatus(drawMode ? t('Draw mode is on. Click the field to place route points.', '绘制模式已开启。点击球场添加路线点。') : t('Draw mode is off.', '绘制模式已关闭。')); }
+      function renderSavedPlaysList() { savedPlayListEl.innerHTML = ''; if (savedCustomPlays.length === 0) { const empty = document.createElement('div'); empty.className = 'glass rounded-2xl p-4'; empty.textContent = t('No saved plays yet.', '还没有保存的战术。'); savedPlayListEl.appendChild(empty); return; } savedCustomPlays.forEach(play => { const btn = document.createElement('button'); btn.className = `saved-play-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left ${play.id === selectedSavedPlayId ? 'active' : ''}`; btn.textContent = `${play.name} • ${getLocalizedPlayerName(play.playerId)}`; btn.addEventListener('click', () => { selectedSavedPlayId = play.id; updatePlayDescription(); updateScoreboard(); renderSavedPlaysList(); renderCustomPlaybookLayer(); clearRoutes(); setStatus(t(`Selected custom play ${play.name}.`, `已选择自定义战术 ${play.name}。`)); }); savedPlayListEl.appendChild(btn); }); }
+      function saveCurrentDrawing() { if (currentDrawPoints.length < 1) { setStatus(t('Please place at least one route point before saving.', '保存前请至少添加一个路线点。')); return; } const name = customPlayNameInput.value.trim() || `Custom Play ${savedCustomPlays.length + 1}`; const play = { id: `custom-${Date.now()}`, name, playerId: drawPlayerSelect.value, points: currentDrawPoints.map(pt => ({ x: Number(pt.x.toFixed(2)), y: Number(pt.y.toFixed(2)) })) }; savedCustomPlays.push(play); selectedSavedPlayId = play.id; currentDrawPoints = []; renderSavedPlaysList(); renderCustomPlaybookLayer(); updatePlayDescription(); updateScoreboard(); setStatus(t(`Saved ${name}.`, `已保存 ${name}。`)); }
+      function deleteSelectedSavedPlay() { if (!selectedSavedPlayId) { setStatus(t('Select a saved play first.', '请先选择一个已保存的战术。')); return; } savedCustomPlays = savedCustomPlays.filter(play => play.id !== selectedSavedPlayId); selectedSavedPlayId = null; renderSavedPlaysList(); renderCustomPlaybookLayer(); updatePlayDescription(); updateScoreboard(); showPreviewRoutes(); setStatus(t('Deleted saved play.', '已删除保存的战术。')); }
+      function resetField() { if (!hasFieldPieces()) return; busy = false; draggingId = null; down = 1; selectedSavedPlayId = null; renderAnimals(); clearRoutes(); footballLayer.innerHTML = ''; burstLayer.innerHTML = ''; confettiLayer.innerHTML = ''; updateScoreboard(); updateRoleCard('bear'); renderCustomPlaybookLayer(); showPreviewRoutes(); setStatus(t('Ready! Drag the bear or pick a playbook play.', '准备好了！拖动小熊或选择一个战术。')); renderSavedPlaysList(); }
+      function runSmokeTests() { console.assert(hasFieldPieces(), 'Smoke test failed: field pieces missing'); console.assert(baseAnimals.length === 8, 'Smoke test failed: expected 8 animals'); console.assert(typeof pctToView(20, 50).x === 'number', 'Smoke test failed: pctToView x should be number'); console.assert(typeof pctToView(20, 50).y === 'number', 'Smoke test failed: pctToView y should be number'); console.assert(getRequiredAnimals(['bear', 'monkey', 'horse', 'fox']) !== null, 'Smoke test failed: required animals missing after reset'); console.assert(!!document.getElementById('tab-home'), 'Smoke test failed: home tab missing'); console.assert(!!runPlayBtn && !!demoBtn && !!scoreBtn && !!resetBtn, 'Smoke test failed: one or more buttons missing'); console.assert(Array.isArray(savedCustomPlays), 'Smoke test failed: savedCustomPlays should be array'); }
 
-      function createConfetti() {
-        if (!confettiLayer) return;
-        confettiLayer.innerHTML = '';
-        const colors = ['#ffd15c', '#ff7aa8', '#7dd3fc', '#7dffb2', '#ffffff'];
-        for (let i = 0; i < 26; i += 1) {
-          const piece = document.createElement('div');
-          piece.className = 'confetti';
-          piece.style.left = `${4 + Math.random() * 92}%`;
-          piece.style.top = `${2 + Math.random() * 8}%`;
-          piece.style.background = colors[i % colors.length];
-          piece.style.animationDelay = `${Math.random() * 0.2}s`;
-          confettiLayer.appendChild(piece);
-        }
-        setTimeout(() => { confettiLayer.innerHTML = ''; }, 1700);
-      }
+      if (!hasFieldPieces()) { console.error('Flag Football app could not initialize because required DOM elements are missing.'); return; }
 
-      function addTouchdown(team = 'home') {
-        if (team === 'home') homeScore += 6; else awayScore += 6;
-        down = 1;
-        updateScoreboard();
-        showTouchdown();
-        setStatus(t('Touchdown! Great play!', '达阵！精彩进攻！'));
-      }
-
-      async function runSlantPlay() {
-        const refs = getRequiredAnimals(['bear', 'monkey']);
-        if (!refs) return false;
-        const { bear, monkey } = refs;
-        const startMonkey = { x: monkey.x, y: monkey.y };
-        const catchMonkey = { x: startMonkey.x + 14, y: startMonkey.y - 9 };
-        const afterCatchMonkey = { x: startMonkey.x + 31, y: startMonkey.y - 16 };
-        clearRoutes();
-        routeLayer.append(createPath([pctToView(bear.x, bear.y), { x: bear.x * 10 + 90, y: bear.y * 6.2 - 50 }, { x: catchMonkey.x * 10 - 20, y: catchMonkey.y * 6.2 }, pctToView(catchMonkey.x, catchMonkey.y)], '#7dd3fc'));
-        await animateMove('monkey', [startMonkey, { x: startMonkey.x + 7, y: startMonkey.y - 5 }, catchMonkey], 900);
-        await animateFootball({ x: bear.x + 3, y: bear.y - 7 }, { x: catchMonkey.x, y: catchMonkey.y - 6 }, 950);
-        await animateMove('monkey', [catchMonkey, { x: startMonkey.x + 23, y: startMonkey.y - 13 }, afterCatchMonkey], 900);
-        return true;
-      }
-
-      async function runHandoffPlayAnim() {
-        const refs = getRequiredAnimals(['bear', 'horse', 'fox', 'leopard']);
-        if (!refs) return false;
-        const { bear, horse, fox, leopard } = refs;
-        const startHorse = { x: horse.x, y: horse.y };
-        const endHorse = { x: startHorse.x + 23, y: startHorse.y - 8 };
-        clearRoutes();
-        routeLayer.append(createPath([pctToView(bear.x, bear.y), pctToView(startHorse.x - 2, startHorse.y - 2)], '#ffd447'), createPath([pctToView(startHorse.x, startHorse.y), { x: startHorse.x * 10 + 70, y: startHorse.y * 6.2 }, { x: startHorse.x * 10 + 130, y: startHorse.y * 6.2 - 30 }, { x: endHorse.x * 10, y: endHorse.y * 6.2 }], '#ffd447'), createPath([pctToView(fox.x, fox.y), { x: fox.x * 10 - 40, y: fox.y * 6.2 + 16 }, { x: bear.x * 10 + 60, y: bear.y * 6.2 + 12 }], '#ff9dc0'));
-        await animateFootball({ x: bear.x + 2, y: bear.y - 2 }, { x: startHorse.x - 2, y: startHorse.y - 3 }, 420);
-        await animateMove('horse', [startHorse, { x: startHorse.x + 8, y: startHorse.y }, { x: startHorse.x + 15, y: startHorse.y - 5 }, endHorse], 1200);
-        leopard.el.classList.add('pulled'); createBurst(leopard.x, leopard.y, '#ffd447'); setTimeout(() => leopard.el.classList.remove('pulled'), 600);
-        return true;
-      }
-
-      async function runGoRoutePlay() {
-        const refs = getRequiredAnimals(['bear', 'monkey', 'rabbit']);
-        if (!refs) return false;
-        const { bear, monkey, rabbit } = refs;
-        const startMonkey = { x: monkey.x, y: monkey.y };
-        const deepMonkey = { x: startMonkey.x + 2, y: startMonkey.y - 28 };
-        const scoreMonkey = { x: startMonkey.x + 2, y: 11 };
-        clearRoutes();
-        routeLayer.append(createPath([pctToView(startMonkey.x, startMonkey.y), pctToView(deepMonkey.x, deepMonkey.y), pctToView(scoreMonkey.x, scoreMonkey.y)], '#7dd3fc'), createPath([pctToView(bear.x, bear.y), { x: bear.x * 10 + 120, y: bear.y * 6.2 - 120 }, pctToView(scoreMonkey.x, scoreMonkey.y)], '#aef6ff'));
-        await animateMove('monkey', [startMonkey, deepMonkey, scoreMonkey], 1400);
-        await animateFootball({ x: bear.x + 3, y: bear.y - 7 }, { x: scoreMonkey.x, y: scoreMonkey.y + 2 }, 1100);
-        rabbit.el.classList.add('pulled'); setTimeout(() => rabbit.el.classList.remove('pulled'), 500);
-        addTouchdown('home');
-        return true;
-      }
-
-      async function runSweepPlay() {
-        const refs = getRequiredAnimals(['horse', 'giraffe']);
-        if (!refs) return false;
-        const { horse, giraffe } = refs;
-        const startHorse = { x: horse.x, y: horse.y };
-        const endHorse = { x: startHorse.x + 30, y: startHorse.y - 18 };
-        clearRoutes();
-        routeLayer.append(createPath([pctToView(startHorse.x, startHorse.y), { x: startHorse.x * 10 + 80, y: startHorse.y * 6.2 + 10 }, { x: startHorse.x * 10 + 160, y: startHorse.y * 6.2 - 18 }, { x: endHorse.x * 10, y: endHorse.y * 6.2 }], '#ffd447'));
-        await animateMove('horse', [startHorse, { x: startHorse.x + 10, y: startHorse.y + 2 }, { x: startHorse.x + 20, y: startHorse.y - 10 }, endHorse], 1200);
-        giraffe.el.classList.add('pulled'); createBurst(giraffe.x, giraffe.y, '#ffd447'); setTimeout(() => giraffe.el.classList.remove('pulled'), 600);
-        return true;
-      }
-
-      function getSavedPlayById(id) { return savedCustomPlays.find(play => play.id === id) || null; }
-
-      async function runSavedCustomPlay(play) {
-        const animal = getAnimal(play.playerId);
-        if (!animal || !play.points || play.points.length === 0) return false;
-        clearRoutes();
-        const start = { x: animal.x, y: animal.y };
-        const points = [start, ...play.points];
-        await animateMove(play.playerId, points, 1400);
-        if (play.playerId === 'bear' && play.points.length > 0) {
-          const last = play.points[play.points.length - 1];
-          createBurst(last.x, last.y, '#fff59b');
-        }
-        return true;
-      }
-
-      async function runSelectedPlay() {
-        if (busy) return;
-        busy = true;
-
-        if (selectedSavedPlayId) {
-          const customPlay = getSavedPlayById(selectedSavedPlayId);
-          setStatus(t(`Running custom play ${customPlay?.name || ''}...`, `正在执行自定义战术 ${customPlay?.name || ''}...`));
-          const ok = customPlay ? await runSavedCustomPlay(customPlay) : false;
-          if (ok) advanceDown();
-          busy = false;
-          setStatus(ok ? t('Completed custom play.', '已完成自定义战术。') : t('Custom play unavailable.', '当前无法执行自定义战术。'));
-          renderCustomPlaybookLayer();
-          return;
-        }
-
-        setStatus(t(`Running ${plays[selectedPlay].enName}...`, `正在执行 ${plays[selectedPlay].zhName}...`));
-        let ok = false;
-        if (selectedPlay === 'slant') ok = await runSlantPlay();
-        else if (selectedPlay === 'handoff') ok = await runHandoffPlayAnim();
-        else if (selectedPlay === 'go') ok = await runGoRoutePlay();
-        else if (selectedPlay === 'sweep') ok = await runSweepPlay();
-        if (ok && plays[selectedPlay].downAdvance && !plays[selectedPlay].score) advanceDown();
-        busy = false;
-        setStatus(ok ? t(`Completed ${plays[selectedPlay].enName}.`, `已完成 ${plays[selectedPlay].zhName}。`) : t('Play unavailable. Reset the field first.', '当前无法执行战术，请先重置球场。'));
-        showPreviewRoutes();
-      }
-
-      async function runAutoDemo() {
-        if (busy) return;
-        const original = selectedPlay;
-        const originalSaved = selectedSavedPlayId;
-        selectedSavedPlayId = null;
-        const sequence = ['slant', 'handoff', 'sweep', 'go'];
-        for (const play of sequence) {
-          selectedPlay = play;
-          syncPlayButtons();
-          updatePlayDescription();
-          updateScoreboard();
-          showPreviewRoutes();
-          await runSelectedPlay();
-          await wait(450);
-        }
-        selectedPlay = original;
-        selectedSavedPlayId = originalSaved;
-        syncPlayButtons();
-        updatePlayDescription();
-        updateScoreboard();
-        showPreviewRoutes();
-      }
-
-      function syncPlayButtons() {
-        document.querySelectorAll('.playbook-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.play === selectedPlay && !selectedSavedPlayId));
-      }
-
-      function toggleDrawMode() {
-        drawMode = !drawMode;
-        drawToggleBtn.classList.toggle('active', drawMode);
-        drawToggleBtn.textContent = drawMode ? t('✏️ Draw Mode On', '✏️ 绘制模式开启') : t('✏️ Draw Mode Off', '✏️ 绘制模式关闭');
-        setStatus(drawMode ? t('Draw mode is on. Click the field to place route points.', '绘制模式已开启。点击球场添加路线点。') : t('Draw mode is off.', '绘制模式已关闭。'));
-      }
-
-      function renderSavedPlaysList() {
-        savedPlayListEl.innerHTML = '';
-        if (savedCustomPlays.length === 0) {
-          const empty = document.createElement('div');
-          empty.className = 'mini-card';
-          empty.textContent = t('No saved plays yet.', '还没有保存的战术。');
-          savedPlayListEl.appendChild(empty);
-          return;
-        }
-        savedCustomPlays.forEach(play => {
-          const btn = document.createElement('button');
-          btn.className = `saved-play-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left ${play.id === selectedSavedPlayId ? 'active' : ''}`;
-          btn.textContent = `${play.name} • ${getLocalizedPlayerName(play.playerId)}`;
-          btn.addEventListener('click', () => {
-            selectedSavedPlayId = play.id;
-            updatePlayDescription();
-            updateScoreboard();
-            renderSavedPlaysList();
-            renderCustomPlaybookLayer();
-            clearRoutes();
-            setStatus(t(`Selected custom play ${play.name}.`, `已选择自定义战术 ${play.name}。`));
-          });
-          savedPlayListEl.appendChild(btn);
-        });
-      }
-
-      function saveCurrentDrawing() {
-        if (currentDrawPoints.length < 1) {
-          setStatus(t('Please place at least one route point before saving.', '保存前请至少添加一个路线点。'));
-          return;
-        }
-        const name = customPlayNameInput.value.trim() || `Custom Play ${savedCustomPlays.length + 1}`;
-        const play = {
-          id: `custom-${Date.now()}`,
-          name,
-          playerId: drawPlayerSelect.value,
-          points: currentDrawPoints.map(pt => ({ x: Number(pt.x.toFixed(2)), y: Number(pt.y.toFixed(2)) }))
-        };
-        savedCustomPlays.push(play);
-        selectedSavedPlayId = play.id;
-        currentDrawPoints = [];
-        renderSavedPlaysList();
-        renderCustomPlaybookLayer();
-        updatePlayDescription();
-        updateScoreboard();
-        setStatus(t(`Saved ${name}.`, `已保存 ${name}。`));
-      }
-
-      function deleteSelectedSavedPlay() {
-        if (!selectedSavedPlayId) {
-          setStatus(t('Select a saved play first.', '请先选择一个已保存的战术。'));
-          return;
-        }
-        savedCustomPlays = savedCustomPlays.filter(play => play.id !== selectedSavedPlayId);
-        selectedSavedPlayId = null;
-        renderSavedPlaysList();
-        renderCustomPlaybookLayer();
-        updatePlayDescription();
-        updateScoreboard();
-        showPreviewRoutes();
-        setStatus(t('Deleted saved play.', '已删除保存的战术。'));
-      }
-
-      function resetField() {
-        if (!hasFieldPieces()) return;
-        busy = false;
-        draggingId = null;
-        down = 1;
-        selectedSavedPlayId = null;
-        renderAnimals();
-        clearRoutes();
-        footballLayer.innerHTML = '';
-        burstLayer.innerHTML = '';
-        confettiLayer.innerHTML = '';
-        updateScoreboard();
-        updateRoleCard('bear');
-        renderCustomPlaybookLayer();
-        showPreviewRoutes();
-        setStatus(t('Ready! Drag the bear or pick a playbook play.', '准备好了！拖动小熊或选择一个战术。'));
-        renderSavedPlaysList();
-      }
-
-      function runSmokeTests() {
-        console.assert(hasFieldPieces(), 'Smoke test failed: field pieces missing');
-        console.assert(baseAnimals.length === 8, 'Smoke test failed: expected 8 animals');
-        console.assert(typeof pctToView(20, 50).x === 'number', 'Smoke test failed: pctToView x should be number');
-        console.assert(typeof pctToView(20, 50).y === 'number', 'Smoke test failed: pctToView y should be number');
-        console.assert(getRequiredAnimals(['bear', 'monkey', 'horse', 'fox']) !== null, 'Smoke test failed: required animals missing after reset');
-        console.assert(!!document.getElementById('tab-home'), 'Smoke test failed: home tab missing');
-        console.assert(!!runPlayBtn && !!demoBtn && !!scoreBtn && !!resetBtn, 'Smoke test failed: one or more buttons missing');
-        console.assert(typeof plays[selectedPlay].enName === 'string', 'Smoke test failed: playbook data missing');
-        console.assert(typeof playerInfo.bear.enBody === 'string', 'Smoke test failed: player info missing');
-        console.assert(Array.isArray(savedCustomPlays), 'Smoke test failed: savedCustomPlays should be array');
-      }
-
-      if (!hasFieldPieces()) {
-        console.error('Flag Football app could not initialize because required DOM elements are missing.');
-        return;
-      }
-
-      field.addEventListener('pointermove', (e) => {
-        if (!draggingId || !field) return;
-        const a = getAnimal(draggingId);
-        if (!a) { stopDrag(); return; }
-        const rect = field.getBoundingClientRect();
-        a.x = clamp(((e.clientX - rect.left) / rect.width) * 100 - dragOffset.x, 8, 92);
-        a.y = clamp(((e.clientY - rect.top) / rect.height) * 100 - dragOffset.y, 14, 86);
-        updateAnimalPos(a);
-        showPreviewRoutes();
-        renderCustomPlaybookLayer();
-      });
-
-      field.addEventListener('click', (e) => {
-        if (!drawMode || draggingId) return;
-        const rect = field.getBoundingClientRect();
-        const viewX = ((e.clientX - rect.left) / rect.width) * 1000;
-        const viewY = ((e.clientY - rect.top) / rect.height) * 620;
-        const pct = viewToPct(viewX, viewY);
-        currentDrawPoints.push({ x: clamp(pct.x, 4, 96), y: clamp(pct.y, 4, 96) });
-        renderCustomPlaybookLayer();
-        setStatus(t('Added a route point.', '已添加一个路线点。'));
-      });
-
+      field.addEventListener('pointermove', (e) => { if (!draggingId || !field) return; const a = getAnimal(draggingId); if (!a) { stopDrag(); return; } const rect = field.getBoundingClientRect(); a.x = clamp(((e.clientX - rect.left) / rect.width) * 100 - dragOffset.x, 8, 92); a.y = clamp(((e.clientY - rect.top) / rect.height) * 100 - dragOffset.y, 12, 88); updateAnimalPos(a); showPreviewRoutes(); renderCustomPlaybookLayer(); });
+      field.addEventListener('click', (e) => { if (!drawMode || draggingId) return; const rect = field.getBoundingClientRect(); const viewX = ((e.clientX - rect.left) / rect.width) * 1000; const viewY = ((e.clientY - rect.top) / rect.height) * 620; const pct = viewToPct(viewX, viewY); currentDrawPoints.push({ x: clamp(pct.x, 4, 96), y: clamp(pct.y, 4, 96) }); renderCustomPlaybookLayer(); setStatus(t('Added a route point.', '已添加一个路线点。')); });
       window.addEventListener('pointerup', stopDrag);
       field.addEventListener('pointerleave', () => { if (draggingId) stopDrag(); });
       runPlayBtn?.addEventListener('click', runSelectedPlay);
@@ -1412,30 +872,8 @@
       saveCustomPlayBtn?.addEventListener('click', saveCurrentDrawing);
       clearDrawingBtn?.addEventListener('click', () => { clearDrawing(); setStatus(t('Cleared current drawing.', '已清除当前绘制。')); });
       deleteSavedPlayBtn?.addEventListener('click', deleteSelectedSavedPlay);
-
-      document.querySelectorAll('.playbook-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          selectedPlay = btn.dataset.play;
-          selectedSavedPlayId = null;
-          syncPlayButtons();
-          updatePlayDescription();
-          updateScoreboard();
-          renderSavedPlaysList();
-          showPreviewRoutes();
-          setStatus(t(`Selected ${plays[selectedPlay].enName}.`, `已选择 ${plays[selectedPlay].zhName}。`));
-        });
-      });
-
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const tab = btn.dataset.tab;
-          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden-tab'));
-          const panel = document.getElementById(`tab-${tab}`);
-          if (panel) panel.classList.remove('hidden-tab');
-        });
-      });
+      document.querySelectorAll('.playbook-btn').forEach(btn => { btn.addEventListener('click', () => { selectedPlay = btn.dataset.play; selectedSavedPlayId = null; syncPlayButtons(); updatePlayDescription(); updateScoreboard(); renderSavedPlaysList(); showPreviewRoutes(); setStatus(t(`Selected ${plays[selectedPlay].enName}.`, `已选择 ${plays[selectedPlay].zhName}。`)); }); });
+      document.querySelectorAll('.tab-btn').forEach(btn => { btn.addEventListener('click', () => { const tab = btn.dataset.tab; document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden-tab')); const panel = document.getElementById(`tab-${tab}`); if (panel) panel.classList.remove('hidden-tab'); }); });
 
       updateHeaderAndTeams();
       syncPlayButtons();
