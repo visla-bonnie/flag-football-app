@@ -1,310 +1,1093 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flag Football Fun - Coach Byryden Edition</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Fredoka:wght@600&display=swap');
-        body { font-family: 'Comic Neue', cursive; }
-        .title-font { font-family: 'Fredoka', sans-serif; }
-        canvas { 
-            border: 12px solid #f59e0b; 
-            border-radius: 28px; 
-            box-shadow: 0 30px 60px -15px rgba(245,158,11,0.5);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flag Football Fun - Coach Byryden Edition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;700;800&display=swap');
+
+    :root {
+      --grass-1: #0f7a43;
+      --grass-2: #159957;
+      --sky: #c9f1ff;
+      --navy: #17345e;
+      --gold: #ffd15c;
+      --cream: #fff7df;
+      --line: rgba(255,255,255,0.82);
+      --shadow: 0 18px 45px rgba(0,0,0,0.18);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Nunito', sans-serif;
+      color: #fff;
+      background:
+        radial-gradient(circle at top, #dff8ff 0%, #c6f0ff 22%, #89d7ff 22.5%, #89d7ff 23%, #1d9a55 23.5%, #0a713b 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .title-font { font-family: 'Fredoka', sans-serif; }
+    .glass {
+      background: rgba(255,255,255,0.14);
+      border: 2px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+    }
+
+    .field-card {
+      background: linear-gradient(180deg, #21a95f 0%, #0d7a40 100%);
+      border: 10px solid #ffdc6c;
+      border-radius: 28px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.24);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .field {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      min-height: 420px;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,0.02) 0 72px,
+          rgba(255,255,255,0.05) 72px 144px
+        );
+    }
+
+    .field::before,
+    .field::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .field::before {
+      background:
+        linear-gradient(to bottom,
+          transparent 0%, transparent 9%, var(--line) 9.4%, transparent 10%,
+          transparent 19%, var(--line) 19.4%, transparent 20%,
+          transparent 29%, var(--line) 29.4%, transparent 30%,
+          transparent 39%, var(--line) 39.4%, transparent 40%,
+          transparent 49%, var(--line) 49.4%, transparent 50%,
+          transparent 59%, var(--line) 59.4%, transparent 60%,
+          transparent 69%, var(--line) 69.4%, transparent 70%,
+          transparent 79%, var(--line) 79.4%, transparent 80%,
+          transparent 89%, var(--line) 89.4%, transparent 90%);
+      opacity: 0.9;
+    }
+
+    .field::after {
+      border-left: 8px solid rgba(255,255,255,0.9);
+      border-right: 8px solid rgba(255,255,255,0.9);
+      inset: 18px;
+      border-radius: 16px;
+    }
+
+    .endzone {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      height: 54px;
+      border-radius: 14px;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(255,255,255,0.18) 0 14px,
+        rgba(255,255,255,0.05) 14px 28px
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 22px;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.88);
+      text-shadow: 0 3px 12px rgba(0,0,0,0.25);
+      pointer-events: none;
+    }
+
+    .endzone.top { top: 12px; }
+    .endzone.bottom { bottom: 12px; }
+
+    .route-layer, .football-layer, .burst-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .animal {
+      position: absolute;
+      width: 92px;
+      height: 118px;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      user-select: none;
+      touch-action: none;
+      transition: filter 0.18s ease, transform 0.18s ease;
+      z-index: 4;
+    }
+
+    .animal:hover { filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18)); }
+    .animal.dragging { z-index: 7; transform: translate(-50%, -50%) scale(1.06); }
+    .animal .label {
+      position: absolute;
+      left: 50%;
+      bottom: -28px;
+      transform: translateX(-50%);
+      background: rgba(23,52,94,0.88);
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.25);
+      border-radius: 999px;
+      padding: 4px 10px;
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+    }
+
+    .animal .flag {
+      position: absolute;
+      width: 15px;
+      height: 26px;
+      border-radius: 8px;
+      top: 56px;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.1);
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+
+    .animal .flag.left { left: 12px; background: #ff5f87; }
+    .animal .flag.right { right: 12px; background: #ffd447; }
+    .animal.pulled .flag.left { transform: translateX(-24px) rotate(-25deg); opacity: 0.15; }
+    .animal.pulled .flag.right { transform: translateX(24px) rotate(25deg); opacity: 0.15; }
+
+    .animal svg { width: 100%; height: 100%; overflow: visible; }
+
+    .float-bob {
+      animation: bob 1.8s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    .animal.dragging .float-bob,
+    .animal.running .float-bob {
+      animation: runBob 0.35s ease-in-out infinite alternate;
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+
+    @keyframes runBob {
+      0% { transform: translateY(-2px) rotate(-1deg); }
+      100% { transform: translateY(2px) rotate(1deg); }
+    }
+
+    .football {
+      position: absolute;
+      width: 34px;
+      height: 22px;
+      background: #7a3f14;
+      border-radius: 60% 40% 60% 40% / 55% 45% 55% 45%;
+      border: 2px solid #4a230c;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.28);
+      transform: translate(-50%, -50%) rotate(18deg);
+      z-index: 6;
+    }
+
+    .football::before,
+    .football::after {
+      content: "";
+      position: absolute;
+      background: #f8edd5;
+      border-radius: 10px;
+    }
+
+    .football::before {
+      width: 12px;
+      height: 2px;
+      left: 10px;
+      top: 9px;
+      box-shadow: 0 -4px 0 #f8edd5, 0 4px 0 #f8edd5;
+    }
+
+    .football::after {
+      width: 2px;
+      height: 14px;
+      left: 16px;
+      top: 3px;
+    }
+
+    .burst {
+      position: absolute;
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0.3);
+      background: radial-gradient(circle, rgba(255,243,123,0.95) 0%, rgba(255,170,42,0.68) 46%, rgba(255,170,42,0) 74%);
+      animation: burst 0.55s ease-out forwards;
+      z-index: 5;
+    }
+
+    @keyframes burst {
+      0% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.2); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
+    }
+
+    .route-line {
+      fill: none;
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 14 12;
+      opacity: 0.95;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
+      animation: dash 1s linear infinite;
+    }
+
+    .route-arrow {
+      stroke-width: 5;
+      stroke-linecap: round;
+    }
+
+    @keyframes dash {
+      to { stroke-dashoffset: -52; }
+    }
+
+    .hidden-tab { display: none; }
+
+    .tab-btn.active {
+      background: #ffd15c;
+      color: #17345e;
+      box-shadow: 0 10px 25px rgba(255,209,92,0.35);
+    }
+
+    .mini-card {
+      background: rgba(255,255,255,0.14);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 24px;
+      padding: 18px;
+    }
+
+    .lineup-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      background: rgba(255,255,255,0.16);
+      border: 2px solid rgba(255,255,255,0.18);
+    }
+
+    .legend-dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .chalk {
+      position: relative;
+      border-radius: 26px;
+      background: linear-gradient(180deg, #14324b 0%, #0f2435 100%);
+      border: 8px solid #7b563b;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.24);
+      min-height: 380px;
+      overflow: hidden;
+    }
+
+    .chalk svg {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      inset: 0;
+    }
+
+    .status-box {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.12);
+      border: 2px solid rgba(255,255,255,0.18);
+      font-weight: 800;
+      min-height: 54px;
+    }
+
+    .small-note {
+      color: #eaf7ff;
+      opacity: 0.92;
+    }
+
+    @media (max-width: 900px) {
+      .field { min-height: 360px; }
+      .animal { width: 80px; height: 104px; }
+      .lineup-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .field { min-height: 320px; }
+      .animal { width: 74px; height: 98px; }
+    }
+  </style>
 </head>
-<body class="bg-emerald-800 text-white">
-    <!-- Navigation -->
-    <nav class="bg-emerald-700 border-b-4 border-amber-400 py-5 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <span class="text-5xl">🏈</span>
-                <div>
-                    <h1 class="title-font text-4xl font-bold">Flag Football Fun</h1>
-                    <p class="text-amber-300 text-sm">Coach Byryden Enhanced Animation Edition</p>
-                </div>
-            </div>
-            <div class="flex gap-8 text-xl font-bold">
-                <a href="#" onclick="switchTab(0)" class="hover:text-amber-300">🏠 Home</a>
-                <a href="#" onclick="switchTab(1)" class="hover:text-amber-300">📖 What is Flag Football</a>
-                <a href="#" onclick="switchTab(2)" class="hover:text-amber-300">🚫 Fouls</a>
-                <a href="#" onclick="switchTab(3)" class="hover:text-amber-300">⚡ How to Play (5 Players)</a>
-            </div>
+<body>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <header class="glass rounded-[32px] p-5 sm:p-7 mb-6">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+        <div class="flex items-center gap-4">
+          <div class="w-20 h-20 rounded-[26px] bg-white/20 flex items-center justify-center text-5xl shadow-xl">🏈</div>
+          <div>
+            <div class="title-font text-3xl sm:text-5xl font-bold leading-tight">Flag Football Fun</div>
+            <div class="text-yellow-200 font-extrabold text-base sm:text-lg">Coach Byryden classroom app • cute cartoon animals • American flag football</div>
+          </div>
         </div>
+        <div class="glass rounded-[28px] px-5 py-4 max-w-xl">
+          <div class="font-extrabold text-yellow-200 mb-1">What this version adds</div>
+          <div class="text-sm sm:text-base">Full-body cartoon characters, drag-to-run bear movement, passing football animation, route lines, foul lessons, and a 5v5 positions guide for kids and teachers.</div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="glass rounded-[28px] p-3 mb-6 sticky top-3 z-20">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <button class="tab-btn active rounded-2xl px-4 py-3 font-extrabold text-sm sm:text-base bg-white/15" data-tab="home">🏠 Home</button>
+        <button class="tab-btn rounded-2xl px-4 py-3 font-extrabold text-sm sm:text-base bg-white/10" data-tab="about">📘 What is Flag Football?</button>
+        <button class="tab-btn rounded-2xl px-4 py-3 font-extrabold text-sm sm:text-base bg-white/10" data-tab="fouls">🚫 Fouls</button>
+        <button class="tab-btn rounded-2xl px-4 py-3 font-extrabold text-sm sm:text-base bg-white/10" data-tab="positions">⭐ 5v5 Positions</button>
+      </div>
     </nav>
 
-    <div class="max-w-6xl mx-auto px-6 py-10">
-        <!-- Home Tab with Animation -->
-        <div id="tab0" class="tab-content">
-            <div class="grid md:grid-cols-12 gap-12 items-start">
-                <!-- Left Side -->
-                <div class="md:col-span-5">
-                    <h2 class="title-font text-6xl font-bold leading-none mb-6">Animation Classroom!</h2>
-                    <p class="text-2xl mb-8">Drag the little bear to run! Watch cute animals pass the ball, pull flags, and celebrate touchdowns!</p>
-
-                    <div class="bg-amber-400 text-emerald-900 p-8 rounded-3xl text-lg font-bold mb-10">
-                        🖱️ <strong>Tips for Kids:</strong><br><br>
-                        • Drag the 🐻 bear with your mouse to practice running routes<br>
-                        • Click other animals to "pull the flag" and see fun effects<br>
-                        • Click "Auto Demo Attack" to watch the bear throw the ball to the monkey!<br>
-                        • Perfect for classroom projection!
-                    </div>
-
-                    <div class="flex gap-4">
-                        <button onclick="startDemo()" 
-                                class="bg-amber-400 hover:bg-amber-300 text-emerald-900 px-10 py-6 rounded-3xl text-2xl font-bold flex items-center gap-3">
-                            ▶️ Auto Demo Attack
-                        </button>
-                        <button onclick="resetAnimation()" 
-                                class="border-4 border-white hover:bg-white/20 px-8 py-6 rounded-3xl text-2xl font-bold">
-                            Reset Animation 🔄
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Right Side - Interactive Canvas -->
-                <div class="md:col-span-7">
-                    <canvas id="animationCanvas" width="720" height="480"></canvas>
-                    <div class="text-center mt-4 text-amber-300 font-bold text-lg">
-                        🐻 Drag the bear • Click others to pull flags
-                    </div>
-                </div>
+    <main>
+      <section id="tab-home" class="tab-panel">
+        <div class="grid lg:grid-cols-12 gap-6 items-start">
+          <div class="lg:col-span-4 space-y-5">
+            <div class="glass rounded-[30px] p-6">
+              <h2 class="title-font text-4xl font-bold mb-3">Interactive Field</h2>
+              <p class="text-lg leading-8">Drag the little <strong>bear quarterback</strong> to a new spot. Then press a play button to see <strong>route lines</strong> and a real <strong>football pass animation</strong>. Click a defender to practice a <strong>flag pull</strong>.</p>
             </div>
-        </div>
 
-        <!-- Tab 1 -->
-        <div id="tab1" class="tab-content hidden">
-            <h2 class="text-5xl font-bold mb-8">What is Flag Football?</h2>
-            <p class="text-2xl max-w-3xl">Flag Football is a safe, non-contact version of American football. Each player wears a belt with two flags. Defenders tackle by pulling a flag instead of hitting. The goal is to score touchdowns by reaching the end zone!</p>
-        </div>
-
-        <!-- Tab 2 -->
-        <div id="tab2" class="tab-content hidden">
-            <h2 class="text-5xl font-bold mb-8">Common Fouls</h2>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-white/10 p-8 rounded-3xl">
-                    <h3 class="text-3xl font-bold">Flag Guarding</h3>
-                    <p class="text-xl mt-3">Using hands to block your own flag so others can't pull it.</p>
-                    <p class="text-red-400 font-bold mt-6">Penalty: 10 yards + loss of down</p>
-                </div>
-                <div class="bg-white/10 p-8 rounded-3xl">
-                    <h3 class="text-3xl font-bold">Pushing / Illegal Blocking</h3>
-                    <p class="text-xl mt-3">Pushing defenders with your body.</p>
-                    <p class="text-red-400 font-bold mt-6">Penalty: 10 yards + loss of down</p>
-                </div>
+            <div class="glass rounded-[30px] p-6">
+              <div class="font-extrabold text-yellow-200 text-xl mb-3">How kids can use it</div>
+              <ul class="space-y-3 text-base sm:text-lg leading-7">
+                <li>🧸 Move the bear with your mouse or finger.</li>
+                <li>🏈 Watch a short pass, handoff, or touchdown demo.</li>
+                <li>🚩 Click defenders to see the flag-pull effect.</li>
+                <li>📚 Open the learning tabs to read rules and positions.</li>
+              </ul>
             </div>
-        </div>
 
-        <!-- Tab 3 -->
-        <div id="tab3" class="tab-content hidden">
-            <h2 class="text-5xl font-bold mb-8">How to Play with 5 Players</h2>
-            <div class="grid md:grid-cols-2 gap-12 text-xl">
-                <div>
-                    <h3 class="text-amber-300 text-3xl font-bold mb-6">Offense</h3>
-                    <ul class="space-y-5">
-                        <li><strong>🐻 Quarterback (QB)</strong> — Throws the ball</li>
-                        <li><strong>🐒 Wide Receiver (WR)</strong> — Catches the ball</li>
-                        <li><strong>🐴 Running Back (RB)</strong> — Runs with the ball</li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-amber-300 text-3xl font-bold mb-6">Defense</h3>
-                    <ul class="space-y-5">
-                        <li><strong>🐆 Rusher</strong> — Rushes the QB to pull flag</li>
-                        <li><strong>🦒 Defensive Back</strong> — Covers receivers</li>
-                    </ul>
-                </div>
+            <div class="glass rounded-[30px] p-6">
+              <div class="font-extrabold text-yellow-200 text-xl mb-4">Play controls</div>
+              <div class="grid gap-3">
+                <button id="btn-pass" class="rounded-2xl px-4 py-4 bg-yellow-300 text-slate-900 font-extrabold text-lg hover:scale-[1.02] transition">🏈 Pass to Monkey WR</button>
+                <button id="btn-handoff" class="rounded-2xl px-4 py-4 bg-pink-300 text-slate-900 font-extrabold text-lg hover:scale-[1.02] transition">🤝 Handoff to Horse RB</button>
+                <button id="btn-demo" class="rounded-2xl px-4 py-4 bg-cyan-300 text-slate-900 font-extrabold text-lg hover:scale-[1.02] transition">▶️ Auto Demo Play</button>
+                <button id="btn-reset" class="rounded-2xl px-4 py-4 bg-white/15 text-white font-extrabold text-lg border-2 border-white/20 hover:bg-white/20 transition">🔄 Reset Field</button>
+              </div>
+              <div id="status-box" class="status-box mt-4">Ready! Drag the bear or start a play.</div>
             </div>
+          </div>
+
+          <div class="lg:col-span-8">
+            <div class="field-card">
+              <div class="field" id="field">
+                <div class="endzone top">TOUCHDOWN ZONE</div>
+                <div class="endzone bottom">TOUCHDOWN ZONE</div>
+                <svg class="route-layer" id="route-layer" viewBox="0 0 1000 620" preserveAspectRatio="none"></svg>
+                <div class="football-layer" id="football-layer"></div>
+                <div class="burst-layer" id="burst-layer"></div>
+              </div>
+            </div>
+            <div class="mt-4 flex flex-wrap gap-3 text-sm sm:text-base font-bold">
+              <span class="pill"><span class="legend-dot" style="background:#ffd447"></span>Offense learning routes</span>
+              <span class="pill"><span class="legend-dot" style="background:#ff6d9b"></span>Defense / flag pull fun</span>
+              <span class="pill"><span class="legend-dot" style="background:#7dd3fc"></span>Animated football pass</span>
+            </div>
+          </div>
         </div>
-    </div>
+      </section>
 
-    <script>
-        let canvas, ctx;
-        let animals = [];
-        let football = { x: 0, y: 0, vx: 0, vy: 0, active: false };
-        let particles = [];
-        let mouse = { x: 360, y: 240, dragging: false };
-        let isDemoRunning = false;
+      <section id="tab-about" class="tab-panel hidden-tab">
+        <div class="grid lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-7 glass rounded-[30px] p-7">
+            <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">What is Flag Football?</h2>
+            <p class="text-lg sm:text-xl leading-9 mb-5">Flag football is a <strong>safe, non-contact version of American football</strong>. Instead of tackling, defenders pull a player’s <strong>flag belt</strong> to stop the play. Teams try to move the ball down the field and score a touchdown in the end zone.</p>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div class="mini-card">
+                <div class="text-3xl mb-2">🏈</div>
+                <div class="font-extrabold text-xl mb-1">What players do</div>
+                <div>Throw, catch, run routes, hand off, defend passes, and pull flags.</div>
+              </div>
+              <div class="mini-card">
+                <div class="text-3xl mb-2">🚩</div>
+                <div class="font-extrabold text-xl mb-1">How a play stops</div>
+                <div>A defender pulls the ball carrier’s flag, a pass falls incomplete, or a score happens.</div>
+              </div>
+              <div class="mini-card">
+                <div class="text-3xl mb-2">🧠</div>
+                <div class="font-extrabold text-xl mb-1">What kids learn</div>
+                <div>Teamwork, spacing, routes, passing timing, defense, and sportsmanship.</div>
+              </div>
+              <div class="mini-card">
+                <div class="text-3xl mb-2">😊</div>
+                <div class="font-extrabold text-xl mb-1">Why it’s fun</div>
+                <div>Fast plays, lots of movement, easier safety rules, and everyone can join in.</div>
+              </div>
+            </div>
+          </div>
+          <div class="lg:col-span-5 glass rounded-[30px] p-7">
+            <h3 class="title-font text-3xl font-bold mb-4">Simple kid-friendly game flow</h3>
+            <div class="space-y-4 text-lg leading-8">
+              <div class="mini-card"><strong>1. Start the play</strong><br />The center snaps the ball to the quarterback.</div>
+              <div class="mini-card"><strong>2. Choose a move</strong><br />The offense can pass, hand off, or run.</div>
+              <div class="mini-card"><strong>3. Defend safely</strong><br />The defense covers players and tries to pull the flag.</div>
+              <div class="mini-card"><strong>4. Score!</strong><br />If the offense reaches the end zone, that is a touchdown.</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        class Animal {
-            constructor(x, y, emoji, name) {
-                this.x = x;
-                this.y = y;
-                this.emoji = emoji;
-                this.name = name;
-            }
-            draw() {
-                ctx.font = '72px system-ui';
-                ctx.textAlign = 'center';
-                ctx.fillText(this.emoji, this.x, this.y);
-                ctx.font = 'bold 17px Comic Neue';
-                ctx.fillStyle = 'white';
-                ctx.fillText(this.name, this.x, this.y + 62);
-            }
+      <section id="tab-fouls" class="tab-panel hidden-tab">
+        <div class="glass rounded-[30px] p-7">
+          <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">Common Fouls</h2>
+          <p class="text-lg sm:text-xl leading-8 mb-6">These are common kid-friendly examples teachers can explain. Exact penalties can vary by school or league, so coaches can customize the wording later.</p>
+          <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div class="mini-card"><div class="text-4xl mb-3">🚫🖐️</div><div class="font-extrabold text-2xl mb-2">Flag Guarding</div><div>Using hands, arms, or the ball to block a defender from pulling your flag.</div></div>
+            <div class="mini-card"><div class="text-4xl mb-3">🚫💥</div><div class="font-extrabold text-2xl mb-2">Illegal Contact</div><div>Pushing, tackling, or rough contact instead of safe flag football play.</div></div>
+            <div class="mini-card"><div class="text-4xl mb-3">🚫⏱️</div><div class="font-extrabold text-2xl mb-2">Offside</div><div>Starting across the line before the ball is snapped.</div></div>
+            <div class="mini-card"><div class="text-4xl mb-3">🚫🌀</div><div class="font-extrabold text-2xl mb-2">Spinning Into Contact</div><div>Turning or jumping into defenders in a dangerous way.</div></div>
+            <div class="mini-card"><div class="text-4xl mb-3">🚫🤾</div><div class="font-extrabold text-2xl mb-2">Illegal Screen / Block</div><div>Getting in someone’s way with the body when the rules do not allow blocking.</div></div>
+            <div class="mini-card"><div class="text-4xl mb-3">🚫🎯</div><div class="font-extrabold text-2xl mb-2">Pass Interference</div><div>Grabbing or bumping a receiver too early while the ball is in the air.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-positions" class="tab-panel hidden-tab">
+        <div class="grid lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-5 glass rounded-[30px] p-7">
+            <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">5v5 Positions</h2>
+            <p class="text-lg sm:text-xl leading-8 mb-5">This tab gives a simple overview of the main jobs kids may hear about in class or practice.</p>
+            <div class="space-y-3 text-lg">
+              <div class="mini-card"><strong>Quarterback (QB)</strong><br />Gets the snap and decides to throw, hand off, or run.</div>
+              <div class="mini-card"><strong>Center</strong><br />Snaps the ball to start the play.</div>
+              <div class="mini-card"><strong>Wide Receiver (WR)</strong><br />Runs routes and catches passes.</div>
+              <div class="mini-card"><strong>Running Back (RB)</strong><br />Can take handoffs, run, or catch short passes.</div>
+              <div class="mini-card"><strong>Rusher / Defensive Back / Safety / Linebacker</strong><br />These defenders rush the QB, cover receivers, help in the middle, and protect deep passes depending on the scheme.</div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 space-y-6">
+            <div class="chalk p-6">
+              <svg viewBox="0 0 1000 620" preserveAspectRatio="none">
+                <rect x="28" y="28" width="944" height="564" rx="24" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="8"/>
+                <line x1="100" y1="310" x2="900" y2="310" stroke="rgba(255,255,255,0.6)" stroke-width="6" stroke-dasharray="10 12"/>
+                <text x="84" y="88" fill="#dff7ff" font-size="40" font-family="Fredoka">OFFENSE</text>
+                <text x="760" y="88" fill="#dff7ff" font-size="40" font-family="Fredoka">DEFENSE</text>
+
+                <circle cx="200" cy="320" r="36" fill="#ffd15c"/>
+                <circle cx="310" cy="220" r="36" fill="#ffd15c"/>
+                <circle cx="310" cy="420" r="36" fill="#ffd15c"/>
+                <circle cx="140" cy="320" r="36" fill="#ffd15c"/>
+                <circle cx="390" cy="320" r="36" fill="#ffd15c"/>
+
+                <circle cx="650" cy="220" r="36" fill="#ff7aa8"/>
+                <circle cx="650" cy="420" r="36" fill="#ff7aa8"/>
+                <circle cx="745" cy="320" r="36" fill="#ff7aa8"/>
+                <circle cx="845" cy="210" r="36" fill="#ff7aa8"/>
+                <circle cx="845" cy="430" r="36" fill="#ff7aa8"/>
+
+                <text x="178" y="330" fill="#17345e" font-size="24" font-weight="800">QB</text>
+                <text x="286" y="230" fill="#17345e" font-size="24" font-weight="800">WR</text>
+                <text x="286" y="430" fill="#17345e" font-size="24" font-weight="800">RB</text>
+                <text x="113" y="330" fill="#17345e" font-size="22" font-weight="800">C</text>
+                <text x="364" y="330" fill="#17345e" font-size="22" font-weight="800">WR</text>
+
+                <text x="610" y="230" fill="#fff" font-size="20" font-weight="800">DB</text>
+                <text x="610" y="430" fill="#fff" font-size="20" font-weight="800">DB</text>
+                <text x="710" y="330" fill="#fff" font-size="18" font-weight="800">LB</text>
+                <text x="804" y="220" fill="#fff" font-size="16" font-weight="800">S</text>
+                <text x="786" y="440" fill="#fff" font-size="16" font-weight="800">Rusher</text>
+
+                <path d="M 200 320 C 235 300, 270 270, 300 240" stroke="#7dd3fc" stroke-width="7" fill="none" stroke-dasharray="12 10"/>
+                <path d="M 310 420 C 390 420, 470 420, 540 470" stroke="#7dd3fc" stroke-width="7" fill="none" stroke-dasharray="12 10"/>
+                <path d="M 845 430 C 810 410, 760 380, 705 350" stroke="#ff9dc0" stroke-width="7" fill="none" stroke-dasharray="12 10"/>
+              </svg>
+            </div>
+
+            <div class="glass rounded-[30px] p-6">
+              <div class="lineup-grid text-slate-900">
+                <div class="rounded-3xl bg-yellow-300 p-4"><div class="font-extrabold text-xl">QB</div><div>Leader with the ball</div></div>
+                <div class="rounded-3xl bg-yellow-300 p-4"><div class="font-extrabold text-xl">Center</div><div>Snaps the ball</div></div>
+                <div class="rounded-3xl bg-yellow-300 p-4"><div class="font-extrabold text-xl">WR</div><div>Catches passes</div></div>
+                <div class="rounded-3xl bg-pink-300 p-4"><div class="font-extrabold text-xl">Rusher</div><div>Runs at the QB</div></div>
+                <div class="rounded-3xl bg-pink-300 p-4"><div class="font-extrabold text-xl">Safety</div><div>Helps deep</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const field = document.getElementById('field');
+      const routeLayer = document.getElementById('route-layer');
+      const footballLayer = document.getElementById('football-layer');
+      const burstLayer = document.getElementById('burst-layer');
+      const statusBox = document.getElementById('status-box');
+      const passBtn = document.getElementById('btn-pass');
+      const handoffBtn = document.getElementById('btn-handoff');
+      const demoBtn = document.getElementById('btn-demo');
+      const resetBtn = document.getElementById('btn-reset');
+
+      const baseAnimals = [
+        { id: 'bear', name: 'Bear QB', type: 'bear', team: 'offense', x: 20, y: 50 },
+        { id: 'monkey', name: 'Monkey WR', type: 'monkey', team: 'offense', x: 36, y: 29 },
+        { id: 'horse', name: 'Horse RB', type: 'horse', team: 'offense', x: 42, y: 71 },
+        { id: 'pony', name: 'Pony Center', type: 'pony', team: 'offense', x: 13, y: 50 },
+        { id: 'leopard', name: 'Leopard Rusher', type: 'leopard', team: 'defense', x: 80, y: 36 },
+        { id: 'giraffe', name: 'Giraffe DB', type: 'giraffe', team: 'defense', x: 78, y: 68 },
+        { id: 'rabbit', name: 'Rabbit Safety', type: 'rabbit', team: 'defense', x: 89, y: 24 },
+        { id: 'fox', name: 'Fox Linebacker', type: 'fox', team: 'defense', x: 69, y: 50 }
+      ];
+
+      let animals = [];
+      let animalMap = {};
+      let draggingId = null;
+      let dragOffset = { x: 0, y: 0 };
+      let busy = false;
+
+      function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+      function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+      function setStatus(message) {
+        if (statusBox) statusBox.textContent = message;
+      }
+
+      function hasFieldPieces() {
+        return !!(field && routeLayer && footballLayer && burstLayer);
+      }
+
+      function getAnimal(id) {
+        const animal = animalMap[id];
+        return animal && typeof animal.x === 'number' && typeof animal.y === 'number' ? animal : null;
+      }
+
+      function getRequiredAnimals(ids) {
+        const resolved = {};
+        for (const id of ids) {
+          const animal = getAnimal(id);
+          if (!animal) {
+            console.warn(`Missing animal: ${id}`);
+            return null;
+          }
+          resolved[id] = animal;
         }
+        return resolved;
+      }
 
-        function initCanvas() {
-            canvas = document.getElementById('animationCanvas');
-            ctx = canvas.getContext('2d');
-
-            animals = [
-                new Animal(160, 200, '🐻', 'Bear - QB'),
-                new Animal(400, 160, '🐒', 'Monkey - WR'),
-                new Animal(540, 270, '🐴', 'Horse - RB'),
-                new Animal(570, 130, '🐆', 'Leopard - Rusher'),
-                new Animal(250, 340, '🦒', 'Giraffe - DB')
-            ];
-
-            canvas.addEventListener('mousedown', e => {
-                const rect = canvas.getBoundingClientRect();
-                mouse.x = e.clientX - rect.left;
-                mouse.y = e.clientY - rect.top;
-                mouse.dragging = true;
-            });
-
-            canvas.addEventListener('mousemove', e => {
-                const rect = canvas.getBoundingClientRect();
-                mouse.x = e.clientX - rect.left;
-                mouse.y = e.clientY - rect.top;
-            });
-
-            canvas.addEventListener('mouseup', () => mouse.dragging = false);
-            canvas.addEventListener('mouseleave', () => mouse.dragging = false);
-
-            // Click to pull flag
-            canvas.addEventListener('click', e => {
-                const rect = canvas.getBoundingClientRect();
-                const cx = e.clientX - rect.left;
-                const cy = e.clientY - rect.top;
-                animals.forEach(a => {
-                    if (Math.hypot(cx - a.x, cy - a.y) < 80 && a.emoji !== '🐻') {
-                        a.y += 25;
-                        setTimeout(() => a.y -= 25, 280);
-                    }
-                });
-            });
-        }
-
-        function createParticles(x, y) {
-            for (let i = 0; i < 35; i++) {
-                particles.push({
-                    x: x,
-                    y: y,
-                    vx: (Math.random() - 0.5) * 12,
-                    vy: (Math.random() - 0.5) * 10 - 3,
-                    life: 45,
-                    color: '#fcd34d'
-                });
-            }
-        }
-
-        function throwFootball() {
-            const qb = animals[0];
-            const wr = animals[1];
-            football = {
-                x: qb.x + 45,
-                y: qb.y - 35,
-                vx: (wr.x - qb.x - 20) / 25,
-                vy: (wr.y - qb.y - 40) / 25 - 7,
-                active: true,
-                target: wr
-            };
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#166534';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Field lines
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 7;
-            for (let i = 70; i < 480; i += 85) {
-                ctx.beginPath();
-                ctx.moveTo(40, i);
-                ctx.lineTo(680, i);
-                ctx.stroke();
-            }
-
-            // Draw animals
-            animals.forEach(animal => {
-                if (animal.emoji === '🐻' && mouse.dragging) {
-                    animal.x = Math.max(60, Math.min(mouse.x, canvas.width - 60));
-                    animal.y = Math.max(80, Math.min(mouse.y, canvas.height - 80));
-                }
-                animal.draw();
-            });
-
-            // Football
-            if (football.active) {
-                football.x += football.vx;
-                football.y += football.vy;
-                football.vy += 0.32;
-
-                ctx.font = '46px system-ui';
-                ctx.fillText('🏈', football.x, football.y);
-
-                if (football.target) {
-                    const dx = football.x - football.target.x;
-                    const dy = football.y - football.target.y;
-                    if (Math.hypot(dx, dy) < 50) {
-                        football.active = false;
-                        createParticles(football.x, football.y);
-                    }
-                }
-            }
-
-            // Particles
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.3;
-                p.life--;
-                ctx.globalAlpha = p.life / 45;
-                ctx.fillStyle = p.color;
-                ctx.fillRect(p.x, p.y, 11, 11);
-                if (p.life <= 0) particles.splice(i, 1);
-            }
-            ctx.globalAlpha = 1;
-
-            requestAnimationFrame(animate);
-        }
-
-        function startDemo() {
-            if (isDemoRunning) return;
-            isDemoRunning = true;
-
-            // Reset positions
-            animals[0].x = 160;
-            animals[0].y = 200;
-            animals[1].x = 400;
-            animals[1].y = 160;
-
-            setTimeout(() => throwFootball(), 500);
-            setTimeout(() => isDemoRunning = false, 4000);
-        }
-
-        function resetAnimation() {
-            animals[0].x = 160;
-            animals[0].y = 200;
-            football.active = false;
-            particles = [];
-        }
-
-        function switchTab(n) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('tab' + n).classList.remove('hidden');
-        }
-
-        window.onload = () => {
-            initCanvas();
-            animate();
-            switchTab(0);
+      function animalSVG(type, team) {
+        const jerseys = {
+          offense: { main: '#ffd15c', trim: '#17345e' },
+          defense: { main: '#ff7aa8', trim: '#5b1833' }
         };
-    </script>
+        const j = jerseys[team] || jerseys.offense;
+
+        const configs = {
+          bear: { fur: '#8b5b34', ear: '#6e4325', belly: '#ecd8b5', muzzle: '#f6ead1' },
+          monkey: { fur: '#8d6237', ear: '#6f4929', belly: '#f1d9b5', muzzle: '#f3e6cb' },
+          horse: { fur: '#b47b4f', ear: '#8f5c34', belly: '#f3dfc4', muzzle: '#f4e8d6' },
+          pony: { fur: '#d49a71', ear: '#b5744f', belly: '#f4e1c6', muzzle: '#f8eee1' },
+          leopard: { fur: '#f0c66e', ear: '#cc9643', belly: '#f7e6bf', muzzle: '#fff1d8' },
+          giraffe: { fur: '#edc26e', ear: '#d5954b', belly: '#f8e8bd', muzzle: '#fff1d7' },
+          rabbit: { fur: '#dfe4ec', ear: '#ffb8d4', belly: '#ffffff', muzzle: '#fff3f8' },
+          fox: { fur: '#ec9447', ear: '#c66a2b', belly: '#fff0d8', muzzle: '#fff7ea' }
+        };
+
+        const c = configs[type] || configs.bear;
+
+        const spots = type === 'leopard'
+          ? '<circle cx="29" cy="37" r="4" fill="#6d3f17"/><circle cx="57" cy="33" r="4" fill="#6d3f17"/><circle cx="68" cy="55" r="4" fill="#6d3f17"/><circle cx="20" cy="60" r="4" fill="#6d3f17"/>'
+          : type === 'giraffe'
+          ? '<circle cx="28" cy="26" r="5" fill="#b9772f"/><circle cx="55" cy="41" r="5" fill="#b9772f"/><circle cx="24" cy="66" r="5" fill="#b9772f"/><circle cx="64" cy="74" r="5" fill="#b9772f"/>'
+          : '';
+
+        const tail = type === 'monkey'
+          ? '<path d="M78 78 C96 72, 98 94, 84 98" stroke="#6f4929" stroke-width="7" fill="none" stroke-linecap="round"/>'
+          : type === 'horse' || type === 'pony'
+          ? '<path d="M78 78 C92 82, 95 95, 84 103" stroke="#7b4b2c" stroke-width="7" fill="none" stroke-linecap="round"/>'
+          : type === 'fox'
+          ? '<path d="M78 82 C95 89, 99 101, 84 106" stroke="#c66a2b" stroke-width="7" fill="none" stroke-linecap="round"/>'
+          : '<path d="M78 80 C90 84, 93 96, 82 102" stroke="#6d4323" stroke-width="7" fill="none" stroke-linecap="round"/>';
+
+        const ears = type === 'rabbit'
+          ? `
+            <ellipse cx="28" cy="10" rx="9" ry="22" fill="${c.fur}"/>
+            <ellipse cx="28" cy="11" rx="4" ry="16" fill="${c.ear}"/>
+            <ellipse cx="56" cy="10" rx="9" ry="22" fill="${c.fur}"/>
+            <ellipse cx="56" cy="11" rx="4" ry="16" fill="${c.ear}"/>
+          `
+          : type === 'giraffe'
+          ? `
+            <rect x="28" y="4" width="5" height="16" rx="3" fill="#a66d32"/>
+            <rect x="52" y="4" width="5" height="16" rx="3" fill="#a66d32"/>
+            <circle cx="30.5" cy="4" r="4" fill="#a66d32"/>
+            <circle cx="54.5" cy="4" r="4" fill="#a66d32"/>
+          `
+          : `
+            <circle cx="24" cy="22" r="12" fill="${c.ear}"/>
+            <circle cx="60" cy="22" r="12" fill="${c.ear}"/>
+            <circle cx="24" cy="22" r="7" fill="${c.belly}" opacity="0.65"/>
+            <circle cx="60" cy="22" r="7" fill="${c.belly}" opacity="0.65"/>
+          `;
+
+        return `
+          <svg viewBox="0 0 84 112" aria-hidden="true">
+            <g class="float-bob">
+              ${tail}
+              ${ears}
+              <ellipse cx="42" cy="34" rx="26" ry="22" fill="${c.fur}"/>
+              <ellipse cx="42" cy="43" rx="18" ry="13" fill="${c.muzzle}"/>
+              <circle cx="33" cy="32" r="3.2" fill="#1e2334"/>
+              <circle cx="51" cy="32" r="3.2" fill="#1e2334"/>
+              <ellipse cx="42" cy="41" rx="4.5" ry="3.6" fill="#2d1c12"/>
+              <path d="M37 46 Q42 50 47 46" stroke="#6f4a35" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <rect x="23" y="52" width="38" height="28" rx="12" fill="${j.main}"/>
+              <rect x="26" y="55" width="32" height="22" rx="9" fill="${j.main}" stroke="${j.trim}" stroke-width="3"/>
+              <text x="42" y="71" text-anchor="middle" font-family="Fredoka" font-size="15" font-weight="700" fill="${j.trim}">${team === 'offense' ? 'O' : 'D'}</text>
+              <ellipse cx="42" cy="88" rx="20" ry="16" fill="${c.belly}"/>
+              <ellipse cx="28" cy="84" rx="8" ry="16" fill="${c.fur}"/>
+              <ellipse cx="56" cy="84" rx="8" ry="16" fill="${c.fur}"/>
+              <rect x="24" y="95" width="9" height="14" rx="5" fill="${c.fur}"/>
+              <rect x="51" y="95" width="9" height="14" rx="5" fill="${c.fur}"/>
+              <ellipse cx="28.5" cy="109" rx="9" ry="4" fill="#3c2a1f" opacity="0.85"/>
+              <ellipse cx="55.5" cy="109" rx="9" ry="4" fill="#3c2a1f" opacity="0.85"/>
+              ${spots}
+            </g>
+          </svg>
+        `;
+      }
+
+      function createAnimal(a) {
+        const el = document.createElement('div');
+        el.className = 'animal';
+        el.dataset.id = a.id;
+        el.style.left = `${a.x}%`;
+        el.style.top = `${a.y}%`;
+        el.innerHTML = `
+          <div class="flag left"></div>
+          <div class="flag right"></div>
+          ${animalSVG(a.type, a.team)}
+          <div class="label">${a.name}</div>
+        `;
+
+        el.addEventListener('pointerdown', (e) => startDrag(e, a.id));
+        el.addEventListener('click', (e) => handleAnimalClick(e, a.id));
+        field.appendChild(el);
+
+        return { ...a, el };
+      }
+
+      function renderAnimals() {
+        if (!field) return;
+        field.querySelectorAll('.animal').forEach(n => n.remove());
+        animals = baseAnimals.map(a => createAnimal({ ...a }));
+        animalMap = Object.fromEntries(animals.map(a => [a.id, a]));
+      }
+
+      function updateAnimalPos(a) {
+        if (!a || !a.el) return;
+        a.el.style.left = `${a.x}%`;
+        a.el.style.top = `${a.y}%`;
+      }
+
+      function startDrag(e, id) {
+        if (busy || id !== 'bear') return;
+        const a = getAnimal(id);
+        if (!a || !field) return;
+        draggingId = id;
+        a.el.classList.add('dragging', 'running');
+        const rect = field.getBoundingClientRect();
+        dragOffset.x = ((e.clientX - rect.left) / rect.width) * 100 - a.x;
+        dragOffset.y = ((e.clientY - rect.top) / rect.height) * 100 - a.y;
+        if (typeof a.el.setPointerCapture === 'function') {
+          try { a.el.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+        setStatus('Dragging the bear quarterback...');
+      }
+
+      function stopDrag() {
+        if (!draggingId) return;
+        const a = getAnimal(draggingId);
+        if (a) a.el.classList.remove('dragging', 'running');
+        draggingId = null;
+        setStatus('Bear moved. Pick a play to watch!');
+      }
+
+      function handleAnimalClick(e, id) {
+        if (draggingId) return;
+        const a = getAnimal(id);
+        if (!a) return;
+        if (a.team === 'defense') {
+          a.el.classList.add('pulled');
+          createBurst(a.x, a.y, '#ffd447');
+          setStatus(`${a.name} flag pulled!`);
+          setTimeout(() => a.el.classList.remove('pulled'), 600);
+        }
+      }
+
+      function pctToView(x, y) {
+        return { x: x * 10, y: y * 6.2 };
+      }
+
+      function createPath(points, color) {
+        const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const d = points.map((pt, idx) => `${idx === 0 ? 'M' : 'L'} ${pt.x} ${pt.y}`).join(' ');
+        p.setAttribute('d', d);
+        p.setAttribute('class', 'route-line');
+        p.setAttribute('stroke', color);
+        return p;
+      }
+
+      function createArrow(x1, y1, x2, y2, color) {
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+        line.setAttribute('stroke', color);
+        line.setAttribute('class', 'route-arrow');
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        const size = 12;
+        const wing1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        wing1.setAttribute('x1', x2); wing1.setAttribute('y1', y2);
+        wing1.setAttribute('x2', x2 - size * Math.cos(angle - Math.PI / 6));
+        wing1.setAttribute('y2', y2 - size * Math.sin(angle - Math.PI / 6));
+        wing1.setAttribute('stroke', color);
+        wing1.setAttribute('class', 'route-arrow');
+        const wing2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        wing2.setAttribute('x1', x2); wing2.setAttribute('y1', y2);
+        wing2.setAttribute('x2', x2 - size * Math.cos(angle + Math.PI / 6));
+        wing2.setAttribute('y2', y2 - size * Math.sin(angle + Math.PI / 6));
+        wing2.setAttribute('stroke', color);
+        wing2.setAttribute('class', 'route-arrow');
+        g.append(line, wing1, wing2);
+        return g;
+      }
+
+      function clearRoutes() {
+        if (routeLayer) routeLayer.innerHTML = '';
+      }
+
+      function showPreviewRoutes() {
+        if (busy || !routeLayer) return;
+        const refs = getRequiredAnimals(['bear', 'monkey', 'horse', 'fox']);
+        if (!refs) {
+          clearRoutes();
+          return;
+        }
+
+        clearRoutes();
+        const { bear, monkey, horse, fox } = refs;
+
+        const b = pctToView(bear.x, bear.y);
+        const m = pctToView(monkey.x + 4, monkey.y - 2);
+        const h = pctToView(horse.x + 10, horse.y);
+        const f = pctToView(fox.x - 8, fox.y + 6);
+
+        const passPath = createPath([
+          b,
+          { x: b.x + 90, y: b.y - 55 },
+          { x: m.x - 55, y: m.y - 12 },
+          m
+        ], '#7dd3fc');
+
+        const runPath = createPath([
+          pctToView(horse.x, horse.y),
+          { x: h.x + 60, y: h.y },
+          { x: h.x + 120, y: h.y - 28 },
+          { x: h.x + 175, y: h.y - 28 }
+        ], '#ffd447');
+
+        const defensePath = createPath([
+          pctToView(fox.x, fox.y),
+          { x: f.x - 35, y: f.y },
+          { x: b.x + 25, y: b.y + 12 }
+        ], '#ff9dc0');
+
+        routeLayer.append(
+          passPath,
+          createArrow(m.x - 22, m.y - 4, m.x, m.y, '#7dd3fc'),
+          runPath,
+          createArrow(h.x + 150, h.y - 28, h.x + 175, h.y - 28, '#ffd447'),
+          defensePath,
+          createArrow(b.x + 12, b.y + 10, b.x + 25, b.y + 12, '#ff9dc0')
+        );
+      }
+
+      function createBurst(x, y, color = '#ffd447') {
+        if (!burstLayer) return;
+        const burst = document.createElement('div');
+        burst.className = 'burst';
+        burst.style.left = `${x}%`;
+        burst.style.top = `${y}%`;
+        burst.style.background = `radial-gradient(circle, ${color} 0%, rgba(255,170,42,0.68) 46%, rgba(255,170,42,0) 74%)`;
+        burstLayer.appendChild(burst);
+        setTimeout(() => burst.remove(), 600);
+      }
+
+      function animateFootball(from, to, duration = 900) {
+        return new Promise(resolve => {
+          if (!footballLayer || !from || !to) {
+            resolve();
+            return;
+          }
+          const ball = document.createElement('div');
+          ball.className = 'football';
+          footballLayer.appendChild(ball);
+          const start = performance.now();
+
+          function frame(now) {
+            const t = Math.min((now - start) / duration, 1);
+            const x = from.x + (to.x - from.x) * t;
+            const curve = Math.sin(Math.PI * t) * -9;
+            const y = from.y + (to.y - from.y) * t + curve;
+            ball.style.left = `${x}%`;
+            ball.style.top = `${y}%`;
+            ball.style.transform = `translate(-50%, -50%) rotate(${18 + 540 * t}deg)`;
+            if (t < 1) {
+              requestAnimationFrame(frame);
+            } else {
+              ball.remove();
+              createBurst(to.x, to.y, '#fff59b');
+              resolve();
+            }
+          }
+          requestAnimationFrame(frame);
+        });
+      }
+
+      function animateMove(id, points, duration = 1200) {
+        return new Promise(resolve => {
+          const a = getAnimal(id);
+          if (!a || !Array.isArray(points) || points.length < 2) {
+            resolve();
+            return;
+          }
+          const start = performance.now();
+          a.el.classList.add('running');
+          function frame(now) {
+            const t = Math.min((now - start) / duration, 1);
+            const seg = (points.length - 1) * t;
+            const i = Math.min(points.length - 2, Math.floor(seg));
+            const local = seg - i;
+            const p1 = points[i];
+            const p2 = points[i + 1];
+            a.x = p1.x + (p2.x - p1.x) * local;
+            a.y = p1.y + (p2.y - p1.y) * local;
+            updateAnimalPos(a);
+            if (t < 1) {
+              requestAnimationFrame(frame);
+            } else {
+              a.el.classList.remove('running');
+              resolve();
+            }
+          }
+          requestAnimationFrame(frame);
+        });
+      }
+
+      async function runPassPlay() {
+        if (busy) return;
+        const refs = getRequiredAnimals(['bear', 'monkey']);
+        if (!refs) {
+          setStatus('Play unavailable. Reset the field first.');
+          return;
+        }
+
+        busy = true;
+        setStatus('Passing to Monkey WR...');
+        clearRoutes();
+
+        const { bear, monkey } = refs;
+        const startMonkey = { x: monkey.x, y: monkey.y };
+        const catchMonkey = { x: startMonkey.x + 14, y: startMonkey.y - 9 };
+        const afterCatchMonkey = { x: startMonkey.x + 31, y: startMonkey.y - 16 };
+
+        const path = createPath([
+          pctToView(bear.x, bear.y),
+          { x: bear.x * 10 + 90, y: bear.y * 6.2 - 50 },
+          { x: catchMonkey.x * 10 - 20, y: catchMonkey.y * 6.2 },
+          pctToView(catchMonkey.x, catchMonkey.y)
+        ], '#7dd3fc');
+        routeLayer.append(path);
+
+        await animateMove('monkey', [
+          startMonkey,
+          { x: startMonkey.x + 7, y: startMonkey.y - 5 },
+          catchMonkey
+        ], 900);
+
+        await animateFootball(
+          { x: bear.x + 3, y: bear.y - 7 },
+          { x: catchMonkey.x, y: catchMonkey.y - 6 },
+          950
+        );
+
+        await animateMove('monkey', [
+          catchMonkey,
+          { x: startMonkey.x + 23, y: startMonkey.y - 13 },
+          afterCatchMonkey
+        ], 900);
+
+        busy = false;
+        setStatus('Completed: pass to Monkey WR.');
+        showPreviewRoutes();
+      }
+
+      async function runHandoffPlay() {
+        if (busy) return;
+        const refs = getRequiredAnimals(['bear', 'horse', 'fox', 'leopard']);
+        if (!refs) {
+          setStatus('Play unavailable. Reset the field first.');
+          return;
+        }
+
+        busy = true;
+        setStatus('Handing off to Horse RB...');
+        clearRoutes();
+
+        const { bear, horse, fox, leopard } = refs;
+        const startHorse = { x: horse.x, y: horse.y };
+        const endHorse = { x: startHorse.x + 23, y: startHorse.y - 8 };
+
+        routeLayer.append(
+          createPath([
+            pctToView(bear.x, bear.y),
+            pctToView(startHorse.x - 2, startHorse.y - 2)
+          ], '#ffd447'),
+          createPath([
+            pctToView(startHorse.x, startHorse.y),
+            { x: startHorse.x * 10 + 70, y: startHorse.y * 6.2 },
+            { x: startHorse.x * 10 + 130, y: startHorse.y * 6.2 - 30 },
+            { x: endHorse.x * 10, y: endHorse.y * 6.2 }
+          ], '#ffd447'),
+          createPath([
+            pctToView(fox.x, fox.y),
+            { x: fox.x * 10 - 40, y: fox.y * 6.2 + 16 },
+            { x: bear.x * 10 + 60, y: bear.y * 6.2 + 12 }
+          ], '#ff9dc0')
+        );
+
+        await animateFootball(
+          { x: bear.x + 2, y: bear.y - 2 },
+          { x: startHorse.x - 2, y: startHorse.y - 3 },
+          420
+        );
+
+        await animateMove('horse', [
+          startHorse,
+          { x: startHorse.x + 8, y: startHorse.y },
+          { x: startHorse.x + 15, y: startHorse.y - 5 },
+          endHorse
+        ], 1200);
+
+        leopard.el.classList.add('pulled');
+        createBurst(leopard.x, leopard.y, '#ffd447');
+        setTimeout(() => leopard.el.classList.remove('pulled'), 600);
+
+        busy = false;
+        setStatus('Completed: handoff to Horse RB.');
+        showPreviewRoutes();
+      }
+
+      async function runAutoDemo() {
+        if (busy) return;
+        setStatus('Running auto demo...');
+        await runPassPlay();
+        await wait(500);
+        await runHandoffPlay();
+        await wait(300);
+        createBurst(50, 10, '#fff59b');
+        setStatus('Auto demo finished!');
+      }
+
+      function resetField() {
+        if (!hasFieldPieces()) return;
+        busy = false;
+        draggingId = null;
+        renderAnimals();
+        clearRoutes();
+        footballLayer.innerHTML = '';
+        burstLayer.innerHTML = '';
+        showPreviewRoutes();
+        setStatus('Ready! Drag the bear or start a play.');
+      }
+
+      function runSmokeTests() {
+        console.assert(hasFieldPieces(), 'Smoke test failed: field pieces missing');
+        console.assert(baseAnimals.length === 8, 'Smoke test failed: expected 8 animals');
+        console.assert(typeof pctToView(20, 50).x === 'number', 'Smoke test failed: pctToView x should be number');
+        console.assert(typeof pctToView(20, 50).y === 'number', 'Smoke test failed: pctToView y should be number');
+        console.assert(getRequiredAnimals(['bear', 'monkey', 'horse', 'fox']) !== null, 'Smoke test failed: required animals missing after reset');
+        console.assert(!!document.getElementById('tab-home'), 'Smoke test failed: home tab missing');
+        console.assert(!!passBtn && !!handoffBtn && !!demoBtn && !!resetBtn, 'Smoke test failed: one or more buttons missing');
+      }
+
+      if (!hasFieldPieces()) {
+        console.error('Flag Football app could not initialize because required DOM elements are missing.');
+        return;
+      }
+
+      field.addEventListener('pointermove', (e) => {
+        if (!draggingId || !field) return;
+        const a = getAnimal(draggingId);
+        if (!a) {
+          stopDrag();
+          return;
+        }
+        const rect = field.getBoundingClientRect();
+        a.x = clamp(((e.clientX - rect.left) / rect.width) * 100 - dragOffset.x, 8, 92);
+        a.y = clamp(((e.clientY - rect.top) / rect.height) * 100 - dragOffset.y, 14, 86);
+        updateAnimalPos(a);
+        showPreviewRoutes();
+      });
+
+      window.addEventListener('pointerup', stopDrag);
+      field.addEventListener('pointerleave', () => { if (draggingId) stopDrag(); });
+
+      passBtn?.addEventListener('click', runPassPlay);
+      handoffBtn?.addEventListener('click', runHandoffPlay);
+      demoBtn?.addEventListener('click', runAutoDemo);
+      resetBtn?.addEventListener('click', resetField);
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.tab;
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden-tab'));
+          const panel = document.getElementById(`tab-${tab}`);
+          if (panel) panel.classList.remove('hidden-tab');
+        });
+      });
+
+      resetField();
+      runSmokeTests();
+    });
+  </script>
 </body>
 </html>
