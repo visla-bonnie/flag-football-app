@@ -3,18 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flag Football Fun - Coach Byryden Edition</title>
+  <title>Flag Football Fun - Coach Byryden Edition V2</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;700;800&display=swap');
 
     :root {
-      --grass-1: #0f7a43;
-      --grass-2: #159957;
-      --sky: #c9f1ff;
       --navy: #17345e;
       --gold: #ffd15c;
-      --cream: #fff7df;
       --line: rgba(255,255,255,0.82);
       --shadow: 0 18px 45px rgba(0,0,0,0.18);
     }
@@ -26,14 +22,22 @@
       font-family: 'Nunito', sans-serif;
       color: #fff;
       background:
-        radial-gradient(circle at top, #dff8ff 0%, #c6f0ff 22%, #89d7ff 22.5%, #89d7ff 23%, #1d9a55 23.5%, #0a713b 100%);
+        radial-gradient(circle at top,
+          #bfe9ff 0%,
+          #9ed8ff 20%,
+          #5cc8ff 35%,
+          #2fb36f 60%,
+          #0a713b 100%),
+        radial-gradient(circle at center,
+          rgba(0,0,0,0.12) 0%,
+          rgba(0,0,0,0.22) 100%);
       min-height: 100vh;
       overflow-x: hidden;
     }
 
     .title-font { font-family: 'Fredoka', sans-serif; }
     .glass {
-      background: rgba(255,255,255,0.14);
+      background: linear-gradient(rgba(255,255,255,0.12), rgba(255,255,255,0.08));
       border: 2px solid rgba(255,255,255,0.18);
       backdrop-filter: blur(10px);
       box-shadow: var(--shadow);
@@ -52,7 +56,7 @@
       position: relative;
       width: 100%;
       aspect-ratio: 16 / 10;
-      min-height: 440px;
+      min-height: 460px;
       background:
         repeating-linear-gradient(
           90deg,
@@ -118,7 +122,7 @@
     .endzone.top { top: 12px; }
     .endzone.bottom { bottom: 12px; }
 
-    .route-layer, .football-layer, .burst-layer, .confetti-layer {
+    .route-layer, .football-layer, .burst-layer, .confetti-layer, .custom-playbook-layer {
       position: absolute;
       inset: 0;
       pointer-events: none;
@@ -138,7 +142,7 @@
 
     .animal:hover { filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18)); }
     .animal.dragging { z-index: 7; transform: translate(-50%, -50%) scale(1.06); }
-    .animal.selected { filter: drop-shadow(0 0 0 rgba(0,0,0,0)) drop-shadow(0 0 20px rgba(255,255,255,0.65)); }
+    .animal.selected { filter: drop-shadow(0 0 20px rgba(255,255,255,0.65)); }
     .animal .label {
       position: absolute;
       left: 50%;
@@ -242,7 +246,7 @@
       100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
     }
 
-    .route-line {
+    .route-line, .custom-route-line {
       fill: none;
       stroke-width: 7;
       stroke-linecap: round;
@@ -256,6 +260,17 @@
     .route-arrow {
       stroke-width: 5;
       stroke-linecap: round;
+    }
+
+    .custom-route-line {
+      stroke: #fff59b;
+      stroke-dasharray: 12 10;
+    }
+
+    .draw-dot {
+      fill: #fff59b;
+      stroke: #17345e;
+      stroke-width: 3;
     }
 
     @keyframes dash { to { stroke-dashoffset: -52; } }
@@ -299,23 +314,6 @@
       display: inline-block;
     }
 
-    .chalk {
-      position: relative;
-      border-radius: 26px;
-      background: linear-gradient(180deg, #14324b 0%, #0f2435 100%);
-      border: 8px solid #7b563b;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.24);
-      min-height: 380px;
-      overflow: hidden;
-    }
-
-    .chalk svg {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      inset: 0;
-    }
-
     .scoreboard {
       display: grid;
       grid-template-columns: 1.2fr 0.9fr 1.2fr;
@@ -324,7 +322,7 @@
     }
 
     .score-panel, .score-mid {
-      background: linear-gradient(180deg, rgba(7,18,35,0.9) 0%, rgba(12,32,58,0.9) 100%);
+      background: linear-gradient(180deg, rgba(7,18,35,0.92) 0%, rgba(12,32,58,0.92) 100%);
       border: 2px solid rgba(255,255,255,0.14);
       border-radius: 24px;
       padding: 14px;
@@ -375,9 +373,7 @@
       z-index: 50;
     }
 
-    .touchdown-banner.show {
-      animation: touchdownPop 1.4s ease forwards;
-    }
+    .touchdown-banner.show { animation: touchdownPop 1.4s ease forwards; }
 
     @keyframes touchdownPop {
       0% { opacity: 0; transform: translateX(-50%) scale(0.7); }
@@ -400,7 +396,7 @@
       100% { transform: translateY(300px) rotate(420deg); opacity: 0; }
     }
 
-    .speak-btn {
+    .speak-btn, .small-action-btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -411,9 +407,21 @@
       font-weight: 800;
     }
 
-    .playbook-btn.active {
+    .playbook-btn.active, .draw-toggle.active {
       background: #ffd15c;
       color: #17345e;
+    }
+
+    .saved-play-btn.active {
+      background: #7dd3fc;
+      color: #17345e;
+    }
+
+    .play-list {
+      max-height: 220px;
+      overflow: auto;
+      display: grid;
+      gap: 10px;
     }
 
     .small-note { color: #eaf7ff; opacity: 0.92; }
@@ -447,8 +455,8 @@
             </div>
           </div>
           <div class="glass rounded-[28px] px-5 py-4 max-w-xl">
-            <div class="font-extrabold text-yellow-200 mb-1">Level 2 Upgrade</div>
-            <div class="text-sm sm:text-base">Playbook mode, click-to-learn positions, bilingual labels, teacher custom team names, scoreboard, down & touchdown effects, plus extra cute character skins.</div>
+            <div class="font-extrabold text-yellow-200 mb-1">Version 2 Upgrade</div>
+            <div class="text-sm sm:text-base">Softer background, teacher draw-and-save playbook mode, bilingual labels, scoreboard, touchdown effects, and cute character skins.</div>
           </div>
         </div>
 
@@ -512,17 +520,40 @@
           <div class="lg:col-span-4 space-y-5">
             <div class="glass rounded-[30px] p-6">
               <h2 class="title-font text-4xl font-bold mb-3">Interactive Field</h2>
-              <p class="text-lg leading-8">Drag the little <strong>bear quarterback</strong>. Pick a <strong>playbook play</strong>. Click a player to learn the job in <strong>English + Chinese</strong>. Watch the <strong>scoreboard, down counter, and touchdown animation</strong>.</p>
+              <p class="text-lg leading-8">Drag the bear quarterback. Pick a playbook play. Click a player to learn the role in English + Chinese. Now teachers can also draw and save their own plays.</p>
             </div>
 
             <div class="glass rounded-[30px] p-6">
-              <div class="font-extrabold text-yellow-200 text-xl mb-3">Playbook Mode</div>
+              <div class="font-extrabold text-yellow-200 text-xl mb-3">Built-in Playbook</div>
               <div class="grid gap-3">
                 <button class="playbook-btn active rounded-2xl px-4 py-3 bg-white/15 font-extrabold text-left" data-play="slant">🏈 Slant Pass / 斜线传球</button>
                 <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="handoff">🤝 Handoff Run / 交接跑球</button>
                 <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="go">⚡ Go Route / 直线深传</button>
                 <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="sweep">🌪️ Sweep / 外侧冲跑</button>
               </div>
+            </div>
+
+            <div class="glass rounded-[30px] p-6">
+              <div class="font-extrabold text-yellow-200 text-xl mb-4">Teacher Draw Playbook</div>
+              <div class="grid gap-3">
+                <button id="draw-toggle" class="draw-toggle rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left">✏️ Draw Mode Off</button>
+                <select id="draw-player" class="w-full rounded-xl px-3 py-3 text-slate-900 font-bold">
+                  <option value="bear">Bear QB</option>
+                  <option value="monkey">Monkey WR</option>
+                  <option value="horse">Horse RB</option>
+                  <option value="pony">Pony Center</option>
+                  <option value="leopard">Leopard Rusher</option>
+                  <option value="giraffe">Giraffe DB</option>
+                  <option value="rabbit">Rabbit Safety</option>
+                  <option value="fox">Fox Linebacker</option>
+                </select>
+                <input id="custom-play-name" class="w-full rounded-xl px-3 py-3 text-slate-900 font-bold" value="Coach Bryden Play 1" />
+                <div class="grid grid-cols-2 gap-3">
+                  <button id="save-custom-play" class="rounded-2xl px-4 py-3 bg-yellow-300 text-slate-900 font-extrabold">💾 Save Play</button>
+                  <button id="clear-drawing" class="rounded-2xl px-4 py-3 bg-white/15 text-white font-extrabold border-2 border-white/20">🧹 Clear Draw</button>
+                </div>
+              </div>
+              <div class="small-note mt-3">Turn on Draw Mode, click the field to place points, then save the route.</div>
             </div>
 
             <div class="glass rounded-[30px] p-6">
@@ -554,6 +585,7 @@
                 <div class="endzone top" id="top-endzone">Coach Byryden School</div>
                 <div class="endzone bottom" id="bottom-endzone">Coach Byryden School</div>
                 <svg class="route-layer" id="route-layer" viewBox="0 0 1000 620" preserveAspectRatio="none"></svg>
+                <svg class="custom-playbook-layer" id="custom-playbook-layer" viewBox="0 0 1000 620" preserveAspectRatio="none"></svg>
                 <div class="football-layer" id="football-layer"></div>
                 <div class="burst-layer" id="burst-layer"></div>
                 <div class="confetti-layer" id="confetti-layer"></div>
@@ -562,7 +594,7 @@
             <div class="mt-4 flex flex-wrap gap-3 text-sm sm:text-base font-bold">
               <span class="pill"><span class="legend-dot" style="background:#ffd447"></span>Offense routes</span>
               <span class="pill"><span class="legend-dot" style="background:#ff6d9b"></span>Defense / flag pull</span>
-              <span class="pill"><span class="legend-dot" style="background:#7dd3fc"></span>Animated football pass</span>
+              <span class="pill"><span class="legend-dot" style="background:#fff59b"></span>Teacher custom routes</span>
             </div>
           </div>
 
@@ -584,13 +616,11 @@
             </div>
 
             <div class="glass rounded-[30px] p-6">
-              <h3 class="title-font text-3xl font-bold mb-3">Teacher Ideas</h3>
-              <ul class="space-y-3 text-base leading-7">
-                <li>✅ Use the school/team name boxes for class branding.</li>
-                <li>✅ Let kids click players and read the jobs aloud.</li>
-                <li>✅ Use the language switch for EN / 中文 learning.</li>
-                <li>✅ Run plays and ask students which route they saw.</li>
-              </ul>
+              <div class="flex items-center justify-between gap-3 mb-3">
+                <h3 class="title-font text-3xl font-bold">Saved Plays</h3>
+                <button id="delete-saved-play" class="small-action-btn">🗑️ Delete</button>
+              </div>
+              <div id="saved-play-list" class="play-list"></div>
             </div>
           </div>
         </div>
@@ -600,7 +630,7 @@
         <div class="grid lg:grid-cols-12 gap-6">
           <div class="lg:col-span-7 glass rounded-[30px] p-7">
             <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">What is Flag Football?</h2>
-            <p class="text-lg sm:text-xl leading-9 mb-5">Flag football is a <strong>safe, non-contact version of American football</strong>. Instead of tackling, defenders pull a player’s <strong>flag belt</strong> to stop the play. Teams try to move the ball down the field and score a touchdown in the end zone. 夺旗橄榄球是美式橄榄球的安全版，不用擒抱，而是通过拉旗来停止进攻。</p>
+            <p class="text-lg sm:text-xl leading-9 mb-5">Flag football is a safe, non-contact version of American football. Instead of tackling, defenders pull a player’s flag belt to stop the play. Teams try to move the ball down the field and score a touchdown in the end zone. 夺旗橄榄球是美式橄榄球的安全版，不用擒抱，而是通过拉旗来停止进攻。</p>
             <div class="grid sm:grid-cols-2 gap-4">
               <div class="mini-card"><div class="text-3xl mb-2">🏈</div><div class="font-extrabold text-xl mb-1">What players do / 球员做什么</div><div>Throw, catch, run, defend, and pull flags. 传球、接球、跑动、防守、拉旗。</div></div>
               <div class="mini-card"><div class="text-3xl mb-2">🚩</div><div class="font-extrabold text-xl mb-1">How a play stops / 何时停止</div><div>A flag gets pulled, the pass is incomplete, or a score happens. 拉旗、传球未完成或得分。</div></div>
@@ -650,43 +680,6 @@
           </div>
 
           <div class="lg:col-span-7 space-y-6">
-            <div class="chalk p-6">
-              <svg viewBox="0 0 1000 620" preserveAspectRatio="none">
-                <rect x="28" y="28" width="944" height="564" rx="24" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="8"/>
-                <line x1="100" y1="310" x2="900" y2="310" stroke="rgba(255,255,255,0.6)" stroke-width="6" stroke-dasharray="10 12"/>
-                <text x="84" y="88" fill="#dff7ff" font-size="40" font-family="Fredoka">OFFENSE</text>
-                <text x="760" y="88" fill="#dff7ff" font-size="40" font-family="Fredoka">DEFENSE</text>
-
-                <circle cx="200" cy="320" r="36" fill="#ffd15c"/>
-                <circle cx="310" cy="220" r="36" fill="#ffd15c"/>
-                <circle cx="310" cy="420" r="36" fill="#ffd15c"/>
-                <circle cx="140" cy="320" r="36" fill="#ffd15c"/>
-                <circle cx="390" cy="320" r="36" fill="#ffd15c"/>
-
-                <circle cx="650" cy="220" r="36" fill="#ff7aa8"/>
-                <circle cx="650" cy="420" r="36" fill="#ff7aa8"/>
-                <circle cx="745" cy="320" r="36" fill="#ff7aa8"/>
-                <circle cx="845" cy="210" r="36" fill="#ff7aa8"/>
-                <circle cx="845" cy="430" r="36" fill="#ff7aa8"/>
-
-                <text x="178" y="330" fill="#17345e" font-size="24" font-weight="800">QB</text>
-                <text x="286" y="230" fill="#17345e" font-size="24" font-weight="800">WR</text>
-                <text x="286" y="430" fill="#17345e" font-size="24" font-weight="800">RB</text>
-                <text x="113" y="330" fill="#17345e" font-size="22" font-weight="800">C</text>
-                <text x="364" y="330" fill="#17345e" font-size="22" font-weight="800">WR</text>
-
-                <text x="610" y="230" fill="#fff" font-size="20" font-weight="800">DB</text>
-                <text x="610" y="430" fill="#fff" font-size="20" font-weight="800">DB</text>
-                <text x="710" y="330" fill="#fff" font-size="18" font-weight="800">LB</text>
-                <text x="804" y="220" fill="#fff" font-size="16" font-weight="800">S</text>
-                <text x="786" y="440" fill="#fff" font-size="16" font-weight="800">Rusher</text>
-
-                <path d="M 200 320 C 235 300, 270 270, 300 240" stroke="#7dd3fc" stroke-width="7" fill="none" stroke-dasharray="12 10"/>
-                <path d="M 310 420 C 390 420, 470 420, 540 470" stroke="#7dd3fc" stroke-width="7" fill="none" stroke-dasharray="12 10"/>
-                <path d="M 845 430 C 810 410, 760 380, 705 350" stroke="#ff9dc0" stroke-width="7" fill="none" stroke-dasharray="12 10"/>
-              </svg>
-            </div>
-
             <div class="glass rounded-[30px] p-6">
               <div class="lineup-grid text-slate-900">
                 <div class="rounded-3xl bg-yellow-300 p-4"><div class="font-extrabold text-xl">QB</div><div>Leader with the ball</div></div>
@@ -706,6 +699,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       const field = document.getElementById('field');
       const routeLayer = document.getElementById('route-layer');
+      const customPlaybookLayer = document.getElementById('custom-playbook-layer');
       const footballLayer = document.getElementById('football-layer');
       const burstLayer = document.getElementById('burst-layer');
       const confettiLayer = document.getElementById('confetti-layer');
@@ -735,99 +729,30 @@
       const roleEmojiEl = document.getElementById('role-card-emoji');
       const roleTitleEl = document.getElementById('role-card-title');
       const roleBodyEl = document.getElementById('role-card-body');
+      const drawToggleBtn = document.getElementById('draw-toggle');
+      const drawPlayerSelect = document.getElementById('draw-player');
+      const customPlayNameInput = document.getElementById('custom-play-name');
+      const saveCustomPlayBtn = document.getElementById('save-custom-play');
+      const clearDrawingBtn = document.getElementById('clear-drawing');
+      const savedPlayListEl = document.getElementById('saved-play-list');
+      const deleteSavedPlayBtn = document.getElementById('delete-saved-play');
 
       const playerInfo = {
-        bear: {
-          emoji: '🐻',
-          enTitle: 'Bear QB',
-          zhTitle: '小熊四分卫',
-          enBody: 'Quarterback: throws the ball, starts decisions, and leads the offense.',
-          zhBody: '四分卫：负责传球、做决定，并带领进攻。'
-        },
-        monkey: {
-          emoji: '🐒',
-          enTitle: 'Monkey WR',
-          zhTitle: '小猴子外接手',
-          enBody: 'Wide Receiver: runs routes, gets open, and catches passes.',
-          zhBody: '外接手：跑路线、摆脱防守并接球。'
-        },
-        horse: {
-          emoji: '🐴',
-          enTitle: 'Horse RB',
-          zhTitle: '小马跑卫',
-          enBody: 'Running Back: takes handoffs, runs outside, or catches short passes.',
-          zhBody: '跑卫：接交接球、外侧冲跑，或接短传。'
-        },
-        pony: {
-          emoji: '🐎',
-          enTitle: 'Pony Center',
-          zhTitle: '小马中锋',
-          enBody: 'Center: snaps the ball to begin the play.',
-          zhBody: '中锋：负责开球，把球传给四分卫。'
-        },
-        leopard: {
-          emoji: '🐆',
-          enTitle: 'Leopard Rusher',
-          zhTitle: '豹子突袭手',
-          enBody: 'Rusher: runs toward the quarterback and tries to force a quick decision.',
-          zhBody: '突袭手：冲向四分卫，逼迫对方快速处理球。'
-        },
-        giraffe: {
-          emoji: '🦒',
-          enTitle: 'Giraffe DB',
-          zhTitle: '长颈鹿防守后卫',
-          enBody: 'Defensive Back: covers receivers and tries to stop catches.',
-          zhBody: '防守后卫：盯防接球员，阻止完成接球。'
-        },
-        rabbit: {
-          emoji: '🐰',
-          enTitle: 'Rabbit Safety',
-          zhTitle: '兔子安全卫',
-          enBody: 'Safety: stays deeper to help stop long passes.',
-          zhBody: '安全卫：站位更深，帮助防守长传。'
-        },
-        fox: {
-          emoji: '🦊',
-          enTitle: 'Fox Linebacker',
-          zhTitle: '狐狸线卫',
-          enBody: 'Linebacker: helps in the middle, watches runs, and supports coverage.',
-          zhBody: '线卫：协助中路防守、观察跑球并支援传球防守。'
-        }
+        bear: { emoji: '🐻', enTitle: 'Bear QB', zhTitle: '小熊四分卫', enBody: 'Quarterback: throws the ball, starts decisions, and leads the offense.', zhBody: '四分卫：负责传球、做决定，并带领进攻。' },
+        monkey: { emoji: '🐒', enTitle: 'Monkey WR', zhTitle: '小猴子外接手', enBody: 'Wide Receiver: runs routes, gets open, and catches passes.', zhBody: '外接手：跑路线、摆脱防守并接球。' },
+        horse: { emoji: '🐴', enTitle: 'Horse RB', zhTitle: '小马跑卫', enBody: 'Running Back: takes handoffs, runs outside, or catches short passes.', zhBody: '跑卫：接交接球、外侧冲跑，或接短传。' },
+        pony: { emoji: '🐎', enTitle: 'Pony Center', zhTitle: '小马中锋', enBody: 'Center: snaps the ball to begin the play.', zhBody: '中锋：负责开球，把球传给四分卫。' },
+        leopard: { emoji: '🐆', enTitle: 'Leopard Rusher', zhTitle: '豹子突袭手', enBody: 'Rusher: runs toward the quarterback and tries to force a quick decision.', zhBody: '突袭手：冲向四分卫，逼迫对方快速处理球。' },
+        giraffe: { emoji: '🦒', enTitle: 'Giraffe DB', zhTitle: '长颈鹿防守后卫', enBody: 'Defensive Back: covers receivers and tries to stop catches.', zhBody: '防守后卫：盯防接球员，阻止完成接球。' },
+        rabbit: { emoji: '🐰', enTitle: 'Rabbit Safety', zhTitle: '兔子安全卫', enBody: 'Safety: stays deeper to help stop long passes.', zhBody: '安全卫：站位更深，帮助防守长传。' },
+        fox: { emoji: '🦊', enTitle: 'Fox Linebacker', zhTitle: '狐狸线卫', enBody: 'Linebacker: helps in the middle, watches runs, and supports coverage.', zhBody: '线卫：协助中路防守、观察跑球并支援传球防守。' }
       };
 
       const plays = {
-        slant: {
-          enName: 'Slant Pass',
-          zhName: '斜线传球',
-          enDesc: 'The receiver cuts across the field for a quick pass.',
-          zhDesc: '外接手快速斜切穿过中路接球。',
-          downAdvance: true,
-          score: false
-        },
-        handoff: {
-          enName: 'Handoff Run',
-          zhName: '交接跑球',
-          enDesc: 'The quarterback gives the ball to the running back for a safe run.',
-          zhDesc: '四分卫把球交给跑卫推进。',
-          downAdvance: true,
-          score: false
-        },
-        go: {
-          enName: 'Go Route',
-          zhName: '直线深传',
-          enDesc: 'The receiver runs deep for a long throw.',
-          zhDesc: '外接手直线冲刺，准备接长传。',
-          downAdvance: true,
-          score: true
-        },
-        sweep: {
-          enName: 'Sweep',
-          zhName: '外侧冲跑',
-          enDesc: 'The running back sweeps wide to the outside.',
-          zhDesc: '跑卫向外侧大范围冲跑。',
-          downAdvance: true,
-          score: false
-        }
+        slant: { enName: 'Slant Pass', zhName: '斜线传球', enDesc: 'The receiver cuts across the field for a quick pass.', zhDesc: '外接手快速斜切穿过中路接球。', downAdvance: true, score: false },
+        handoff: { enName: 'Handoff Run', zhName: '交接跑球', enDesc: 'The quarterback gives the ball to the running back for a safe run.', zhDesc: '四分卫把球交给跑卫推进。', downAdvance: true, score: false },
+        go: { enName: 'Go Route', zhName: '直线深传', enDesc: 'The receiver runs deep for a long throw.', zhDesc: '外接手直线冲刺，准备接长传。', downAdvance: true, score: true },
+        sweep: { enName: 'Sweep', zhName: '外侧冲跑', enDesc: 'The running back sweeps wide to the outside.', zhDesc: '跑卫向外侧大范围冲跑。', downAdvance: true, score: false }
       };
 
       const baseAnimals = [
@@ -853,27 +778,20 @@
       let down = 1;
       let selectedAnimalId = 'bear';
       let skinStyle = 'classic';
+      let drawMode = false;
+      let currentDrawPoints = [];
+      let savedCustomPlays = [];
+      let selectedSavedPlayId = null;
 
       function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
       function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
       function setStatus(message) { if (statusBox) statusBox.textContent = message; }
-      function hasFieldPieces() { return !!(field && routeLayer && footballLayer && burstLayer && confettiLayer); }
+      function hasFieldPieces() { return !!(field && routeLayer && footballLayer && burstLayer && confettiLayer && customPlaybookLayer); }
       function getAnimal(id) { const a = animalMap[id]; return a && typeof a.x === 'number' && typeof a.y === 'number' ? a : null; }
-      function getRequiredAnimals(ids) {
-        const resolved = {};
-        for (const id of ids) {
-          const animal = getAnimal(id);
-          if (!animal) return null;
-          resolved[id] = animal;
-        }
-        return resolved;
-      }
-
-      function t(en, zh) {
-        if (languageMode === 'en') return en;
-        if (languageMode === 'zh') return zh;
-        return `${en} / ${zh}`;
-      }
+      function getRequiredAnimals(ids) { const resolved = {}; for (const id of ids) { const a = getAnimal(id); if (!a) return null; resolved[id] = a; } return resolved; }
+      function t(en, zh) { if (languageMode === 'en') return en; if (languageMode === 'zh') return zh; return `${en} / ${zh}`; }
+      function pctToView(x, y) { return { x: x * 10, y: y * 6.2 }; }
+      function viewToPct(x, y) { return { x: x / 10, y: y / 6.2 }; }
 
       function getSkinPalette(team) {
         const base = {
@@ -881,21 +799,9 @@
           defense: { main: '#ff7aa8', trim: '#5b1833', accent: '#ffffff', star: '#5b1833' }
         };
         const palette = base[team] || base.offense;
-        if (skinStyle === 'superhero') {
-          return team === 'offense'
-            ? { main: '#5cc8ff', trim: '#132f57', accent: '#ffef7d', star: '#ffef7d' }
-            : { main: '#ff6584', trim: '#52162c', accent: '#ffd15c', star: '#ffd15c' };
-        }
-        if (skinStyle === 'space') {
-          return team === 'offense'
-            ? { main: '#8f7cff', trim: '#24164d', accent: '#7dffea', star: '#7dffea' }
-            : { main: '#ff89dd', trim: '#4a1742', accent: '#8fe7ff', star: '#8fe7ff' };
-        }
-        if (skinStyle === 'rainbow') {
-          return team === 'offense'
-            ? { main: '#7dffb2', trim: '#0f5e4e', accent: '#ff8fd5', star: '#ff8fd5' }
-            : { main: '#ffc46d', trim: '#784300', accent: '#78b8ff', star: '#78b8ff' };
-        }
+        if (skinStyle === 'superhero') return team === 'offense' ? { main: '#5cc8ff', trim: '#132f57', accent: '#ffef7d', star: '#ffef7d' } : { main: '#ff6584', trim: '#52162c', accent: '#ffd15c', star: '#ffd15c' };
+        if (skinStyle === 'space') return team === 'offense' ? { main: '#8f7cff', trim: '#24164d', accent: '#7dffea', star: '#7dffea' } : { main: '#ff89dd', trim: '#4a1742', accent: '#8fe7ff', star: '#8fe7ff' };
+        if (skinStyle === 'rainbow') return team === 'offense' ? { main: '#7dffb2', trim: '#0f5e4e', accent: '#ff8fd5', star: '#ff8fd5' } : { main: '#ffc46d', trim: '#784300', accent: '#78b8ff', star: '#78b8ff' };
         return palette;
       }
 
@@ -912,80 +818,18 @@
           fox: { fur: '#ec9447', ear: '#c66a2b', belly: '#fff0d8', muzzle: '#fff7ea' }
         };
         const c = configs[type] || configs.bear;
-        const spots = type === 'leopard'
-          ? '<circle cx="29" cy="37" r="4" fill="#6d3f17"/><circle cx="57" cy="33" r="4" fill="#6d3f17"/><circle cx="68" cy="55" r="4" fill="#6d3f17"/><circle cx="20" cy="60" r="4" fill="#6d3f17"/>'
-          : type === 'giraffe'
-          ? '<circle cx="28" cy="26" r="5" fill="#b9772f"/><circle cx="55" cy="41" r="5" fill="#b9772f"/><circle cx="24" cy="66" r="5" fill="#b9772f"/><circle cx="64" cy="74" r="5" fill="#b9772f"/>'
-          : '';
-        const tail = type === 'monkey'
-          ? '<path d="M78 78 C96 72, 98 94, 84 98" stroke="#6f4929" stroke-width="7" fill="none" stroke-linecap="round"/>'
-          : type === 'horse' || type === 'pony'
-          ? '<path d="M78 78 C92 82, 95 95, 84 103" stroke="#7b4b2c" stroke-width="7" fill="none" stroke-linecap="round"/>'
-          : type === 'fox'
-          ? '<path d="M78 82 C95 89, 99 101, 84 106" stroke="#c66a2b" stroke-width="7" fill="none" stroke-linecap="round"/>'
-          : '<path d="M78 80 C90 84, 93 96, 82 102" stroke="#6d4323" stroke-width="7" fill="none" stroke-linecap="round"/>';
+        const spots = type === 'leopard' ? '<circle cx="29" cy="37" r="4" fill="#6d3f17"/><circle cx="57" cy="33" r="4" fill="#6d3f17"/><circle cx="68" cy="55" r="4" fill="#6d3f17"/><circle cx="20" cy="60" r="4" fill="#6d3f17"/>' : type === 'giraffe' ? '<circle cx="28" cy="26" r="5" fill="#b9772f"/><circle cx="55" cy="41" r="5" fill="#b9772f"/><circle cx="24" cy="66" r="5" fill="#b9772f"/><circle cx="64" cy="74" r="5" fill="#b9772f"/>' : '';
+        const tail = type === 'monkey' ? '<path d="M78 78 C96 72, 98 94, 84 98" stroke="#6f4929" stroke-width="7" fill="none" stroke-linecap="round"/>' : type === 'horse' || type === 'pony' ? '<path d="M78 78 C92 82, 95 95, 84 103" stroke="#7b4b2c" stroke-width="7" fill="none" stroke-linecap="round"/>' : type === 'fox' ? '<path d="M78 82 C95 89, 99 101, 84 106" stroke="#c66a2b" stroke-width="7" fill="none" stroke-linecap="round"/>' : '<path d="M78 80 C90 84, 93 96, 82 102" stroke="#6d4323" stroke-width="7" fill="none" stroke-linecap="round"/>';
         const ears = type === 'rabbit'
-          ? `
-            <ellipse cx="28" cy="10" rx="9" ry="22" fill="${c.fur}"/>
-            <ellipse cx="28" cy="11" rx="4" ry="16" fill="${c.ear}"/>
-            <ellipse cx="56" cy="10" rx="9" ry="22" fill="${c.fur}"/>
-            <ellipse cx="56" cy="11" rx="4" ry="16" fill="${c.ear}"/>
-          `
+          ? `<ellipse cx="28" cy="10" rx="9" ry="22" fill="${c.fur}"/><ellipse cx="28" cy="11" rx="4" ry="16" fill="${c.ear}"/><ellipse cx="56" cy="10" rx="9" ry="22" fill="${c.fur}"/><ellipse cx="56" cy="11" rx="4" ry="16" fill="${c.ear}"/>`
           : type === 'giraffe'
-          ? `
-            <rect x="28" y="4" width="5" height="16" rx="3" fill="#a66d32"/>
-            <rect x="52" y="4" width="5" height="16" rx="3" fill="#a66d32"/>
-            <circle cx="30.5" cy="4" r="4" fill="#a66d32"/>
-            <circle cx="54.5" cy="4" r="4" fill="#a66d32"/>
-          `
-          : `
-            <circle cx="24" cy="22" r="12" fill="${c.ear}"/>
-            <circle cx="60" cy="22" r="12" fill="${c.ear}"/>
-            <circle cx="24" cy="22" r="7" fill="${c.belly}" opacity="0.65"/>
-            <circle cx="60" cy="22" r="7" fill="${c.belly}" opacity="0.65"/>
-          `;
-
-        const skinDecor = skinStyle === 'superhero'
-          ? `<path d="M23 58 L61 58 L54 68 L30 68 Z" fill="${j.accent}" opacity="0.9"/><path d="M42 52 L49 40 L56 52 Z" fill="${j.accent}" opacity="0.9"/>`
-          : skinStyle === 'space'
-          ? `<circle cx="63" cy="20" r="6" fill="${j.accent}" opacity="0.95"/><circle cx="18" cy="48" r="3" fill="${j.accent}" opacity="0.85"/><circle cx="64" cy="64" r="3" fill="${j.accent}" opacity="0.85"/>`
-          : skinStyle === 'rainbow'
-          ? `<path d="M26 55 Q42 46 58 55" stroke="${j.accent}" stroke-width="6" fill="none"/><circle cx="28" cy="56" r="4" fill="#ff7aa8"/><circle cx="42" cy="50" r="4" fill="#7dd3fc"/><circle cx="56" cy="56" r="4" fill="#ffd15c"/>`
-          : `<circle cx="42" cy="66" r="6" fill="${j.star}" opacity="0.85"/>`;
-
-        return `
-          <svg viewBox="0 0 84 112" aria-hidden="true">
-            <g class="float-bob">
-              ${tail}
-              ${ears}
-              <ellipse cx="42" cy="34" rx="26" ry="22" fill="${c.fur}"/>
-              <ellipse cx="42" cy="43" rx="18" ry="13" fill="${c.muzzle}"/>
-              <circle cx="33" cy="32" r="3.2" fill="#1e2334"/>
-              <circle cx="51" cy="32" r="3.2" fill="#1e2334"/>
-              <ellipse cx="42" cy="41" rx="4.5" ry="3.6" fill="#2d1c12"/>
-              <path d="M37 46 Q42 50 47 46" stroke="#6f4a35" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-              <rect x="23" y="52" width="38" height="28" rx="12" fill="${j.main}"/>
-              <rect x="26" y="55" width="32" height="22" rx="9" fill="${j.main}" stroke="${j.trim}" stroke-width="3"/>
-              ${skinDecor}
-              <text x="42" y="71" text-anchor="middle" font-family="Fredoka" font-size="15" font-weight="700" fill="${j.trim}">${team === 'offense' ? 'O' : 'D'}</text>
-              <ellipse cx="42" cy="88" rx="20" ry="16" fill="${c.belly}"/>
-              <ellipse cx="28" cy="84" rx="8" ry="16" fill="${c.fur}"/>
-              <ellipse cx="56" cy="84" rx="8" ry="16" fill="${c.fur}"/>
-              <rect x="24" y="95" width="9" height="14" rx="5" fill="${c.fur}"/>
-              <rect x="51" y="95" width="9" height="14" rx="5" fill="${c.fur}"/>
-              <ellipse cx="28.5" cy="109" rx="9" ry="4" fill="#3c2a1f" opacity="0.85"/>
-              <ellipse cx="55.5" cy="109" rx="9" ry="4" fill="#3c2a1f" opacity="0.85"/>
-              ${spots}
-            </g>
-          </svg>
-        `;
+          ? `<rect x="28" y="4" width="5" height="16" rx="3" fill="#a66d32"/><rect x="52" y="4" width="5" height="16" rx="3" fill="#a66d32"/><circle cx="30.5" cy="4" r="4" fill="#a66d32"/><circle cx="54.5" cy="4" r="4" fill="#a66d32"/>`
+          : `<circle cx="24" cy="22" r="12" fill="${c.ear}"/><circle cx="60" cy="22" r="12" fill="${c.ear}"/><circle cx="24" cy="22" r="7" fill="${c.belly}" opacity="0.65"/><circle cx="60" cy="22" r="7" fill="${c.belly}" opacity="0.65"/>`;
+        const skinDecor = skinStyle === 'superhero' ? `<path d="M23 58 L61 58 L54 68 L30 68 Z" fill="${j.accent}" opacity="0.9"/><path d="M42 52 L49 40 L56 52 Z" fill="${j.accent}" opacity="0.9"/>` : skinStyle === 'space' ? `<circle cx="63" cy="20" r="6" fill="${j.accent}" opacity="0.95"/><circle cx="18" cy="48" r="3" fill="${j.accent}" opacity="0.85"/><circle cx="64" cy="64" r="3" fill="${j.accent}" opacity="0.85"/>` : skinStyle === 'rainbow' ? `<path d="M26 55 Q42 46 58 55" stroke="${j.accent}" stroke-width="6" fill="none"/><circle cx="28" cy="56" r="4" fill="#ff7aa8"/><circle cx="42" cy="50" r="4" fill="#7dd3fc"/><circle cx="56" cy="56" r="4" fill="#ffd15c"/>` : `<circle cx="42" cy="66" r="6" fill="${j.star}" opacity="0.85"/>`;
+        return `<svg viewBox="0 0 84 112" aria-hidden="true"><g class="float-bob">${tail}${ears}<ellipse cx="42" cy="34" rx="26" ry="22" fill="${c.fur}"/><ellipse cx="42" cy="43" rx="18" ry="13" fill="${c.muzzle}"/><circle cx="33" cy="32" r="3.2" fill="#1e2334"/><circle cx="51" cy="32" r="3.2" fill="#1e2334"/><ellipse cx="42" cy="41" rx="4.5" ry="3.6" fill="#2d1c12"/><path d="M37 46 Q42 50 47 46" stroke="#6f4a35" stroke-width="2.5" fill="none" stroke-linecap="round"/><rect x="23" y="52" width="38" height="28" rx="12" fill="${j.main}"/><rect x="26" y="55" width="32" height="22" rx="9" fill="${j.main}" stroke="${j.trim}" stroke-width="3"/>${skinDecor}<text x="42" y="71" text-anchor="middle" font-family="Fredoka" font-size="15" font-weight="700" fill="${j.trim}">${team === 'offense' ? 'O' : 'D'}</text><ellipse cx="42" cy="88" rx="20" ry="16" fill="${c.belly}"/><ellipse cx="28" cy="84" rx="8" ry="16" fill="${c.fur}"/><ellipse cx="56" cy="84" rx="8" ry="16" fill="${c.fur}"/><rect x="24" y="95" width="9" height="14" rx="5" fill="${c.fur}"/><rect x="51" y="95" width="9" height="14" rx="5" fill="${c.fur}"/><ellipse cx="28.5" cy="109" rx="9" ry="4" fill="#3c2a1f" opacity="0.85"/><ellipse cx="55.5" cy="109" rx="9" ry="4" fill="#3c2a1f" opacity="0.85"/>${spots}</g></svg>`;
       }
 
-      function getLocalizedPlayerName(id) {
-        const info = playerInfo[id];
-        if (!info) return id;
-        return t(info.enTitle, info.zhTitle);
-      }
+      function getLocalizedPlayerName(id) { const info = playerInfo[id]; if (!info) return id; return t(info.enTitle, info.zhTitle); }
 
       function createAnimal(a) {
         const el = document.createElement('div');
@@ -993,16 +837,19 @@
         el.dataset.id = a.id;
         el.style.left = `${a.x}%`;
         el.style.top = `${a.y}%`;
-        el.innerHTML = `
-          <div class="flag left"></div>
-          <div class="flag right"></div>
-          ${animalSVG(a.type, a.team)}
-          <div class="label">${getLocalizedPlayerName(a.id)}</div>
-        `;
+        el.innerHTML = `<div class="flag left"></div><div class="flag right"></div>${animalSVG(a.type, a.team)}<div class="label">${getLocalizedPlayerName(a.id)}</div>`;
         el.addEventListener('pointerdown', (e) => startDrag(e, a.id));
-        el.addEventListener('click', (e) => handleAnimalClick(e, a.id));
+        el.addEventListener('click', () => handleAnimalClick(a.id));
         field.appendChild(el);
         return { ...a, el };
+      }
+
+      function renderAnimals() {
+        if (!field) return;
+        field.querySelectorAll('.animal').forEach(n => n.remove());
+        animals = baseAnimals.map(a => createAnimal({ ...a }));
+        animalMap = Object.fromEntries(animals.map(a => [a.id, a]));
+        highlightSelectedAnimal();
       }
 
       function refreshAnimalLabels() {
@@ -1015,23 +862,8 @@
         highlightSelectedAnimal();
       }
 
-      function renderAnimals() {
-        if (!field) return;
-        field.querySelectorAll('.animal').forEach(n => n.remove());
-        animals = baseAnimals.map(a => createAnimal({ ...a }));
-        animalMap = Object.fromEntries(animals.map(a => [a.id, a]));
-        highlightSelectedAnimal();
-      }
-
-      function updateAnimalPos(a) {
-        if (!a || !a.el) return;
-        a.el.style.left = `${a.x}%`;
-        a.el.style.top = `${a.y}%`;
-      }
-
-      function highlightSelectedAnimal() {
-        animals.forEach(a => a.el.classList.toggle('selected', a.id === selectedAnimalId));
-      }
+      function updateAnimalPos(a) { if (!a || !a.el) return; a.el.style.left = `${a.x}%`; a.el.style.top = `${a.y}%`; }
+      function highlightSelectedAnimal() { animals.forEach(a => a.el.classList.toggle('selected', a.id === selectedAnimalId)); }
 
       function updateRoleCard(id) {
         const info = playerInfo[id];
@@ -1071,14 +903,16 @@
         homeScoreEl.textContent = String(homeScore);
         awayScoreEl.textContent = String(awayScore);
         downValueEl.textContent = String(down);
-        currentPlayNameEl.textContent = t(plays[selectedPlay].enName, plays[selectedPlay].zhName);
+        currentPlayNameEl.textContent = selectedSavedPlayId ? getSavedPlayById(selectedSavedPlayId)?.name || t(plays[selectedPlay].enName, plays[selectedPlay].zhName) : t(plays[selectedPlay].enName, plays[selectedPlay].zhName);
       }
 
       function updatePlayDescription() {
-        playDescEl.textContent = t(
-          `${plays[selectedPlay].enName}: ${plays[selectedPlay].enDesc}`,
-          `${plays[selectedPlay].zhName}：${plays[selectedPlay].zhDesc}`
-        );
+        if (selectedSavedPlayId) {
+          const play = getSavedPlayById(selectedSavedPlayId);
+          playDescEl.textContent = play ? t(`Custom Play: ${play.name}`, `自定义战术：${play.name}`) : t(`${plays[selectedPlay].enName}: ${plays[selectedPlay].enDesc}`, `${plays[selectedPlay].zhName}：${plays[selectedPlay].zhDesc}`);
+        } else {
+          playDescEl.textContent = t(`${plays[selectedPlay].enName}: ${plays[selectedPlay].enDesc}`, `${plays[selectedPlay].zhName}：${plays[selectedPlay].zhDesc}`);
+        }
       }
 
       function updateAllTextLabels() {
@@ -1092,10 +926,11 @@
         document.getElementById('playbook-mode-label').textContent = t('Play', '战术');
         document.getElementById('score-home-sub').textContent = t('Home Team', '主队');
         document.getElementById('score-away-sub').textContent = t('Away Team', '客队');
+        drawToggleBtn.textContent = drawMode ? t('✏️ Draw Mode On', '✏️ 绘制模式开启') : t('✏️ Draw Mode Off', '✏️ 绘制模式关闭');
       }
 
       function startDrag(e, id) {
-        if (busy || id !== 'bear') return;
+        if (busy || drawMode || id !== 'bear') return;
         const a = getAnimal(id);
         if (!a || !field) return;
         draggingId = id;
@@ -1103,9 +938,7 @@
         const rect = field.getBoundingClientRect();
         dragOffset.x = ((e.clientX - rect.left) / rect.width) * 100 - a.x;
         dragOffset.y = ((e.clientY - rect.top) / rect.height) * 100 - a.y;
-        if (typeof a.el.setPointerCapture === 'function') {
-          try { a.el.setPointerCapture(e.pointerId); } catch (_) {}
-        }
+        if (typeof a.el.setPointerCapture === 'function') { try { a.el.setPointerCapture(e.pointerId); } catch (_) {} }
         setStatus(t('Dragging the bear quarterback...', '正在拖动小熊四分卫...'));
       }
 
@@ -1117,11 +950,15 @@
         setStatus(t('Bear moved. Pick a play to watch!', '小熊已经移动。选择一个战术吧！'));
       }
 
-      function handleAnimalClick(e, id) {
-        if (draggingId) return;
+      function handleAnimalClick(id) {
         const a = getAnimal(id);
         if (!a) return;
         updateRoleCard(id);
+        if (drawMode) {
+          drawPlayerSelect.value = id;
+          setStatus(t(`Now drawing for ${playerInfo[id].enTitle}.`, `现在正在为 ${playerInfo[id].zhTitle} 画路线。`));
+          return;
+        }
         if (a.team === 'defense') {
           a.el.classList.add('pulled');
           createBurst(a.x, a.y, '#ffd447');
@@ -1132,82 +969,89 @@
         }
       }
 
-      function pctToView(x, y) { return { x: x * 10, y: y * 6.2 }; }
-
-      function createPath(points, color) {
+      function createPath(points, color, customClass = 'route-line') {
         const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         const d = points.map((pt, idx) => `${idx === 0 ? 'M' : 'L'} ${pt.x} ${pt.y}`).join(' ');
         p.setAttribute('d', d);
-        p.setAttribute('class', 'route-line');
-        p.setAttribute('stroke', color);
+        p.setAttribute('class', customClass);
+        if (color) p.setAttribute('stroke', color);
         return p;
       }
 
       function createArrow(x1, y1, x2, y2, color) {
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', x1); line.setAttribute('y1', y1);
-        line.setAttribute('x2', x2); line.setAttribute('y2', y2);
-        line.setAttribute('stroke', color); line.setAttribute('class', 'route-arrow');
+        line.setAttribute('x1', x1); line.setAttribute('y1', y1); line.setAttribute('x2', x2); line.setAttribute('y2', y2); line.setAttribute('stroke', color); line.setAttribute('class', 'route-arrow');
         const angle = Math.atan2(y2 - y1, x2 - x1);
         const size = 12;
         const wing1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        wing1.setAttribute('x1', x2); wing1.setAttribute('y1', y2);
-        wing1.setAttribute('x2', x2 - size * Math.cos(angle - Math.PI / 6));
-        wing1.setAttribute('y2', y2 - size * Math.sin(angle - Math.PI / 6));
-        wing1.setAttribute('stroke', color); wing1.setAttribute('class', 'route-arrow');
+        wing1.setAttribute('x1', x2); wing1.setAttribute('y1', y2); wing1.setAttribute('x2', x2 - size * Math.cos(angle - Math.PI / 6)); wing1.setAttribute('y2', y2 - size * Math.sin(angle - Math.PI / 6)); wing1.setAttribute('stroke', color); wing1.setAttribute('class', 'route-arrow');
         const wing2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        wing2.setAttribute('x1', x2); wing2.setAttribute('y1', y2);
-        wing2.setAttribute('x2', x2 - size * Math.cos(angle + Math.PI / 6));
-        wing2.setAttribute('y2', y2 - size * Math.sin(angle + Math.PI / 6));
-        wing2.setAttribute('stroke', color); wing2.setAttribute('class', 'route-arrow');
+        wing2.setAttribute('x1', x2); wing2.setAttribute('y1', y2); wing2.setAttribute('x2', x2 - size * Math.cos(angle + Math.PI / 6)); wing2.setAttribute('y2', y2 - size * Math.sin(angle + Math.PI / 6)); wing2.setAttribute('stroke', color); wing2.setAttribute('class', 'route-arrow');
         g.append(line, wing1, wing2);
         return g;
       }
 
       function clearRoutes() { if (routeLayer) routeLayer.innerHTML = ''; }
+      function clearDrawing() { currentDrawPoints = []; renderCustomPlaybookLayer(); }
+
+      function renderCustomPlaybookLayer() {
+        if (!customPlaybookLayer) return;
+        customPlaybookLayer.innerHTML = '';
+
+        savedCustomPlays.forEach(play => {
+          const player = getAnimal(play.playerId);
+          if (!player) return;
+          const start = pctToView(player.x, player.y);
+          const points = [start, ...play.points.map(pt => pctToView(pt.x, pt.y))];
+          const path = createPath(points, null, 'custom-route-line');
+          path.setAttribute('stroke', play.id === selectedSavedPlayId ? '#fff59b' : 'rgba(255,245,155,0.62)');
+          path.setAttribute('stroke-width', play.id === selectedSavedPlayId ? '8' : '6');
+          customPlaybookLayer.append(path);
+        });
+
+        if (currentDrawPoints.length > 0) {
+          const player = getAnimal(drawPlayerSelect.value);
+          if (player) {
+            const start = pctToView(player.x, player.y);
+            const points = [start, ...currentDrawPoints.map(pt => pctToView(pt.x, pt.y))];
+            const path = createPath(points, null, 'custom-route-line');
+            customPlaybookLayer.append(path);
+            currentDrawPoints.forEach(pt => {
+              const view = pctToView(pt.x, pt.y);
+              const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+              dot.setAttribute('cx', view.x);
+              dot.setAttribute('cy', view.y);
+              dot.setAttribute('r', '7');
+              dot.setAttribute('class', 'draw-dot');
+              customPlaybookLayer.append(dot);
+            });
+          }
+        }
+      }
 
       function showPreviewRoutes() {
-        if (busy || !routeLayer) return;
+        if (busy || !routeLayer || selectedSavedPlayId) { clearRoutes(); return; }
         const refs = getRequiredAnimals(['bear', 'monkey', 'horse', 'fox']);
         if (!refs) { clearRoutes(); return; }
         clearRoutes();
-
         const { bear, monkey, horse, fox } = refs;
         const b = pctToView(bear.x, bear.y);
         if (selectedPlay === 'slant') {
           const m = pctToView(monkey.x + 4, monkey.y - 2);
-          routeLayer.append(
-            createPath([b, { x: b.x + 90, y: b.y - 55 }, { x: m.x - 55, y: m.y - 12 }, m], '#7dd3fc'),
-            createArrow(m.x - 22, m.y - 4, m.x, m.y, '#7dd3fc')
-          );
+          routeLayer.append(createPath([b, { x: b.x + 90, y: b.y - 55 }, { x: m.x - 55, y: m.y - 12 }, m], '#7dd3fc'), createArrow(m.x - 22, m.y - 4, m.x, m.y, '#7dd3fc'));
         } else if (selectedPlay === 'handoff') {
           const h = pctToView(horse.x + 12, horse.y - 4);
-          routeLayer.append(
-            createPath([b, h], '#ffd447'),
-            createArrow(h.x - 18, h.y + 2, h.x, h.y, '#ffd447')
-          );
+          routeLayer.append(createPath([b, h], '#ffd447'), createArrow(h.x - 18, h.y + 2, h.x, h.y, '#ffd447'));
         } else if (selectedPlay === 'go') {
           const m = pctToView(monkey.x + 1, monkey.y - 18);
-          routeLayer.append(
-            createPath([pctToView(monkey.x, monkey.y), { x: m.x, y: m.y - 80 }, { x: m.x, y: m.y - 160 }], '#7dd3fc'),
-            createArrow(m.x, m.y - 128, m.x, m.y - 160, '#7dd3fc'),
-            createPath([b, { x: b.x + 130, y: b.y - 80 }, { x: m.x, y: m.y - 160 }], '#aef6ff')
-          );
+          routeLayer.append(createPath([pctToView(monkey.x, monkey.y), { x: m.x, y: m.y - 80 }, { x: m.x, y: m.y - 160 }], '#7dd3fc'), createArrow(m.x, m.y - 128, m.x, m.y - 160, '#7dd3fc'), createPath([b, { x: b.x + 130, y: b.y - 80 }, { x: m.x, y: m.y - 160 }], '#aef6ff'));
         } else if (selectedPlay === 'sweep') {
           const h = pctToView(horse.x, horse.y);
-          routeLayer.append(
-            createPath([h, { x: h.x + 80, y: h.y + 10 }, { x: h.x + 160, y: h.y - 18 }, { x: h.x + 220, y: h.y - 28 }], '#ffd447'),
-            createArrow(h.x + 190, h.y - 25, h.x + 220, h.y - 28, '#ffd447')
-          );
+          routeLayer.append(createPath([h, { x: h.x + 80, y: h.y + 10 }, { x: h.x + 160, y: h.y - 18 }, { x: h.x + 220, y: h.y - 28 }], '#ffd447'), createArrow(h.x + 190, h.y - 25, h.x + 220, h.y - 28, '#ffd447'));
         }
-
         const f = pctToView(fox.x - 8, fox.y + 6);
-        const defensePath = createPath([
-          pctToView(fox.x, fox.y),
-          { x: f.x - 35, y: f.y },
-          { x: b.x + 25, y: b.y + 12 }
-        ], '#ff9dc0');
+        const defensePath = createPath([pctToView(fox.x, fox.y), { x: f.x - 35, y: f.y }, { x: b.x + 25, y: b.y + 12 }], '#ff9dc0');
         routeLayer.append(defensePath, createArrow(b.x + 12, b.y + 10, b.x + 25, b.y + 12, '#ff9dc0'));
       }
 
@@ -1267,17 +1111,8 @@
         });
       }
 
-      function advanceDown() {
-        down = down >= 4 ? 1 : down + 1;
-        updateScoreboard();
-      }
-
-      function showTouchdown() {
-        touchdownBanner.classList.remove('show');
-        void touchdownBanner.offsetWidth;
-        touchdownBanner.classList.add('show');
-        createConfetti();
-      }
+      function advanceDown() { down = down >= 4 ? 1 : down + 1; updateScoreboard(); }
+      function showTouchdown() { touchdownBanner.classList.remove('show'); void touchdownBanner.offsetWidth; touchdownBanner.classList.add('show'); createConfetti(); }
 
       function createConfetti() {
         if (!confettiLayer) return;
@@ -1296,8 +1131,7 @@
       }
 
       function addTouchdown(team = 'home') {
-        if (team === 'home') homeScore += 6;
-        else awayScore += 6;
+        if (team === 'home') homeScore += 6; else awayScore += 6;
         down = 1;
         updateScoreboard();
         showTouchdown();
@@ -1312,12 +1146,7 @@
         const catchMonkey = { x: startMonkey.x + 14, y: startMonkey.y - 9 };
         const afterCatchMonkey = { x: startMonkey.x + 31, y: startMonkey.y - 16 };
         clearRoutes();
-        routeLayer.append(createPath([
-          pctToView(bear.x, bear.y),
-          { x: bear.x * 10 + 90, y: bear.y * 6.2 - 50 },
-          { x: catchMonkey.x * 10 - 20, y: catchMonkey.y * 6.2 },
-          pctToView(catchMonkey.x, catchMonkey.y)
-        ], '#7dd3fc'));
+        routeLayer.append(createPath([pctToView(bear.x, bear.y), { x: bear.x * 10 + 90, y: bear.y * 6.2 - 50 }, { x: catchMonkey.x * 10 - 20, y: catchMonkey.y * 6.2 }, pctToView(catchMonkey.x, catchMonkey.y)], '#7dd3fc'));
         await animateMove('monkey', [startMonkey, { x: startMonkey.x + 7, y: startMonkey.y - 5 }, catchMonkey], 900);
         await animateFootball({ x: bear.x + 3, y: bear.y - 7 }, { x: catchMonkey.x, y: catchMonkey.y - 6 }, 950);
         await animateMove('monkey', [catchMonkey, { x: startMonkey.x + 23, y: startMonkey.y - 13 }, afterCatchMonkey], 900);
@@ -1331,16 +1160,10 @@
         const startHorse = { x: horse.x, y: horse.y };
         const endHorse = { x: startHorse.x + 23, y: startHorse.y - 8 };
         clearRoutes();
-        routeLayer.append(
-          createPath([pctToView(bear.x, bear.y), pctToView(startHorse.x - 2, startHorse.y - 2)], '#ffd447'),
-          createPath([pctToView(startHorse.x, startHorse.y), { x: startHorse.x * 10 + 70, y: startHorse.y * 6.2 }, { x: startHorse.x * 10 + 130, y: startHorse.y * 6.2 - 30 }, { x: endHorse.x * 10, y: endHorse.y * 6.2 }], '#ffd447'),
-          createPath([pctToView(fox.x, fox.y), { x: fox.x * 10 - 40, y: fox.y * 6.2 + 16 }, { x: bear.x * 10 + 60, y: bear.y * 6.2 + 12 }], '#ff9dc0')
-        );
+        routeLayer.append(createPath([pctToView(bear.x, bear.y), pctToView(startHorse.x - 2, startHorse.y - 2)], '#ffd447'), createPath([pctToView(startHorse.x, startHorse.y), { x: startHorse.x * 10 + 70, y: startHorse.y * 6.2 }, { x: startHorse.x * 10 + 130, y: startHorse.y * 6.2 - 30 }, { x: endHorse.x * 10, y: endHorse.y * 6.2 }], '#ffd447'), createPath([pctToView(fox.x, fox.y), { x: fox.x * 10 - 40, y: fox.y * 6.2 + 16 }, { x: bear.x * 10 + 60, y: bear.y * 6.2 + 12 }], '#ff9dc0'));
         await animateFootball({ x: bear.x + 2, y: bear.y - 2 }, { x: startHorse.x - 2, y: startHorse.y - 3 }, 420);
         await animateMove('horse', [startHorse, { x: startHorse.x + 8, y: startHorse.y }, { x: startHorse.x + 15, y: startHorse.y - 5 }, endHorse], 1200);
-        leopard.el.classList.add('pulled');
-        createBurst(leopard.x, leopard.y, '#ffd447');
-        setTimeout(() => leopard.el.classList.remove('pulled'), 600);
+        leopard.el.classList.add('pulled'); createBurst(leopard.x, leopard.y, '#ffd447'); setTimeout(() => leopard.el.classList.remove('pulled'), 600);
         return true;
       }
 
@@ -1352,14 +1175,10 @@
         const deepMonkey = { x: startMonkey.x + 2, y: startMonkey.y - 28 };
         const scoreMonkey = { x: startMonkey.x + 2, y: 11 };
         clearRoutes();
-        routeLayer.append(
-          createPath([pctToView(startMonkey.x, startMonkey.y), pctToView(deepMonkey.x, deepMonkey.y), pctToView(scoreMonkey.x, scoreMonkey.y)], '#7dd3fc'),
-          createPath([pctToView(bear.x, bear.y), { x: bear.x * 10 + 120, y: bear.y * 6.2 - 120 }, pctToView(scoreMonkey.x, scoreMonkey.y)], '#aef6ff')
-        );
+        routeLayer.append(createPath([pctToView(startMonkey.x, startMonkey.y), pctToView(deepMonkey.x, deepMonkey.y), pctToView(scoreMonkey.x, scoreMonkey.y)], '#7dd3fc'), createPath([pctToView(bear.x, bear.y), { x: bear.x * 10 + 120, y: bear.y * 6.2 - 120 }, pctToView(scoreMonkey.x, scoreMonkey.y)], '#aef6ff'));
         await animateMove('monkey', [startMonkey, deepMonkey, scoreMonkey], 1400);
         await animateFootball({ x: bear.x + 3, y: bear.y - 7 }, { x: scoreMonkey.x, y: scoreMonkey.y + 2 }, 1100);
-        rabbit.el.classList.add('pulled');
-        setTimeout(() => rabbit.el.classList.remove('pulled'), 500);
+        rabbit.el.classList.add('pulled'); setTimeout(() => rabbit.el.classList.remove('pulled'), 500);
         addTouchdown('home');
         return true;
       }
@@ -1371,22 +1190,43 @@
         const startHorse = { x: horse.x, y: horse.y };
         const endHorse = { x: startHorse.x + 30, y: startHorse.y - 18 };
         clearRoutes();
-        routeLayer.append(createPath([
-          pctToView(startHorse.x, startHorse.y),
-          { x: startHorse.x * 10 + 80, y: startHorse.y * 6.2 + 10 },
-          { x: startHorse.x * 10 + 160, y: startHorse.y * 6.2 - 18 },
-          { x: endHorse.x * 10, y: endHorse.y * 6.2 }
-        ], '#ffd447'));
+        routeLayer.append(createPath([pctToView(startHorse.x, startHorse.y), { x: startHorse.x * 10 + 80, y: startHorse.y * 6.2 + 10 }, { x: startHorse.x * 10 + 160, y: startHorse.y * 6.2 - 18 }, { x: endHorse.x * 10, y: endHorse.y * 6.2 }], '#ffd447'));
         await animateMove('horse', [startHorse, { x: startHorse.x + 10, y: startHorse.y + 2 }, { x: startHorse.x + 20, y: startHorse.y - 10 }, endHorse], 1200);
-        giraffe.el.classList.add('pulled');
-        createBurst(giraffe.x, giraffe.y, '#ffd447');
-        setTimeout(() => giraffe.el.classList.remove('pulled'), 600);
+        giraffe.el.classList.add('pulled'); createBurst(giraffe.x, giraffe.y, '#ffd447'); setTimeout(() => giraffe.el.classList.remove('pulled'), 600);
+        return true;
+      }
+
+      function getSavedPlayById(id) { return savedCustomPlays.find(play => play.id === id) || null; }
+
+      async function runSavedCustomPlay(play) {
+        const animal = getAnimal(play.playerId);
+        if (!animal || !play.points || play.points.length === 0) return false;
+        clearRoutes();
+        const start = { x: animal.x, y: animal.y };
+        const points = [start, ...play.points];
+        await animateMove(play.playerId, points, 1400);
+        if (play.playerId === 'bear' && play.points.length > 0) {
+          const last = play.points[play.points.length - 1];
+          createBurst(last.x, last.y, '#fff59b');
+        }
         return true;
       }
 
       async function runSelectedPlay() {
         if (busy) return;
         busy = true;
+
+        if (selectedSavedPlayId) {
+          const customPlay = getSavedPlayById(selectedSavedPlayId);
+          setStatus(t(`Running custom play ${customPlay?.name || ''}...`, `正在执行自定义战术 ${customPlay?.name || ''}...`));
+          const ok = customPlay ? await runSavedCustomPlay(customPlay) : false;
+          if (ok) advanceDown();
+          busy = false;
+          setStatus(ok ? t('Completed custom play.', '已完成自定义战术。') : t('Custom play unavailable.', '当前无法执行自定义战术。'));
+          renderCustomPlaybookLayer();
+          return;
+        }
+
         setStatus(t(`Running ${plays[selectedPlay].enName}...`, `正在执行 ${plays[selectedPlay].zhName}...`));
         let ok = false;
         if (selectedPlay === 'slant') ok = await runSlantPlay();
@@ -1395,14 +1235,15 @@
         else if (selectedPlay === 'sweep') ok = await runSweepPlay();
         if (ok && plays[selectedPlay].downAdvance && !plays[selectedPlay].score) advanceDown();
         busy = false;
-        if (ok) setStatus(t(`Completed ${plays[selectedPlay].enName}.`, `已完成 ${plays[selectedPlay].zhName}。`));
-        else setStatus(t('Play unavailable. Reset the field first.', '当前无法执行战术，请先重置球场。'));
+        setStatus(ok ? t(`Completed ${plays[selectedPlay].enName}.`, `已完成 ${plays[selectedPlay].zhName}。`) : t('Play unavailable. Reset the field first.', '当前无法执行战术，请先重置球场。'));
         showPreviewRoutes();
       }
 
       async function runAutoDemo() {
         if (busy) return;
         const original = selectedPlay;
+        const originalSaved = selectedSavedPlayId;
+        selectedSavedPlayId = null;
         const sequence = ['slant', 'handoff', 'sweep', 'go'];
         for (const play of sequence) {
           selectedPlay = play;
@@ -1414,10 +1255,85 @@
           await wait(450);
         }
         selectedPlay = original;
+        selectedSavedPlayId = originalSaved;
         syncPlayButtons();
         updatePlayDescription();
         updateScoreboard();
         showPreviewRoutes();
+      }
+
+      function syncPlayButtons() {
+        document.querySelectorAll('.playbook-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.play === selectedPlay && !selectedSavedPlayId));
+      }
+
+      function toggleDrawMode() {
+        drawMode = !drawMode;
+        drawToggleBtn.classList.toggle('active', drawMode);
+        drawToggleBtn.textContent = drawMode ? t('✏️ Draw Mode On', '✏️ 绘制模式开启') : t('✏️ Draw Mode Off', '✏️ 绘制模式关闭');
+        setStatus(drawMode ? t('Draw mode is on. Click the field to place route points.', '绘制模式已开启。点击球场添加路线点。') : t('Draw mode is off.', '绘制模式已关闭。'));
+      }
+
+      function renderSavedPlaysList() {
+        savedPlayListEl.innerHTML = '';
+        if (savedCustomPlays.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'mini-card';
+          empty.textContent = t('No saved plays yet.', '还没有保存的战术。');
+          savedPlayListEl.appendChild(empty);
+          return;
+        }
+        savedCustomPlays.forEach(play => {
+          const btn = document.createElement('button');
+          btn.className = `saved-play-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left ${play.id === selectedSavedPlayId ? 'active' : ''}`;
+          btn.textContent = `${play.name} • ${getLocalizedPlayerName(play.playerId)}`;
+          btn.addEventListener('click', () => {
+            selectedSavedPlayId = play.id;
+            updatePlayDescription();
+            updateScoreboard();
+            renderSavedPlaysList();
+            renderCustomPlaybookLayer();
+            clearRoutes();
+            setStatus(t(`Selected custom play ${play.name}.`, `已选择自定义战术 ${play.name}。`));
+          });
+          savedPlayListEl.appendChild(btn);
+        });
+      }
+
+      function saveCurrentDrawing() {
+        if (currentDrawPoints.length < 1) {
+          setStatus(t('Please place at least one route point before saving.', '保存前请至少添加一个路线点。'));
+          return;
+        }
+        const name = customPlayNameInput.value.trim() || `Custom Play ${savedCustomPlays.length + 1}`;
+        const play = {
+          id: `custom-${Date.now()}`,
+          name,
+          playerId: drawPlayerSelect.value,
+          points: currentDrawPoints.map(pt => ({ x: Number(pt.x.toFixed(2)), y: Number(pt.y.toFixed(2)) }))
+        };
+        savedCustomPlays.push(play);
+        selectedSavedPlayId = play.id;
+        currentDrawPoints = [];
+        renderSavedPlaysList();
+        renderCustomPlaybookLayer();
+        updatePlayDescription();
+        updateScoreboard();
+        setStatus(t(`Saved ${name}.`, `已保存 ${name}。`));
+      }
+
+      function deleteSelectedSavedPlay() {
+        if (!selectedSavedPlayId) {
+          setStatus(t('Select a saved play first.', '请先选择一个已保存的战术。'));
+          return;
+        }
+        savedCustomPlays = savedCustomPlays.filter(play => play.id !== selectedSavedPlayId);
+        selectedSavedPlayId = null;
+        renderSavedPlaysList();
+        renderCustomPlaybookLayer();
+        updatePlayDescription();
+        updateScoreboard();
+        showPreviewRoutes();
+        setStatus(t('Deleted saved play.', '已删除保存的战术。'));
       }
 
       function resetField() {
@@ -1425,6 +1341,7 @@
         busy = false;
         draggingId = null;
         down = 1;
+        selectedSavedPlayId = null;
         renderAnimals();
         clearRoutes();
         footballLayer.innerHTML = '';
@@ -1432,14 +1349,10 @@
         confettiLayer.innerHTML = '';
         updateScoreboard();
         updateRoleCard('bear');
+        renderCustomPlaybookLayer();
         showPreviewRoutes();
         setStatus(t('Ready! Drag the bear or pick a playbook play.', '准备好了！拖动小熊或选择一个战术。'));
-      }
-
-      function syncPlayButtons() {
-        document.querySelectorAll('.playbook-btn').forEach(btn => {
-          btn.classList.toggle('active', btn.dataset.play === selectedPlay);
-        });
+        renderSavedPlaysList();
       }
 
       function runSmokeTests() {
@@ -1452,6 +1365,7 @@
         console.assert(!!runPlayBtn && !!demoBtn && !!scoreBtn && !!resetBtn, 'Smoke test failed: one or more buttons missing');
         console.assert(typeof plays[selectedPlay].enName === 'string', 'Smoke test failed: playbook data missing');
         console.assert(typeof playerInfo.bear.enBody === 'string', 'Smoke test failed: player info missing');
+        console.assert(Array.isArray(savedCustomPlays), 'Smoke test failed: savedCustomPlays should be array');
       }
 
       if (!hasFieldPieces()) {
@@ -1468,6 +1382,18 @@
         a.y = clamp(((e.clientY - rect.top) / rect.height) * 100 - dragOffset.y, 14, 86);
         updateAnimalPos(a);
         showPreviewRoutes();
+        renderCustomPlaybookLayer();
+      });
+
+      field.addEventListener('click', (e) => {
+        if (!drawMode || draggingId) return;
+        const rect = field.getBoundingClientRect();
+        const viewX = ((e.clientX - rect.left) / rect.width) * 1000;
+        const viewY = ((e.clientY - rect.top) / rect.height) * 620;
+        const pct = viewToPct(viewX, viewY);
+        currentDrawPoints.push({ x: clamp(pct.x, 4, 96), y: clamp(pct.y, 4, 96) });
+        renderCustomPlaybookLayer();
+        setStatus(t('Added a route point.', '已添加一个路线点。'));
       });
 
       window.addEventListener('pointerup', stopDrag);
@@ -1481,17 +1407,20 @@
       schoolNameInput?.addEventListener('input', updateHeaderAndTeams);
       teamHomeInput?.addEventListener('input', updateHeaderAndTeams);
       teamAwayInput?.addEventListener('input', updateHeaderAndTeams);
-      skinStyleSelect?.addEventListener('change', () => {
-        skinStyle = skinStyleSelect.value;
-        refreshAnimalLabels();
-      });
+      skinStyleSelect?.addEventListener('change', () => { skinStyle = skinStyleSelect.value; refreshAnimalLabels(); });
+      drawToggleBtn?.addEventListener('click', toggleDrawMode);
+      saveCustomPlayBtn?.addEventListener('click', saveCurrentDrawing);
+      clearDrawingBtn?.addEventListener('click', () => { clearDrawing(); setStatus(t('Cleared current drawing.', '已清除当前绘制。')); });
+      deleteSavedPlayBtn?.addEventListener('click', deleteSelectedSavedPlay);
 
       document.querySelectorAll('.playbook-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           selectedPlay = btn.dataset.play;
+          selectedSavedPlayId = null;
           syncPlayButtons();
           updatePlayDescription();
           updateScoreboard();
+          renderSavedPlaysList();
           showPreviewRoutes();
           setStatus(t(`Selected ${plays[selectedPlay].enName}.`, `已选择 ${plays[selectedPlay].zhName}。`));
         });
@@ -1514,6 +1443,7 @@
       updateScoreboard();
       resetField();
       updateAllTextLabels();
+      renderSavedPlaysList();
       runSmokeTests();
     });
   </script>
