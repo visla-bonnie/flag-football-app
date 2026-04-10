@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flag Football Fun - Coach Byryden Edition V4</title>
+  <title>Flag Football Fun - Coach Byryden Edition V5</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;700;800&display=swap');
@@ -38,21 +38,18 @@
     }
 
     .title-font { font-family: 'Fredoka', sans-serif; }
-
     .glass {
       background: var(--glass-bg);
       border: 2px solid rgba(255,255,255,0.14);
       backdrop-filter: blur(10px);
       box-shadow: var(--shadow);
     }
-
     .dark-panel {
       background: var(--panel-bg);
       border: 2px solid rgba(255,255,255,0.1);
       box-shadow: inset 0 0 22px rgba(255,255,255,0.04), 0 18px 32px rgba(0,0,0,0.22);
       border-radius: 30px;
     }
-
     .field-card {
       background: linear-gradient(180deg, #1a6d45 0%, #0b4d2d 100%);
       border: 12px solid #f0c650;
@@ -61,7 +58,6 @@
       overflow: hidden;
       position: relative;
     }
-
     .field {
       position: relative;
       width: 100%;
@@ -69,13 +65,8 @@
       min-height: 620px;
       background:
         linear-gradient(90deg, rgba(255,255,255,0.03) 0 100%),
-        repeating-linear-gradient(
-          90deg,
-          rgba(255,255,255,0.02) 0 78px,
-          rgba(255,255,255,0.05) 78px 156px
-        );
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 78px, rgba(255,255,255,0.05) 78px 156px);
     }
-
     .field::before,
     .field::after {
       content: "";
@@ -83,7 +74,6 @@
       inset: 0;
       pointer-events: none;
     }
-
     .field::before {
       background:
         linear-gradient(to bottom,
@@ -99,14 +89,12 @@
           transparent 89%, var(--line) 89.5%, transparent 90%);
       opacity: 0.72;
     }
-
     .field::after {
       inset: 8px;
       border-left: 8px solid rgba(255,255,255,0.9);
       border-right: 8px solid rgba(255,255,255,0.9);
       border-radius: 22px;
     }
-
     .field-overlay {
       position: absolute;
       inset: 0;
@@ -114,18 +102,13 @@
       pointer-events: none;
       z-index: 1;
     }
-
     .endzone {
       position: absolute;
       left: 8px;
       right: 8px;
       height: 36px;
       border-radius: 12px;
-      background: repeating-linear-gradient(
-        45deg,
-        rgba(255,255,255,0.18) 0 14px,
-        rgba(255,255,255,0.05) 14px 28px
-      );
+      background: repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 14px, rgba(255,255,255,0.05) 14px 28px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -139,17 +122,14 @@
       padding: 0 10px;
       z-index: 2;
     }
-
     .endzone.top { top: 8px; }
     .endzone.bottom { bottom: 8px; }
-
     .route-layer, .football-layer, .burst-layer, .confetti-layer, .custom-playbook-layer {
       position: absolute;
       inset: 0;
       pointer-events: none;
       z-index: 3;
     }
-
     .animal {
       position: absolute;
       width: 110px;
@@ -161,11 +141,9 @@
       transition: filter 0.18s ease, transform 0.18s ease;
       z-index: 5;
     }
-
     .animal:hover { filter: drop-shadow(0 12px 22px rgba(0,0,0,0.22)); }
     .animal.dragging { z-index: 8; transform: translate(-50%, -50%) scale(1.06); cursor: grabbing; }
     .animal.selected { filter: drop-shadow(0 0 20px rgba(255,255,255,0.58)); }
-
     .animal .label {
       position: absolute;
       left: 50%;
@@ -181,7 +159,6 @@
       font-weight: 800;
       box-shadow: 0 8px 22px rgba(0,0,0,0.18);
     }
-
     .animal .flag {
       position: absolute;
       width: 16px;
@@ -191,33 +168,16 @@
       box-shadow: 0 3px 0 rgba(0,0,0,0.1);
       transition: transform 0.18s ease, opacity 0.18s ease;
     }
-
     .animal .flag.left { left: 12px; background: #ff5f87; }
     .animal .flag.right { right: 12px; background: #ffd447; }
     .animal.pulled .flag.left { transform: translateX(-24px) rotate(-25deg); opacity: 0.15; }
     .animal.pulled .flag.right { transform: translateX(24px) rotate(25deg); opacity: 0.15; }
     .animal svg { width: 100%; height: 100%; overflow: visible; }
-
-    .float-bob {
-      animation: bob 1.8s ease-in-out infinite;
-      transform-origin: center;
-    }
-
+    .float-bob { animation: bob 1.8s ease-in-out infinite; transform-origin: center; }
     .animal.dragging .float-bob,
-    .animal.running .float-bob {
-      animation: runBob 0.35s ease-in-out infinite alternate;
-    }
-
-    @keyframes bob {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-4px); }
-    }
-
-    @keyframes runBob {
-      0% { transform: translateY(-2px) rotate(-1deg); }
-      100% { transform: translateY(2px) rotate(1deg); }
-    }
-
+    .animal.running .float-bob { animation: runBob 0.35s ease-in-out infinite alternate; }
+    @keyframes bob { 0%,100% { transform: translateY(0px);} 50% { transform: translateY(-4px);} }
+    @keyframes runBob { 0% { transform: translateY(-2px) rotate(-1deg);} 100% { transform: translateY(2px) rotate(1deg);} }
     .football {
       position: absolute;
       width: 34px;
@@ -229,7 +189,6 @@
       transform: translate(-50%, -50%) rotate(18deg);
       z-index: 7;
     }
-
     .football::before,
     .football::after {
       content: "";
@@ -237,7 +196,6 @@
       background: #f8edd5;
       border-radius: 10px;
     }
-
     .football::before {
       width: 12px;
       height: 2px;
@@ -245,14 +203,12 @@
       top: 9px;
       box-shadow: 0 -4px 0 #f8edd5, 0 4px 0 #f8edd5;
     }
-
     .football::after {
       width: 2px;
       height: 14px;
       left: 16px;
       top: 3px;
     }
-
     .burst {
       position: absolute;
       width: 86px;
@@ -263,12 +219,7 @@
       animation: burst 0.55s ease-out forwards;
       z-index: 6;
     }
-
-    @keyframes burst {
-      0% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.2); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
-    }
-
+    @keyframes burst { 0% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.2);} 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2);} }
     .route-line, .custom-route-line, .demo-line {
       fill: none;
       stroke-width: 7;
@@ -279,39 +230,13 @@
       filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
       animation: dash 1s linear infinite;
     }
-
-    .route-arrow {
-      stroke-width: 5;
-      stroke-linecap: round;
-    }
-
-    .custom-route-line {
-      stroke: #fff59b;
-      stroke-dasharray: 12 10;
-    }
-
-    .demo-line {
-      stroke: #7dd3fc;
-      stroke-dasharray: 10 8;
-      stroke-width: 8;
-    }
-
-    .draw-dot {
-      fill: #fff59b;
-      stroke: #17345e;
-      stroke-width: 3;
-    }
-
+    .route-arrow { stroke-width: 5; stroke-linecap: round; }
+    .custom-route-line { stroke: #fff59b; stroke-dasharray: 12 10; }
+    .demo-line { stroke: #7dd3fc; stroke-dasharray: 10 8; stroke-width: 8; }
+    .draw-dot { fill: #fff59b; stroke: #17345e; stroke-width: 3; }
     @keyframes dash { to { stroke-dashoffset: -52; } }
-
     .hidden-tab { display: none; }
-
-    .tab-btn.active {
-      background: #ffd15c;
-      color: #17345e;
-      box-shadow: 0 10px 25px rgba(255,209,92,0.35);
-    }
-
+    .tab-btn.active { background: #ffd15c; color: #17345e; box-shadow: 0 10px 25px rgba(255,209,92,0.35); }
     .pill {
       display: inline-flex;
       align-items: center;
@@ -322,21 +247,8 @@
       background: rgba(255,255,255,0.12);
       border: 2px solid rgba(255,255,255,0.14);
     }
-
-    .legend-dot {
-      width: 13px;
-      height: 13px;
-      border-radius: 999px;
-      display: inline-block;
-    }
-
-    .scoreboard {
-      display: grid;
-      grid-template-columns: 1.2fr 0.9fr 1.2fr;
-      gap: 10px;
-      align-items: stretch;
-    }
-
+    .legend-dot { width: 13px; height: 13px; border-radius: 999px; display: inline-block; }
+    .scoreboard { display: grid; grid-template-columns: 1.2fr 0.9fr 1.2fr; gap: 10px; align-items: stretch; }
     .score-panel, .score-mid {
       background: linear-gradient(180deg, rgba(5,12,25,0.98) 0%, rgba(10,25,50,0.95) 100%);
       border: 2px solid rgba(255,255,255,0.12);
@@ -345,22 +257,35 @@
       text-align: center;
       box-shadow: inset 0 0 18px rgba(255,255,255,0.05), 0 14px 26px rgba(0,0,0,0.3);
     }
-
-    .digit {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 46px;
-      line-height: 1;
-      color: #7dffb2;
-      text-shadow: 0 0 12px rgba(125,255,178,0.35);
+    .digit { font-family: 'Fredoka', sans-serif; font-size: 46px; line-height: 1; color: #7dffb2; text-shadow: 0 0 12px rgba(125,255,178,0.35); }
+    .small-led { font-family: 'Fredoka', sans-serif; font-size: 22px; color: #ffd15c; text-shadow: 0 0 10px rgba(255,209,92,0.3); }
+    .score-edit-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
     }
-
-    .small-led {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 22px;
-      color: #ffd15c;
-      text-shadow: 0 0 10px rgba(255,209,92,0.3);
+    .score-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-weight: 900;
+      cursor: pointer;
     }
-
+    .score-btn:hover { background: rgba(255,255,255,0.16); }
+    .score-input {
+      width: 78px;
+      text-align: center;
+      border-radius: 12px;
+      border: 2px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-weight: 800;
+      padding: 6px 8px;
+    }
     .status-box {
       margin-top: 14px;
       padding: 12px 14px;
@@ -370,7 +295,6 @@
       font-weight: 800;
       min-height: 54px;
     }
-
     .touchdown-banner {
       position: fixed;
       left: 50%;
@@ -388,16 +312,8 @@
       pointer-events: none;
       z-index: 50;
     }
-
     .touchdown-banner.show { animation: touchdownPop 1.4s ease forwards; }
-
-    @keyframes touchdownPop {
-      0% { opacity: 0; transform: translateX(-50%) scale(0.7); }
-      20% { opacity: 1; transform: translateX(-50%) scale(1.06); }
-      70% { opacity: 1; transform: translateX(-50%) scale(1); }
-      100% { opacity: 0; transform: translateX(-50%) scale(0.92); }
-    }
-
+    @keyframes touchdownPop { 0% { opacity: 0; transform: translateX(-50%) scale(0.7);} 20% { opacity: 1; transform: translateX(-50%) scale(1.06);} 70% { opacity: 1; transform: translateX(-50%) scale(1);} 100% { opacity: 0; transform: translateX(-50%) scale(0.92);} }
     .confetti {
       position: absolute;
       width: 10px;
@@ -406,12 +322,7 @@
       opacity: 0.96;
       animation: confettiFall 1.5s linear forwards;
     }
-
-    @keyframes confettiFall {
-      0% { transform: translateY(-40px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(300px) rotate(420deg); opacity: 0; }
-    }
-
+    @keyframes confettiFall { 0% { transform: translateY(-40px) rotate(0deg); opacity: 1;} 100% { transform: translateY(300px) rotate(420deg); opacity: 0;} }
     .speak-btn, .small-action-btn, .action-card {
       display: inline-flex;
       align-items: center;
@@ -421,48 +332,24 @@
       border-radius: 999px;
       padding: 8px 12px;
       font-weight: 800;
+      color: #fff;
     }
-
-    .playbook-btn.active, .draw-toggle.active, .foul-card.active, .position-card.active, .action-card.active {
-      background: #ffd15c;
-      color: #17345e;
-    }
-
-    .saved-play-btn.active {
-      background: #7dd3fc;
-      color: #17345e;
-    }
-
-    .play-list, .teaching-grid {
-      display: grid;
-      gap: 12px;
-    }
-
+    .playbook-btn.active, .draw-toggle.active, .foul-card.active, .position-card.active, .action-card.active { background: #ffd15c; color: #17345e; }
+    .saved-play-btn.active { background: #7dd3fc; color: #17345e; }
+    .play-list, .teaching-grid { display: grid; gap: 12px; }
     .play-list { max-height: 220px; overflow: auto; }
     .teaching-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-
     .teaching-card {
       background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.06) 100%);
       border: 2px solid rgba(255,255,255,0.12);
       border-radius: 24px;
       padding: 18px;
       transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      color: #fff;
     }
-
-    .teaching-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255,255,255,0.22);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.18);
-    }
-
-    .teaching-card h4 {
-      margin: 0 0 10px 0;
-      font-size: 1.2rem;
-      font-weight: 800;
-    }
-
+    .teaching-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.22); box-shadow: 0 12px 24px rgba(0,0,0,0.18); }
+    .teaching-card h4 { margin: 0 0 10px 0; font-size: 1.2rem; font-weight: 800; }
     .small-note { color: #eaf7ff; opacity: 0.92; }
-
     .mini-field {
       position: relative;
       min-height: 280px;
@@ -472,22 +359,14 @@
       border: 8px solid #f0c650;
       box-shadow: 0 18px 40px rgba(0,0,0,0.24);
     }
-
     .mini-field::before {
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(to bottom,
-          transparent 0%, transparent 14%, rgba(255,255,255,0.65) 15%, transparent 16%,
-          transparent 32%, rgba(255,255,255,0.65) 33%, transparent 34%,
-          transparent 50%, rgba(255,255,255,0.65) 51%, transparent 52%,
-          transparent 68%, rgba(255,255,255,0.65) 69%, transparent 70%,
-          transparent 86%, rgba(255,255,255,0.65) 87%, transparent 88%);
+      background: linear-gradient(to bottom, transparent 0%, transparent 14%, rgba(255,255,255,0.65) 15%, transparent 16%, transparent 32%, rgba(255,255,255,0.65) 33%, transparent 34%, transparent 50%, rgba(255,255,255,0.65) 51%, transparent 52%, transparent 68%, rgba(255,255,255,0.65) 69%, transparent 70%, transparent 86%, rgba(255,255,255,0.65) 87%, transparent 88%);
       opacity: 0.72;
       pointer-events: none;
     }
-
     .mini-field::after {
       content: "";
       position: absolute;
@@ -497,7 +376,6 @@
       border-radius: 18px;
       pointer-events: none;
     }
-
     .mini-endzone {
       position: absolute;
       left: 8px;
@@ -513,25 +391,10 @@
       color: rgba(255,255,255,0.86);
       z-index: 2;
     }
-
     .mini-endzone.top { top: 8px; }
     .mini-endzone.bottom { bottom: 8px; }
-
-    .mini-svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 3;
-    }
-
-    .mini-players, .mini-icons {
-      position: absolute;
-      inset: 0;
-      z-index: 4;
-      pointer-events: none;
-    }
-
+    .mini-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; }
+    .mini-players, .mini-icons { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
     .mini-avatar, .mini-icon {
       position: absolute;
       transform: translate(-50%, -50%);
@@ -539,30 +402,14 @@
       line-height: 1;
       filter: drop-shadow(0 6px 10px rgba(0,0,0,0.25));
     }
-
-    .mini-icon {
-      font-size: 32px;
-    }
-
-    @media (max-width: 1200px) {
-      .field { min-height: 560px; }
-      .animal { width: 98px; height: 126px; }
-    }
-
-    @media (max-width: 1024px) {
-      .scoreboard { grid-template-columns: 1fr; }
-      .field { min-height: 540px; }
-    }
-
-    @media (max-width: 640px) {
-      .field { min-height: 460px; }
-      .animal { width: 84px; height: 110px; }
-      .touchdown-banner { font-size: 26px; width: calc(100% - 40px); text-align: center; }
-    }
+    .mini-icon { font-size: 32px; }
+    @media (max-width: 1200px) { .field { min-height: 560px; } .animal { width: 98px; height: 126px; } }
+    @media (max-width: 1024px) { .scoreboard { grid-template-columns: 1fr; } .field { min-height: 540px; } }
+    @media (max-width: 640px) { .field { min-height: 460px; } .animal { width: 84px; height: 110px; } .touchdown-banner { font-size: 26px; width: calc(100% - 40px); text-align: center; } }
   </style>
 </head>
 <body>
-  <div id="touchdown-banner" class="touchdown-banner">TOUCHDOWN! 达阵!</div>
+  <div id="touchdown-banner" class="touchdown-banner">TOUCHDOWN!</div>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
     <header class="glass rounded-[32px] p-5 sm:p-7 mb-6">
@@ -576,8 +423,8 @@
             </div>
           </div>
           <div class="dark-panel px-5 py-4 max-w-xl">
-            <div class="font-extrabold text-yellow-200 mb-1">Version 4 Teaching Upgrade</div>
-            <div class="text-sm sm:text-base text-white/90">Fouls and positions are now full teaching sections with visual cards, mini demos, and all players can be dragged on the field.</div>
+            <div class="font-extrabold text-yellow-200 mb-1">Version 5 Rule Update</div>
+            <div class="text-sm sm:text-base text-white/90">English only, updated formation rules, editable score controls, and complete teaching sections for fouls and positions.</div>
           </div>
         </div>
 
@@ -586,7 +433,12 @@
             <div class="score-panel">
               <div class="text-xs font-extrabold uppercase tracking-[0.25em] text-cyan-200" id="score-home-name">Bears</div>
               <div class="digit" id="home-score">0</div>
-              <div class="text-sm text-white/80" id="score-home-sub">Home 主队</div>
+              <div class="text-sm text-white/80" id="score-home-sub">Home Team</div>
+              <div class="score-edit-row">
+                <button id="home-minus" class="score-btn">−</button>
+                <input id="home-score-input" class="score-input" type="number" min="0" value="0" />
+                <button id="home-plus" class="score-btn">+</button>
+              </div>
             </div>
             <div class="score-mid">
               <div class="small-led"><span id="down-label">Down</span> <span id="down-value">1</span></div>
@@ -596,29 +448,35 @@
             <div class="score-panel">
               <div class="text-xs font-extrabold uppercase tracking-[0.25em] text-pink-200" id="score-away-name">Monkeys</div>
               <div class="digit" id="away-score">0</div>
-              <div class="text-sm text-white/80" id="score-away-sub">Away 客队</div>
+              <div class="text-sm text-white/80" id="score-away-sub">Away Team</div>
+              <div class="score-edit-row">
+                <button id="away-minus" class="score-btn">−</button>
+                <input id="away-score-input" class="score-input" type="number" min="0" value="0" />
+                <button id="away-plus" class="score-btn">+</button>
+              </div>
             </div>
           </div>
 
           <div class="lg:col-span-5 grid sm:grid-cols-2 gap-3">
             <label class="glass rounded-[22px] p-4 block">
-              <div class="text-sm font-extrabold text-yellow-200 mb-2">School / 学校</div>
+              <div class="text-sm font-extrabold text-yellow-200 mb-2">School</div>
               <input id="school-name" class="w-full rounded-xl px-3 py-2 text-slate-900 font-bold" value="Coach Byryden School" />
             </label>
             <label class="glass rounded-[22px] p-4 block">
-              <div class="text-sm font-extrabold text-yellow-200 mb-2">Home Team / 主队</div>
+              <div class="text-sm font-extrabold text-yellow-200 mb-2">Home Team</div>
               <input id="team-home" class="w-full rounded-xl px-3 py-2 text-slate-900 font-bold" value="Bears" />
             </label>
             <label class="glass rounded-[22px] p-4 block">
-              <div class="text-sm font-extrabold text-yellow-200 mb-2">Away Team / 客队</div>
+              <div class="text-sm font-extrabold text-yellow-200 mb-2">Away Team</div>
               <input id="team-away" class="w-full rounded-xl px-3 py-2 text-slate-900 font-bold" value="Monkeys" />
             </label>
             <label class="glass rounded-[22px] p-4 block">
-              <div class="text-sm font-extrabold text-yellow-200 mb-2">Language / 语言</div>
-              <select id="language-toggle" class="w-full rounded-xl px-3 py-2 text-slate-900 font-bold">
-                <option value="en">English</option>
-                <option value="zh">中文</option>
-                <option value="both" selected>EN + 中文</option>
+              <div class="text-sm font-extrabold text-yellow-200 mb-2">Skin Style</div>
+              <select id="skin-style" class="w-full rounded-xl px-3 py-2 text-slate-900 font-bold">
+                <option value="classic">Classic Team</option>
+                <option value="superhero">Superhero</option>
+                <option value="space">Space</option>
+                <option value="rainbow">Rainbow</option>
               </select>
             </label>
           </div>
@@ -641,16 +499,16 @@
           <div class="lg:col-span-3 space-y-5">
             <div class="dark-panel p-6">
               <h2 class="title-font text-4xl font-bold mb-3">Playbook</h2>
-              <p class="text-lg leading-8 text-white/92">Now every animal can be dragged, not just the bear quarterback. Teachers can rearrange the whole formation.</p>
+              <p class="text-lg leading-8 text-white/92">All players are draggable now. The formation has also been updated to match your rule notes.</p>
             </div>
 
             <div class="dark-panel p-6">
               <div class="font-extrabold text-yellow-200 text-xl mb-3">Built-in Plays</div>
               <div class="grid gap-3">
-                <button class="playbook-btn active rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="slant">🏈 Slant Pass / 斜线传球</button>
-                <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="handoff">🤝 Handoff Run / 交接跑球</button>
-                <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="go">⚡ Go Route / 直线深传</button>
-                <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="sweep">🌪️ Sweep / 外侧冲跑</button>
+                <button class="playbook-btn active rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="slant">🏈 Slant Pass</button>
+                <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="handoff">🤝 Handoff Run</button>
+                <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="go">⚡ Go Route</button>
+                <button class="playbook-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left" data-play="sweep">🌪️ Sweep</button>
               </div>
             </div>
 
@@ -660,13 +518,13 @@
                 <button id="draw-toggle" class="draw-toggle rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left">✏️ Draw Mode Off</button>
                 <select id="draw-player" class="w-full rounded-xl px-3 py-3 text-slate-900 font-bold">
                   <option value="bear">Bear QB</option>
-                  <option value="monkey">Monkey WR</option>
-                  <option value="horse">Horse RB</option>
                   <option value="pony">Pony Center</option>
+                  <option value="horse">Horse RB</option>
+                  <option value="monkey">Monkey WR</option>
                   <option value="leopard">Leopard Rusher</option>
-                  <option value="giraffe">Giraffe DB</option>
-                  <option value="rabbit">Rabbit Safety</option>
                   <option value="fox">Fox Linebacker</option>
+                  <option value="rabbit">Rabbit Safety</option>
+                  <option value="giraffe">Giraffe CB</option>
                 </select>
                 <input id="custom-play-name" class="w-full rounded-xl px-3 py-3 text-slate-900 font-bold" value="Coach Bryden Play 1" />
                 <div class="grid grid-cols-2 gap-3">
@@ -717,24 +575,13 @@
               </div>
               <div id="role-card-emoji" class="text-5xl mb-2">🐻</div>
               <div id="role-card-title" class="font-extrabold text-2xl mb-2">Bear QB</div>
-              <div id="role-card-body" class="text-lg leading-8">Quarterback: throws the ball and leads the play. 四分卫：负责传球并指挥进攻。</div>
+              <div id="role-card-body" class="text-lg leading-8">Quarterback: throws the ball and leads the play.</div>
               <div class="mt-3 text-sm text-yellow-200 font-bold">Click any player on the field to learn the role.</div>
             </div>
 
             <div class="dark-panel p-6">
               <h3 class="title-font text-3xl font-bold mb-3">Selected Play</h3>
-              <div id="play-desc" class="text-lg leading-8">Slant Pass: the receiver cuts across the field for a quick pass. 斜线传球：外接手斜切进入空档接球。</div>
-            </div>
-
-            <div class="dark-panel p-6">
-              <div class="font-extrabold text-yellow-200 text-xl mb-4">Cute Skins</div>
-              <select id="skin-style" class="w-full rounded-xl px-3 py-3 text-slate-900 font-bold mb-3">
-                <option value="classic">Classic Team</option>
-                <option value="superhero">Superhero</option>
-                <option value="space">Space</option>
-                <option value="rainbow">Rainbow</option>
-              </select>
-              <div class="small-note">Changes the animal outfit style so kids can have more fun.</div>
+              <div id="play-desc" class="text-lg leading-8">Slant Pass: the receiver cuts across the field for a quick pass.</div>
             </div>
 
             <div class="dark-panel p-6">
@@ -752,15 +599,15 @@
         <div class="grid lg:grid-cols-12 gap-6">
           <div class="lg:col-span-7 dark-panel p-7">
             <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">What is Flag Football?</h2>
-            <p class="text-lg sm:text-xl leading-9 mb-5">Flag football is a safe, non-contact version of American football. Instead of tackling, defenders pull a player’s flag belt to stop the play. Teams try to move the ball down the field and score a touchdown in the end zone. 夺旗橄榄球是美式橄榄球的安全版，不用擒抱，而是通过拉旗来停止进攻。</p>
+            <p class="text-lg sm:text-xl leading-9 mb-5">Flag football is a safe, non-contact version of American football. Instead of tackling, defenders pull a player’s flag belt to stop the play. Teams try to move the ball down the field and score a touchdown in the end zone.</p>
           </div>
           <div class="lg:col-span-5 dark-panel p-7">
-            <h3 class="title-font text-3xl font-bold mb-4">Simple game flow / 简单流程</h3>
+            <h3 class="title-font text-3xl font-bold mb-4">Simple game flow</h3>
             <div class="space-y-4 text-lg leading-8">
-              <div><strong>1. Start the play / 开球</strong><br />The center snaps the ball to the quarterback. 中锋把球传给四分卫。</div>
-              <div><strong>2. Choose a move / 选择战术</strong><br />The offense can pass, hand off, or run. 进攻方可以传球、交接球或自己跑。</div>
-              <div><strong>3. Defend safely / 安全防守</strong><br />The defense covers players and tries to pull the flag. 防守方盯防并尝试拉旗。</div>
-              <div><strong>4. Score / 得分</strong><br />Reach the end zone for a touchdown. 跑到达阵区就得分。</div>
+              <div><strong>1. Start the play</strong><br />The center snaps the ball to the quarterback.</div>
+              <div><strong>2. Choose a move</strong><br />The offense can pass, hand off, or run.</div>
+              <div><strong>3. Defend safely</strong><br />The defense covers players and tries to pull the flag.</div>
+              <div><strong>4. Score</strong><br />Reach the end zone for a touchdown.</div>
             </div>
           </div>
         </div>
@@ -768,8 +615,8 @@
 
       <section id="tab-fouls" class="tab-panel hidden-tab">
         <div class="dark-panel p-7 mb-6">
-          <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">Common Fouls / 常见犯规</h2>
-          <p class="text-lg sm:text-xl leading-8 mb-6">These are kid-friendly teaching examples. Exact penalties can change by league. Click a foul card to show a mini demo. 这些是适合课堂教学的示例。点击犯规卡片可以显示一个小演示。</p>
+          <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">Common Fouls</h2>
+          <p class="text-lg sm:text-xl leading-8 mb-6">These are kid-friendly teaching examples. Exact penalties can change by league. Click a foul card to show a mini demo.</p>
           <div id="foul-cards" class="teaching-grid"></div>
         </div>
 
@@ -780,8 +627,8 @@
               <button id="replay-foul-demo" class="action-card">▶️ Replay Demo</button>
             </div>
             <div class="mini-field">
-              <div class="mini-endzone top">SAFE PLAY / 安全比赛</div>
-              <div class="mini-endzone bottom">SAFE PLAY / 安全比赛</div>
+              <div class="mini-endzone top">SAFE PLAY</div>
+              <div class="mini-endzone bottom">SAFE PLAY</div>
               <svg id="foul-demo-svg" class="mini-svg" viewBox="0 0 1000 620" preserveAspectRatio="none"></svg>
               <div id="foul-demo-icons" class="mini-icons"></div>
             </div>
@@ -789,20 +636,20 @@
 
           <div class="lg:col-span-5 dark-panel p-6">
             <div class="text-5xl mb-3" id="foul-detail-emoji">🚫🖐️</div>
-            <h3 class="title-font text-3xl font-bold mb-3" id="foul-detail-title">Flag Guarding / 护旗</h3>
-            <p class="text-lg leading-8 mb-4" id="foul-detail-body">Using hands, arms, or the ball to stop someone from pulling your flag. 用手、手臂或球挡住别人拉旗。</p>
-            <div class="text-yellow-200 font-extrabold mb-2">Why it is a foul / 为什么犯规</div>
-            <p class="text-base leading-7 text-white/90 mb-4" id="foul-detail-why">Flag football is supposed to stop the play with a clean flag pull, not with blocking or hiding the flag. 夺旗橄榄球应该通过干净地拉旗来停止进攻，而不是靠挡住或藏起旗子。</p>
-            <div class="text-yellow-200 font-extrabold mb-2">Kid tip / 给孩子的提醒</div>
-            <p class="text-base leading-7 text-white/90" id="foul-detail-tip">Keep your hands free and let the defender try to grab the flag fairly. 手要自然摆动，让防守者公平地尝试拉旗。</p>
+            <h3 class="title-font text-3xl font-bold mb-3" id="foul-detail-title">Flag Guarding</h3>
+            <p class="text-lg leading-8 mb-4" id="foul-detail-body">Using hands, arms, or the ball to stop someone from pulling your flag.</p>
+            <div class="text-yellow-200 font-extrabold mb-2">Why it is a foul</div>
+            <p class="text-base leading-7 text-white/90 mb-4" id="foul-detail-why">Flag football should stop the play with a clean flag pull, not by hiding the flag.</p>
+            <div class="text-yellow-200 font-extrabold mb-2">Kid tip</div>
+            <p class="text-base leading-7 text-white/90" id="foul-detail-tip">Keep your hands free and let the defender try to grab the flag fairly.</p>
           </div>
         </div>
       </section>
 
       <section id="tab-positions" class="tab-panel hidden-tab">
         <div class="dark-panel p-7 mb-6">
-          <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">5v5 Positions / 五人制位置</h2>
-          <p class="text-lg sm:text-xl leading-8 mb-6">Click a position card to learn what the role does and see a mini layout. 点击位置卡片来学习这个位置的职责，并查看一个小站位图。</p>
+          <h2 class="title-font text-4xl sm:text-5xl font-bold mb-4">5v5 Positions</h2>
+          <p class="text-lg sm:text-xl leading-8 mb-6">Click a position card to learn what the role does and see a mini layout.</p>
           <div id="position-cards" class="teaching-grid"></div>
         </div>
 
@@ -813,8 +660,8 @@
               <button id="replay-position-demo" class="action-card">▶️ Replay Demo</button>
             </div>
             <div class="mini-field">
-              <div class="mini-endzone top">FORMATION / 站位</div>
-              <div class="mini-endzone bottom">FORMATION / 站位</div>
+              <div class="mini-endzone top">FORMATION</div>
+              <div class="mini-endzone bottom">FORMATION</div>
               <svg id="position-demo-svg" class="mini-svg" viewBox="0 0 1000 620" preserveAspectRatio="none"></svg>
               <div id="position-demo-players" class="mini-players"></div>
             </div>
@@ -822,12 +669,12 @@
 
           <div class="lg:col-span-5 dark-panel p-6">
             <div class="text-5xl mb-3" id="position-detail-emoji">🐻</div>
-            <h3 class="title-font text-3xl font-bold mb-3" id="position-detail-title">Quarterback / 四分卫</h3>
-            <p class="text-lg leading-8 mb-4" id="position-detail-body">The quarterback gets the snap and decides whether to throw, hand off, or run. 四分卫接球后决定是传球、交接球还是自己跑。</p>
-            <div class="text-yellow-200 font-extrabold mb-2">Main job / 主要任务</div>
-            <p class="text-base leading-7 text-white/90 mb-4" id="position-detail-job">Lead the offense and make quick smart choices. 带领进攻并快速做出聪明的决定。</p>
-            <div class="text-yellow-200 font-extrabold mb-2">What kids should remember / 孩子要记住</div>
-            <p class="text-base leading-7 text-white/90" id="position-detail-tip">Look up, stay calm, and know where teammates are moving. 抬头观察、保持冷静，并知道队友往哪里跑。</p>
+            <h3 class="title-font text-3xl font-bold mb-3" id="position-detail-title">Quarterback</h3>
+            <p class="text-lg leading-8 mb-4" id="position-detail-body">The quarterback gets the snap and decides whether to throw, hand off, or run.</p>
+            <div class="text-yellow-200 font-extrabold mb-2">Main job</div>
+            <p class="text-base leading-7 text-white/90 mb-4" id="position-detail-job">Lead the offense and make quick smart choices.</p>
+            <div class="text-yellow-200 font-extrabold mb-2">What kids should remember</div>
+            <p class="text-base leading-7 text-white/90" id="position-detail-tip">Look up, stay calm, and know where teammates are moving.</p>
           </div>
         </div>
       </section>
@@ -849,10 +696,15 @@
       const resetBtn = document.getElementById('btn-reset');
       const homeScoreEl = document.getElementById('home-score');
       const awayScoreEl = document.getElementById('away-score');
+      const homeScoreInput = document.getElementById('home-score-input');
+      const awayScoreInput = document.getElementById('away-score-input');
+      const homePlus = document.getElementById('home-plus');
+      const homeMinus = document.getElementById('home-minus');
+      const awayPlus = document.getElementById('away-plus');
+      const awayMinus = document.getElementById('away-minus');
       const downValueEl = document.getElementById('down-value');
       const currentPlayNameEl = document.getElementById('current-play-name');
       const playDescEl = document.getElementById('play-desc');
-      const languageToggle = document.getElementById('language-toggle');
       const schoolNameInput = document.getElementById('school-name');
       const teamHomeInput = document.getElementById('team-home');
       const teamAwayInput = document.getElementById('team-away');
@@ -895,248 +747,131 @@
       const replayPositionDemoBtn = document.getElementById('replay-position-demo');
 
       const playerInfo = {
-        bear: { emoji: '🐻', enTitle: 'Bear QB', zhTitle: '小熊四分卫', enBody: 'Quarterback: throws the ball, starts decisions, and leads the offense.', zhBody: '四分卫：负责传球、做决定，并带领进攻。' },
-        monkey: { emoji: '🐒', enTitle: 'Monkey WR', zhTitle: '小猴子外接手', enBody: 'Wide Receiver: runs routes, gets open, and catches passes.', zhBody: '外接手：跑路线、摆脱防守并接球。' },
-        horse: { emoji: '🐴', enTitle: 'Horse RB', zhTitle: '小马跑卫', enBody: 'Running Back: takes handoffs, runs outside, or catches short passes.', zhBody: '跑卫：接交接球、外侧冲跑，或接短传。' },
-        pony: { emoji: '🐎', enTitle: 'Pony Center', zhTitle: '小马中锋', enBody: 'Center: snaps the ball to begin the play.', zhBody: '中锋：负责开球，把球传给四分卫。' },
-        leopard: { emoji: '🐆', enTitle: 'Leopard Rusher', zhTitle: '豹子突袭手', enBody: 'Rusher: runs toward the quarterback and tries to force a quick decision.', zhBody: '突袭手：冲向四分卫，逼迫对方快速处理球。' },
-        giraffe: { emoji: '🦒', enTitle: 'Giraffe DB', zhTitle: '长颈鹿防守后卫', enBody: 'Defensive Back: covers receivers and tries to stop catches.', zhBody: '防守后卫：盯防接球员，阻止完成接球。' },
-        rabbit: { emoji: '🐰', enTitle: 'Rabbit Safety', zhTitle: '兔子安全卫', enBody: 'Safety: stays deeper to help stop long passes.', zhBody: '安全卫：站位更深，帮助防守长传。' },
-        fox: { emoji: '🦊', enTitle: 'Fox Linebacker', zhTitle: '狐狸线卫', enBody: 'Linebacker: helps in the middle, watches runs, and supports coverage.', zhBody: '线卫：协助中路防守、观察跑球并支援传球防守。' }
+        bear: { emoji: '🐻', title: 'Bear QB', body: 'Quarterback: throws the ball, starts decisions, and leads the offense.' },
+        monkey: { emoji: '🐒', title: 'Monkey WR', body: 'Wide Receiver: runs routes, gets open, and catches passes.' },
+        horse: { emoji: '🐴', title: 'Horse RB', body: 'Running Back: takes handoffs, runs outside, or catches short passes.' },
+        pony: { emoji: '🐎', title: 'Pony Center', body: 'Center: starts the play by snapping the ball to the quarterback.' },
+        leopard: { emoji: '🐆', title: 'Leopard Rusher', body: 'Rusher: runs toward the quarterback and tries to force a quick decision.' },
+        giraffe: { emoji: '🦒', title: 'Giraffe CB', body: 'Cornerback: stands wide on the edge and helps cover the receiver.' },
+        rabbit: { emoji: '🐰', title: 'Rabbit Safety', body: 'Safety: stays deep in the field to stop long passes.' },
+        fox: { emoji: '🦊', title: 'Fox Linebacker', body: 'Linebacker: lines up beside the rusher and helps in the middle.' }
       };
 
       const plays = {
-        slant: { enName: 'Slant Pass', zhName: '斜线传球', enDesc: 'The receiver cuts across the field for a quick pass.', zhDesc: '外接手快速斜切穿过中路接球。', downAdvance: true, score: false },
-        handoff: { enName: 'Handoff Run', zhName: '交接跑球', enDesc: 'The quarterback gives the ball to the running back for a safe run.', zhDesc: '四分卫把球交给跑卫推进。', downAdvance: true, score: false },
-        go: { enName: 'Go Route', zhName: '直线深传', enDesc: 'The receiver runs deep for a long throw.', zhDesc: '外接手直线冲刺，准备接长传。', downAdvance: true, score: true },
-        sweep: { enName: 'Sweep', zhName: '外侧冲跑', enDesc: 'The running back sweeps wide to the outside.', zhDesc: '跑卫向外侧大范围冲跑。', downAdvance: true, score: false }
+        slant: { name: 'Slant Pass', desc: 'The receiver cuts across the field for a quick pass.', downAdvance: true, score: false },
+        handoff: { name: 'Handoff Run', desc: 'The quarterback gives the ball to the running back for a safe run.', downAdvance: true, score: false },
+        go: { name: 'Go Route', desc: 'The receiver runs deep for a long throw.', downAdvance: true, score: true },
+        sweep: { name: 'Sweep', desc: 'The running back sweeps wide to the outside.', downAdvance: true, score: false }
       };
 
       const fouls = {
         flag_guarding: {
-          emoji: '🚫🖐️',
-          enTitle: 'Flag Guarding', zhTitle: '护旗',
-          enBody: 'Using hands, arms, or the ball to stop someone from pulling your flag.',
-          zhBody: '用手、手臂或球挡住别人拉旗。',
-          enWhy: 'Flag football should stop the play with a clean flag pull, not by hiding the flag.',
-          zhWhy: '夺旗橄榄球应该通过干净地拉旗停止进攻，而不是藏旗。',
-          enTip: 'Keep your hands free and let the defender try to grab the flag fairly.',
-          zhTip: '手要自然摆动，让防守者公平地尝试拉旗。',
-          demo: {
-            icons: [
-              { emoji: '🐻', x: 38, y: 54 },
-              { emoji: '🦒', x: 62, y: 54 },
-              { emoji: '🙅', x: 48, y: 45 },
-              { emoji: '🚩', x: 43, y: 57 }
-            ],
-            lines: [
-              [{ x: 520, y: 330 }, { x: 610, y: 330 }]
-            ]
-          }
+          emoji: '🚫🖐️', title: 'Flag Guarding',
+          body: 'Using hands, arms, or the ball to stop someone from pulling your flag.',
+          why: 'Flag football should stop the play with a clean flag pull, not by hiding the flag.',
+          tip: 'Keep your hands free and let the defender try to grab the flag fairly.',
+          demo: { icons: [{ emoji: '🐻', x: 38, y: 54 }, { emoji: '🦒', x: 62, y: 54 }, { emoji: '🙅', x: 48, y: 45 }, { emoji: '🚩', x: 43, y: 57 }], lines: [[{ x: 520, y: 330 }, { x: 610, y: 330 }]] }
         },
         illegal_contact: {
-          emoji: '🚫💥',
-          enTitle: 'Illegal Contact', zhTitle: '非法身体接触',
-          enBody: 'Pushing, tackling, or rough contact instead of safe flag pulling.',
-          zhBody: '不是拉旗，而是推人、擒抱或粗暴碰撞。',
-          enWhy: 'Flag football is a non-contact game, so rough contact makes the game unsafe.',
-          zhWhy: '夺旗橄榄球是非接触比赛，粗暴身体接触会让比赛不安全。',
-          enTip: 'Slow down your body and reach for the flag, not the player.',
-          zhTip: '身体动作要轻，目标是旗子，不是人。',
-          demo: {
-            icons: [
-              { emoji: '🐴', x: 42, y: 56 },
-              { emoji: '🐆', x: 60, y: 55 },
-              { emoji: '💥', x: 51, y: 50 }
-            ],
-            lines: [
-              [{ x: 430, y: 350 }, { x: 525, y: 340 }, { x: 605, y: 345 }]
-            ]
-          }
+          emoji: '🚫💥', title: 'Illegal Contact',
+          body: 'Pushing, tackling, or rough contact instead of safe flag pulling.',
+          why: 'Flag football is a non-contact game, so rough contact makes the game unsafe.',
+          tip: 'Slow down your body and reach for the flag, not the player.',
+          demo: { icons: [{ emoji: '🐴', x: 42, y: 56 }, { emoji: '🐆', x: 60, y: 55 }, { emoji: '💥', x: 51, y: 50 }], lines: [[{ x: 430, y: 350 }, { x: 525, y: 340 }, { x: 605, y: 345 }]] }
         },
         offside: {
-          emoji: '🚫⏱️',
-          enTitle: 'Offside', zhTitle: '越位',
-          enBody: 'Crossing the line too early before the snap.',
-          zhBody: '在开球前太早越过开球线。',
-          enWhy: 'Both teams should start fairly when the play begins.',
-          zhWhy: '开球时双方都应该公平地从自己的位置出发。',
-          enTip: 'Wait, watch the snap, then go.',
-          zhTip: '先等开球，再出发。',
-          demo: {
-            icons: [
-              { emoji: '🐎', x: 40, y: 54 },
-              { emoji: '🦊', x: 57, y: 46 },
-              { emoji: '⚠️', x: 57, y: 32 }
-            ],
-            lines: [
-              [{ x: 500, y: 160 }, { x: 500, y: 470 }]
-            ]
-          }
+          emoji: '🚫⏱️', title: 'Offside',
+          body: 'Crossing the line too early before the snap.',
+          why: 'Both teams should start fairly when the play begins.',
+          tip: 'Wait, watch the snap, then go.',
+          demo: { icons: [{ emoji: '🐎', x: 40, y: 54 }, { emoji: '🦊', x: 57, y: 46 }, { emoji: '⚠️', x: 57, y: 32 }], lines: [[{ x: 500, y: 160 }, { x: 500, y: 470 }]] }
         },
         illegal_block: {
-          emoji: '🚫🤾',
-          enTitle: 'Illegal Block', zhTitle: '非法阻挡',
-          enBody: 'Using your body to block when the rule does not allow it.',
-          zhBody: '规则不允许时，用身体去挡防守者。',
-          enWhy: 'Blocking changes the game from safe flag pulling into body contact.',
-          zhWhy: '阻挡会把安全拉旗变成身体接触。',
-          enTip: 'Run your route or carry the ball, but do not body-check defenders.',
-          zhTip: '专心跑路线或带球，不要用身体去挡人。',
-          demo: {
-            icons: [
-              { emoji: '🐒', x: 36, y: 52 },
-              { emoji: '🦊', x: 52, y: 52 },
-              { emoji: '⛔', x: 44, y: 40 }
-            ],
-            lines: [
-              [{ x: 360, y: 325 }, { x: 520, y: 325 }]
-            ]
-          }
+          emoji: '🚫🤾', title: 'Illegal Block',
+          body: 'Using your body to block when the rule does not allow it.',
+          why: 'Blocking changes the game from safe flag pulling into body contact.',
+          tip: 'Run your route or carry the ball, but do not body-check defenders.',
+          demo: { icons: [{ emoji: '🐒', x: 36, y: 52 }, { emoji: '🦊', x: 52, y: 52 }, { emoji: '⛔', x: 44, y: 40 }], lines: [[{ x: 360, y: 325 }, { x: 520, y: 325 }]] }
         }
       };
 
       const positions = {
         quarterback: {
-          emoji: '🐻',
-          enTitle: 'Quarterback', zhTitle: '四分卫',
-          enBody: 'The quarterback gets the snap and decides whether to throw, hand off, or run.',
-          zhBody: '四分卫接球后决定是传球、交接球还是自己跑。',
-          enJob: 'Lead the offense and make quick smart choices.',
-          zhJob: '带领进攻并快速做出聪明的决定。',
-          enTip: 'Look up, stay calm, and know where teammates are moving.',
-          zhTip: '抬头观察、保持冷静，并知道队友往哪里跑。',
-          demo: {
-            players: [
-              { emoji: '🐻', x: 28, y: 58 },
-              { emoji: '🐎', x: 16, y: 58 },
-              { emoji: '🐒', x: 52, y: 38 },
-              { emoji: '🐴', x: 50, y: 74 }
-            ],
-            lines: [
-              [{ x: 280, y: 360 }, { x: 520, y: 230 }],
-              [{ x: 280, y: 360 }, { x: 500, y: 430 }]
-            ]
-          }
+          emoji: '🐻', title: 'Quarterback',
+          body: 'The quarterback lines up behind the center and decides whether to throw, hand off, or run.',
+          job: 'Lead the offense and make quick smart choices.',
+          tip: 'Look up, stay calm, and know where teammates are moving.',
+          demo: { players: [{ emoji: '🐎', x: 26, y: 56 }, { emoji: '🐻', x: 36, y: 66 }, { emoji: '🐒', x: 54, y: 40 }, { emoji: '🐴', x: 46, y: 74 }], lines: [[{ x: 360, y: 400 }, { x: 540, y: 245 }], [{ x: 360, y: 400 }, { x: 470, y: 455 }]] }
         },
         center: {
-          emoji: '🐎',
-          enTitle: 'Center', zhTitle: '中锋',
-          enBody: 'The center starts the play by snapping the ball to the quarterback.',
-          zhBody: '中锋通过开球把球传给四分卫，开始进攻。',
-          enJob: 'Make a clean snap and be ready to help after the play starts.',
-          zhJob: '把球稳稳开出，并在开球后准备配合。',
-          enTip: 'A steady snap helps everyone start on time.',
-          zhTip: '稳定的开球能让所有人按时开始动作。',
-          demo: {
-            players: [
-              { emoji: '🐎', x: 24, y: 56 },
-              { emoji: '🐻', x: 36, y: 56 },
-              { emoji: '🦊', x: 66, y: 52 }
-            ],
-            lines: [
-              [{ x: 255, y: 340 }, { x: 355, y: 340 }]
-            ]
-          }
+          emoji: '🐎', title: 'Center',
+          body: 'The center is in front of the quarterback and starts the play by snapping the ball.',
+          job: 'Make a clean snap and be ready to help after the play starts.',
+          tip: 'A steady snap helps everyone start on time.',
+          demo: { players: [{ emoji: '🐎', x: 26, y: 56 }, { emoji: '🐻', x: 36, y: 66 }, { emoji: '🦊', x: 60, y: 54 }], lines: [[{ x: 260, y: 345 }, { x: 360, y: 405 }]] }
         },
         wide_receiver: {
-          emoji: '🐒',
-          enTitle: 'Wide Receiver', zhTitle: '外接手',
-          enBody: 'A wide receiver runs routes, gets open, and catches passes.',
-          zhBody: '外接手负责跑路线、摆脱防守并完成接球。',
-          enJob: 'Create space and be ready when the ball comes.',
-          zhJob: '跑出空间，并在球到来时做好准备。',
-          enTip: 'Watch the ball and keep moving through your route.',
-          zhTip: '盯住球，并持续完成你的路线。',
-          demo: {
-            players: [
-              { emoji: '🐻', x: 26, y: 58 },
-              { emoji: '🐒', x: 42, y: 34 },
-              { emoji: '🦒', x: 66, y: 34 }
-            ],
-            lines: [
-              [{ x: 430, y: 210 }, { x: 560, y: 160 }, { x: 680, y: 110 }]
-            ]
-          }
+          emoji: '🐒', title: 'Wide Receiver',
+          body: 'A wide receiver always stands to the side of the quarterback and runs routes to catch passes.',
+          job: 'Create space and be ready when the ball comes.',
+          tip: 'Watch the ball and keep moving through your route.',
+          demo: { players: [{ emoji: '🐎', x: 26, y: 56 }, { emoji: '🐻', x: 36, y: 66 }, { emoji: '🐒', x: 54, y: 40 }, { emoji: '🦒', x: 76, y: 30 }], lines: [[{ x: 540, y: 245 }, { x: 680, y: 180 }, { x: 800, y: 120 }]] }
         },
         running_back: {
-          emoji: '🐴',
-          enTitle: 'Running Back', zhTitle: '跑卫',
-          enBody: 'A running back can take handoffs, run outside, or catch short passes.',
-          zhBody: '跑卫可以接交接球、向外冲跑或接短传。',
-          enJob: 'Move fast into open space and protect the ball.',
-          zhJob: '快速跑向空档并保护好球。',
-          enTip: 'Stay low, move wide, and keep your flags visible.',
-          zhTip: '压低身体、向外跑，并保持旗子清楚可见。',
-          demo: {
-            players: [
-              { emoji: '🐻', x: 26, y: 58 },
-              { emoji: '🐴', x: 44, y: 74 },
-              { emoji: '🐆', x: 68, y: 62 }
-            ],
-            lines: [
-              [{ x: 450, y: 450 }, { x: 610, y: 420 }, { x: 760, y: 360 }]
-            ]
-          }
+          emoji: '🐴', title: 'Running Back',
+          body: 'A running back always stands slightly to the side or behind the quarterback.',
+          job: 'Move fast into open space and protect the ball.',
+          tip: 'Stay low, move wide, and keep your flags visible.',
+          demo: { players: [{ emoji: '🐎', x: 26, y: 56 }, { emoji: '🐻', x: 36, y: 66 }, { emoji: '🐴', x: 46, y: 74 }, { emoji: '🐆', x: 58, y: 54 }], lines: [[{ x: 455, y: 455 }, { x: 610, y: 420 }, { x: 760, y: 360 }]] }
         },
         rusher: {
-          emoji: '🐆',
-          enTitle: 'Rusher', zhTitle: '突袭手',
-          enBody: 'A rusher runs toward the quarterback and tries to force a quick throw or flag pull.',
-          zhBody: '突袭手冲向四分卫，逼迫对方快速传球或尝试拉旗。',
-          enJob: 'Pressure the quarterback without rough contact.',
-          zhJob: '在不粗暴接触的前提下给四分卫压力。',
-          enTip: 'Go fast, break down under control, then reach for the flag.',
-          zhTip: '快速前进，但接近时要控制好身体，再去拉旗。',
-          demo: {
-            players: [
-              { emoji: '🐻', x: 34, y: 54 },
-              { emoji: '🐆', x: 68, y: 44 }
-            ],
-            lines: [
-              [{ x: 690, y: 270 }, { x: 560, y: 300 }, { x: 360, y: 340 }]
-            ]
-          }
+          emoji: '🐆', title: 'Rusher',
+          body: 'The rusher always stands in the middle on defense and attacks the quarterback.',
+          job: 'Pressure the quarterback without rough contact.',
+          tip: 'Go fast, break down under control, then reach for the flag.',
+          demo: { players: [{ emoji: '🐻', x: 36, y: 66 }, { emoji: '🐆', x: 60, y: 54 }, { emoji: '🦊', x: 72, y: 56 }], lines: [[{ x: 600, y: 335 }, { x: 500, y: 360 }, { x: 360, y: 405 }]] }
+        },
+        linebacker: {
+          emoji: '🦊', title: 'Linebacker',
+          body: 'The linebacker always stands to the side of the rusher and helps in the middle.',
+          job: 'Read the play, cover short space, and help with flag pulls.',
+          tip: 'Stay balanced and react to either the run or the short pass.',
+          demo: { players: [{ emoji: '🐆', x: 58, y: 54 }, { emoji: '🦊', x: 72, y: 56 }, { emoji: '🐴', x: 46, y: 74 }], lines: [[{ x: 720, y: 350 }, { x: 640, y: 380 }, { x: 560, y: 420 }]] }
         },
         safety: {
-          emoji: '🐰',
-          enTitle: 'Safety', zhTitle: '安全卫',
-          enBody: 'A safety stays deeper than the other defenders and helps stop long passes.',
-          zhBody: '安全卫站位更深，帮助阻止长传推进。',
-          enJob: 'Watch the whole field and protect the deep area.',
-          zhJob: '观察全场，并保护后场深区。',
-          enTip: 'Stay patient and do not let receivers get behind you.',
-          zhTip: '保持耐心，不要让接球员跑到你身后。',
-          demo: {
-            players: [
-              { emoji: '🐰', x: 76, y: 18 },
-              { emoji: '🐒', x: 42, y: 34 },
-              { emoji: '🦒', x: 65, y: 36 }
-            ],
-            lines: [
-              [{ x: 770, y: 110 }, { x: 760, y: 210 }, { x: 700, y: 260 }]
-            ]
-          }
+          emoji: '🐰', title: 'Safety',
+          body: 'The safety stays deep in the field to help stop long passes.',
+          job: 'Watch the whole field and protect the deep area.',
+          tip: 'Stay patient and do not let receivers get behind you.',
+          demo: { players: [{ emoji: '🐰', x: 72, y: 20 }, { emoji: '🐒', x: 54, y: 40 }, { emoji: '🦒', x: 80, y: 30 }], lines: [[{ x: 720, y: 130 }, { x: 720, y: 210 }, { x: 675, y: 255 }]] }
+        },
+        cornerback: {
+          emoji: '🦒', title: 'Cornerback',
+          body: 'A cornerback stands on the left or right outside corner of the field facing the wide receiver.',
+          job: 'Stay wide, watch the receiver, and defend the sideline space.',
+          tip: 'Keep your body facing the receiver and be ready to move with the route.',
+          demo: { players: [{ emoji: '🐒', x: 54, y: 40 }, { emoji: '🦒', x: 80, y: 30 }, { emoji: '🐰', x: 72, y: 20 }], lines: [[{ x: 800, y: 185 }, { x: 735, y: 220 }, { x: 660, y: 245 }]] }
         }
       };
 
-      const baseAnimals = [
-        { id: 'bear', type: 'bear', team: 'offense', x: 18, y: 20 },
-        { id: 'monkey', type: 'monkey', team: 'offense', x: 36, y: 34 },
-        { id: 'horse', type: 'horse', team: 'offense', x: 45, y: 76 },
-        { id: 'pony', type: 'pony', team: 'offense', x: 12, y: 52 },
-        { id: 'leopard', type: 'leopard', team: 'defense', x: 77, y: 38 },
-        { id: 'giraffe', type: 'giraffe', team: 'defense', x: 77, y: 74 },
-        { id: 'rabbit', type: 'rabbit', team: 'defense', x: 86, y: 16 },
-        { id: 'fox', type: 'fox', team: 'defense', x: 72, y: 58 }
-      ];
+      function getBaseFormation() {
+        return [
+          { id: 'pony', type: 'pony', team: 'offense', x: 24, y: 56 },
+          { id: 'bear', type: 'bear', team: 'offense', x: 34, y: 66 },
+          { id: 'horse', type: 'horse', team: 'offense', x: 44, y: 74 },
+          { id: 'monkey', type: 'monkey', team: 'offense', x: 54, y: 40 },
+          { id: 'leopard', type: 'leopard', team: 'defense', x: 58, y: 54 },
+          { id: 'fox', type: 'fox', team: 'defense', x: 72, y: 56 },
+          { id: 'rabbit', type: 'rabbit', team: 'defense', x: 72, y: 20 },
+          { id: 'giraffe', type: 'giraffe', team: 'defense', x: 80, y: 30 }
+        ];
+      }
 
       let animals = [];
       let animalMap = {};
       let draggingId = null;
       let dragOffset = { x: 0, y: 0 };
       let busy = false;
-      let languageMode = 'both';
       let selectedPlay = 'slant';
       let homeScore = 0;
       let awayScore = 0;
@@ -1156,9 +891,25 @@
       function hasFieldPieces() { return !!(field && routeLayer && footballLayer && burstLayer && confettiLayer && customPlaybookLayer); }
       function getAnimal(id) { const a = animalMap[id]; return a && typeof a.x === 'number' && typeof a.y === 'number' ? a : null; }
       function getRequiredAnimals(ids) { const resolved = {}; for (const id of ids) { const a = getAnimal(id); if (!a) return null; resolved[id] = a; } return resolved; }
-      function t(en, zh) { if (languageMode === 'en') return en; if (languageMode === 'zh') return zh; return `${en} / ${zh}`; }
       function pctToView(x, y) { return { x: x * 10, y: y * 6.2 }; }
       function viewToPct(x, y) { return { x: x / 10, y: y / 6.2 }; }
+
+      function syncScoreInputs() {
+        homeScoreEl.textContent = String(homeScore);
+        awayScoreEl.textContent = String(awayScore);
+        homeScoreInput.value = String(homeScore);
+        awayScoreInput.value = String(awayScore);
+      }
+
+      function setHomeScore(value) {
+        homeScore = Math.max(0, Number.isFinite(value) ? Math.floor(value) : 0);
+        syncScoreInputs();
+      }
+
+      function setAwayScore(value) {
+        awayScore = Math.max(0, Number.isFinite(value) ? Math.floor(value) : 0);
+        syncScoreInputs();
+      }
 
       function getSkinPalette(team) {
         const base = {
@@ -1192,15 +943,13 @@
         return `<svg viewBox="0 0 84 112" aria-hidden="true"><g class="float-bob">${tail}${ears}<ellipse cx="42" cy="34" rx="26" ry="22" fill="${c.fur}"/><ellipse cx="42" cy="43" rx="18" ry="13" fill="${c.muzzle}"/><circle cx="33" cy="32" r="3.2" fill="#1e2334"/><circle cx="51" cy="32" r="3.2" fill="#1e2334"/><ellipse cx="42" cy="41" rx="4.5" ry="3.6" fill="#2d1c12"/><path d="M37 46 Q42 50 47 46" stroke="#6f4a35" stroke-width="2.5" fill="none" stroke-linecap="round"/><rect x="23" y="52" width="38" height="28" rx="12" fill="${j.main}"/><rect x="26" y="55" width="32" height="22" rx="9" fill="${j.main}" stroke="${j.trim}" stroke-width="3"/>${skinDecor}<text x="42" y="71" text-anchor="middle" font-family="Fredoka" font-size="15" font-weight="700" fill="${j.trim}">${team === 'offense' ? 'O' : 'D'}</text><ellipse cx="42" cy="88" rx="20" ry="16" fill="${c.belly}"/><ellipse cx="28" cy="84" rx="8" ry="16" fill="${c.fur}"/><ellipse cx="56" cy="84" rx="8" ry="16" fill="${c.fur}"/><rect x="24" y="95" width="9" height="14" rx="5" fill="${c.fur}"/><rect x="51" y="95" width="9" height="14" rx="5" fill="${c.fur}"/><ellipse cx="28.5" cy="109" rx="9" ry="4" fill="#3c2a1f" opacity="0.85"/><ellipse cx="55.5" cy="109" rx="9" ry="4" fill="#3c2a1f" opacity="0.85"/>${spots}</g></svg>`;
       }
 
-      function getLocalizedPlayerName(id) { const info = playerInfo[id]; if (!info) return id; return t(info.enTitle, info.zhTitle); }
-
       function createAnimal(a) {
         const el = document.createElement('div');
         el.className = 'animal';
         el.dataset.id = a.id;
         el.style.left = `${a.x}%`;
         el.style.top = `${a.y}%`;
-        el.innerHTML = `<div class="flag left"></div><div class="flag right"></div>${animalSVG(a.type, a.team)}<div class="label">${getLocalizedPlayerName(a.id)}</div>`;
+        el.innerHTML = `<div class="flag left"></div><div class="flag right"></div>${animalSVG(a.type, a.team)}<div class="label">${playerInfo[a.id].title}</div>`;
         el.addEventListener('pointerdown', (e) => startDrag(e, a.id));
         el.addEventListener('click', () => handleAnimalClick(a.id));
         field.appendChild(el);
@@ -1210,7 +959,7 @@
       function renderAnimals() {
         if (!field) return;
         field.querySelectorAll('.animal').forEach(n => n.remove());
-        animals = baseAnimals.map(a => createAnimal({ ...a }));
+        animals = getBaseFormation().map(a => createAnimal({ ...a }));
         animalMap = Object.fromEntries(animals.map(a => [a.id, a]));
         highlightSelectedAnimal();
       }
@@ -1218,7 +967,7 @@
       function refreshAnimalLabels() {
         animals.forEach(a => {
           const label = a.el.querySelector('.label');
-          if (label) label.textContent = getLocalizedPlayerName(a.id);
+          if (label) label.textContent = playerInfo[a.id].title;
           const currentSvg = a.el.querySelector('svg');
           if (currentSvg) currentSvg.outerHTML = animalSVG(a.type, a.team);
         });
@@ -1227,29 +976,25 @@
 
       function updateAnimalPos(a) { if (!a || !a.el) return; a.el.style.left = `${a.x}%`; a.el.style.top = `${a.y}%`; }
       function highlightSelectedAnimal() { animals.forEach(a => a.el.classList.toggle('selected', a.id === selectedAnimalId)); }
-
       function updateRoleCard(id) {
         const info = playerInfo[id];
         if (!info) return;
         selectedAnimalId = id;
         roleEmojiEl.textContent = info.emoji;
-        roleTitleEl.textContent = t(info.enTitle, info.zhTitle);
-        roleBodyEl.textContent = t(info.enBody, info.zhBody);
+        roleTitleEl.textContent = info.title;
+        roleBodyEl.textContent = info.body;
         highlightSelectedAnimal();
       }
-
       function speakSelectedRole() {
         const info = playerInfo[selectedAnimalId];
         if (!info) return;
-        const text = t(`${info.enTitle}. ${info.enBody}`, `${info.zhTitle}。${info.zhBody}`);
         if ('speechSynthesis' in window) {
           window.speechSynthesis.cancel();
-          const utterance = new SpeechSynthesisUtterance(text);
+          const utterance = new SpeechSynthesisUtterance(`${info.title}. ${info.body}`);
           utterance.rate = 0.92;
           window.speechSynthesis.speak(utterance);
         }
       }
-
       function updateHeaderAndTeams() {
         const school = schoolNameInput.value.trim() || 'Coach Byryden School';
         const home = teamHomeInput.value.trim() || 'Bears';
@@ -1259,45 +1004,22 @@
         scoreHomeName.textContent = home;
         scoreAwayName.textContent = away;
         heroTitle.textContent = `${school} Flag Football Fun`;
-        heroSubtitle.textContent = t('Cute classroom app for teachers and kids', '适合老师和孩子的可爱课堂 app');
+        heroSubtitle.textContent = 'Cute classroom app for teachers and kids';
       }
-
       function getSavedPlayById(id) { return savedCustomPlays.find(play => play.id === id) || null; }
-
       function updateScoreboard() {
-        homeScoreEl.textContent = String(homeScore);
-        awayScoreEl.textContent = String(awayScore);
+        syncScoreInputs();
         downValueEl.textContent = String(down);
-        currentPlayNameEl.textContent = selectedSavedPlayId ? getSavedPlayById(selectedSavedPlayId)?.name || t(plays[selectedPlay].enName, plays[selectedPlay].zhName) : t(plays[selectedPlay].enName, plays[selectedPlay].zhName);
+        currentPlayNameEl.textContent = selectedSavedPlayId ? getSavedPlayById(selectedSavedPlayId)?.name || plays[selectedPlay].name : plays[selectedPlay].name;
       }
-
       function updatePlayDescription() {
         if (selectedSavedPlayId) {
           const play = getSavedPlayById(selectedSavedPlayId);
-          playDescEl.textContent = play ? t(`Custom Play: ${play.name}`, `自定义战术：${play.name}`) : t(`${plays[selectedPlay].enName}: ${plays[selectedPlay].enDesc}`, `${plays[selectedPlay].zhName}：${plays[selectedPlay].zhDesc}`);
+          playDescEl.textContent = play ? `Custom Play: ${play.name}` : `${plays[selectedPlay].name}: ${plays[selectedPlay].desc}`;
         } else {
-          playDescEl.textContent = t(`${plays[selectedPlay].enName}: ${plays[selectedPlay].enDesc}`, `${plays[selectedPlay].zhName}：${plays[selectedPlay].zhDesc}`);
+          playDescEl.textContent = `${plays[selectedPlay].name}: ${plays[selectedPlay].desc}`;
         }
       }
-
-      function updateAllTextLabels() {
-        languageMode = languageToggle.value;
-        updateHeaderAndTeams();
-        updatePlayDescription();
-        updateScoreboard();
-        refreshAnimalLabels();
-        updateRoleCard(selectedAnimalId);
-        document.getElementById('down-label').textContent = t('Down', '档');
-        document.getElementById('playbook-mode-label').textContent = t('Play', '战术');
-        document.getElementById('score-home-sub').textContent = t('Home Team', '主队');
-        document.getElementById('score-away-sub').textContent = t('Away Team', '客队');
-        drawToggleBtn.textContent = drawMode ? t('✏️ Draw Mode On', '✏️ 绘制模式开启') : t('✏️ Draw Mode Off', '✏️ 绘制模式关闭');
-        renderFoulCards();
-        renderPositionCards();
-        updateFoulDetail(selectedFoulId);
-        updatePositionDetail(selectedPositionId);
-      }
-
       function startDrag(e, id) {
         if (busy || drawMode) return;
         const a = getAnimal(id);
@@ -1310,36 +1032,33 @@
         if (typeof a.el.setPointerCapture === 'function') {
           try { a.el.setPointerCapture(e.pointerId); } catch (_) {}
         }
-        setStatus(t(`Dragging ${playerInfo[id].enTitle}...`, `正在拖动 ${playerInfo[id].zhTitle}...`));
+        setStatus(`Dragging ${playerInfo[id].title}...`);
       }
-
       function stopDrag() {
         if (!draggingId) return;
         const a = getAnimal(draggingId);
         if (a) a.el.classList.remove('dragging', 'running');
         draggingId = null;
-        setStatus(t('Formation updated. You can drag any player now.', '站位已更新。现在每个球员都可以拖动。'));
+        setStatus('Formation updated. You can drag any player now.');
       }
-
       function handleAnimalClick(id) {
         const a = getAnimal(id);
         if (!a) return;
         updateRoleCard(id);
         if (drawMode) {
           drawPlayerSelect.value = id;
-          setStatus(t(`Now drawing for ${playerInfo[id].enTitle}.`, `现在正在为 ${playerInfo[id].zhTitle} 画路线。`));
+          setStatus(`Now drawing for ${playerInfo[id].title}.`);
           return;
         }
         if (a.team === 'defense') {
           a.el.classList.add('pulled');
           createBurst(a.x, a.y, '#ffd447');
-          setStatus(t(`${playerInfo[id].enTitle} flag pulled!`, `${playerInfo[id].zhTitle} 被拉旗了！`));
+          setStatus(`${playerInfo[id].title} flag pulled!`);
           setTimeout(() => a.el.classList.remove('pulled'), 600);
         } else {
-          setStatus(t(`Selected ${playerInfo[id].enTitle}.`, `已选择 ${playerInfo[id].zhTitle}。`));
+          setStatus(`Selected ${playerInfo[id].title}.`);
         }
       }
-
       function createPath(points, color, customClass = 'route-line') {
         const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         const d = points.map((pt, idx) => `${idx === 0 ? 'M' : 'L'} ${pt.x} ${pt.y}`).join(' ');
@@ -1348,7 +1067,6 @@
         if (color) p.setAttribute('stroke', color);
         return p;
       }
-
       function createArrow(x1, y1, x2, y2, color) {
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -1362,10 +1080,8 @@
         g.append(line, wing1, wing2);
         return g;
       }
-
       function clearRoutes() { if (routeLayer) routeLayer.innerHTML = ''; }
       function clearDrawing() { currentDrawPoints = []; renderCustomPlaybookLayer(); }
-
       function renderCustomPlaybookLayer() {
         if (!customPlaybookLayer) return;
         customPlaybookLayer.innerHTML = '';
@@ -1398,7 +1114,6 @@
           }
         }
       }
-
       function showPreviewRoutes() {
         if (busy || !routeLayer || selectedSavedPlayId) { clearRoutes(); return; }
         const refs = getRequiredAnimals(['bear', 'monkey', 'horse', 'fox']);
@@ -1407,10 +1122,10 @@
         const { bear, monkey, horse, fox } = refs;
         const b = pctToView(bear.x, bear.y);
         if (selectedPlay === 'slant') {
-          const m = pctToView(monkey.x + 4, monkey.y - 2);
-          routeLayer.append(createPath([b, { x: b.x + 90, y: b.y - 55 }, { x: m.x - 55, y: m.y - 12 }, m], '#7dd3fc'), createArrow(m.x - 22, m.y - 4, m.x, m.y, '#7dd3fc'));
+          const m = pctToView(monkey.x + 2, monkey.y + 2);
+          routeLayer.append(createPath([b, { x: b.x + 90, y: b.y - 55 }, { x: m.x - 55, y: m.y + 20 }, m], '#7dd3fc'), createArrow(m.x - 22, m.y + 12, m.x, m.y, '#7dd3fc'));
         } else if (selectedPlay === 'handoff') {
-          const h = pctToView(horse.x + 12, horse.y - 4);
+          const h = pctToView(horse.x, horse.y - 4);
           routeLayer.append(createPath([b, h], '#ffd447'), createArrow(h.x - 18, h.y + 2, h.x, h.y, '#ffd447'));
         } else if (selectedPlay === 'go') {
           const m = pctToView(monkey.x + 1, monkey.y - 18);
@@ -1419,11 +1134,10 @@
           const h = pctToView(horse.x, horse.y);
           routeLayer.append(createPath([h, { x: h.x + 80, y: h.y + 10 }, { x: h.x + 160, y: h.y - 18 }, { x: h.x + 220, y: h.y - 28 }], '#ffd447'), createArrow(h.x + 190, h.y - 25, h.x + 220, h.y - 28, '#ffd447'));
         }
-        const f = pctToView(fox.x - 8, fox.y + 6);
-        const defensePath = createPath([pctToView(fox.x, fox.y), { x: f.x - 35, y: f.y }, { x: b.x + 25, y: b.y + 12 }], '#ff6d9b');
-        routeLayer.append(defensePath, createArrow(b.x + 12, b.y + 10, b.x + 25, b.y + 12, '#ff6d9b'));
+        const f = pctToView(fox.x - 8, fox.y + 2);
+        const defensePath = createPath([pctToView(fox.x, fox.y), { x: f.x - 35, y: f.y }, { x: b.x + 25, y: b.y + 8 }], '#ff6d9b');
+        routeLayer.append(defensePath, createArrow(b.x + 12, b.y + 8, b.x + 25, b.y + 8, '#ff6d9b'));
       }
-
       function createBurst(x, y, color = '#ffd447') {
         if (!burstLayer) return;
         const burst = document.createElement('div');
@@ -1434,7 +1148,6 @@
         burstLayer.appendChild(burst);
         setTimeout(() => burst.remove(), 600);
       }
-
       function animateFootball(from, to, duration = 900) {
         return new Promise(resolve => {
           if (!footballLayer || !from || !to) { resolve(); return; }
@@ -1456,7 +1169,6 @@
           requestAnimationFrame(frame);
         });
       }
-
       function animateMove(id, points, duration = 1200) {
         return new Promise(resolve => {
           const a = getAnimal(id);
@@ -1479,10 +1191,8 @@
           requestAnimationFrame(frame);
         });
       }
-
       function advanceDown() { down = down >= 4 ? 1 : down + 1; updateScoreboard(); }
       function showTouchdown() { touchdownBanner.classList.remove('show'); void touchdownBanner.offsetWidth; touchdownBanner.classList.add('show'); createConfetti(); }
-
       function createConfetti() {
         if (!confettiLayer) return;
         confettiLayer.innerHTML = '';
@@ -1498,78 +1208,72 @@
         }
         setTimeout(() => { confettiLayer.innerHTML = ''; }, 1700);
       }
-
       function addTouchdown(team = 'home') {
-        if (team === 'home') homeScore += 6; else awayScore += 6;
+        if (team === 'home') setHomeScore(homeScore + 6); else setAwayScore(awayScore + 6);
         down = 1;
         updateScoreboard();
         showTouchdown();
-        setStatus(t('Touchdown! Great play!', '达阵！精彩进攻！'));
+        setStatus('Touchdown! Great play!');
       }
-
       async function runSlantPlay() {
         const refs = getRequiredAnimals(['bear', 'monkey']);
         if (!refs) return false;
         const { bear, monkey } = refs;
         const startMonkey = { x: monkey.x, y: monkey.y };
-        const catchMonkey = { x: startMonkey.x + 14, y: startMonkey.y - 9 };
-        const afterCatchMonkey = { x: startMonkey.x + 31, y: startMonkey.y - 16 };
+        const catchMonkey = { x: startMonkey.x + 10, y: startMonkey.y + 10 };
+        const afterCatchMonkey = { x: startMonkey.x + 24, y: startMonkey.y + 16 };
         clearRoutes();
         routeLayer.append(createPath([pctToView(bear.x, bear.y), { x: bear.x * 10 + 90, y: bear.y * 6.2 - 50 }, { x: catchMonkey.x * 10 - 20, y: catchMonkey.y * 6.2 }, pctToView(catchMonkey.x, catchMonkey.y)], '#7dd3fc'));
-        await animateMove('monkey', [startMonkey, { x: startMonkey.x + 7, y: startMonkey.y - 5 }, catchMonkey], 900);
-        await animateFootball({ x: bear.x + 3, y: bear.y - 7 }, { x: catchMonkey.x, y: catchMonkey.y - 6 }, 950);
-        await animateMove('monkey', [catchMonkey, { x: startMonkey.x + 23, y: startMonkey.y - 13 }, afterCatchMonkey], 900);
+        await animateMove('monkey', [startMonkey, { x: startMonkey.x + 5, y: startMonkey.y + 5 }, catchMonkey], 900);
+        await animateFootball({ x: bear.x + 2, y: bear.y - 6 }, { x: catchMonkey.x, y: catchMonkey.y - 4 }, 950);
+        await animateMove('monkey', [catchMonkey, { x: startMonkey.x + 18, y: startMonkey.y + 12 }, afterCatchMonkey], 900);
         return true;
       }
-
       async function runHandoffPlayAnim() {
         const refs = getRequiredAnimals(['bear', 'horse', 'fox', 'leopard']);
         if (!refs) return false;
         const { bear, horse, fox, leopard } = refs;
         const startHorse = { x: horse.x, y: horse.y };
-        const endHorse = { x: startHorse.x + 23, y: startHorse.y - 8 };
+        const endHorse = { x: startHorse.x + 18, y: startHorse.y - 6 };
         clearRoutes();
-        routeLayer.append(createPath([pctToView(bear.x, bear.y), pctToView(startHorse.x - 2, startHorse.y - 2)], '#ffd447'), createPath([pctToView(startHorse.x, startHorse.y), { x: startHorse.x * 10 + 70, y: startHorse.y * 6.2 }, { x: startHorse.x * 10 + 130, y: startHorse.y * 6.2 - 30 }, { x: endHorse.x * 10, y: endHorse.y * 6.2 }], '#ffd447'), createPath([pctToView(fox.x, fox.y), { x: fox.x * 10 - 40, y: fox.y * 6.2 + 16 }, { x: bear.x * 10 + 60, y: bear.y * 6.2 + 12 }], '#ff6d9b'));
-        await animateFootball({ x: bear.x + 2, y: bear.y - 2 }, { x: startHorse.x - 2, y: startHorse.y - 3 }, 420);
-        await animateMove('horse', [startHorse, { x: startHorse.x + 8, y: startHorse.y }, { x: startHorse.x + 15, y: startHorse.y - 5 }, endHorse], 1200);
+        routeLayer.append(createPath([pctToView(bear.x, bear.y), pctToView(startHorse.x, startHorse.y - 2)], '#ffd447'));
+        await animateFootball({ x: bear.x + 1, y: bear.y - 2 }, { x: startHorse.x, y: startHorse.y - 3 }, 420);
+        await animateMove('horse', [startHorse, { x: startHorse.x + 8, y: startHorse.y - 1 }, endHorse], 1100);
         leopard.el.classList.add('pulled');
         createBurst(leopard.x, leopard.y, '#ffd447');
         setTimeout(() => leopard.el.classList.remove('pulled'), 600);
         return true;
       }
-
       async function runGoRoutePlay() {
         const refs = getRequiredAnimals(['bear', 'monkey', 'rabbit']);
         if (!refs) return false;
         const { bear, monkey, rabbit } = refs;
         const startMonkey = { x: monkey.x, y: monkey.y };
-        const deepMonkey = { x: startMonkey.x + 2, y: startMonkey.y - 28 };
+        const deepMonkey = { x: startMonkey.x + 2, y: startMonkey.y - 24 };
         const scoreMonkey = { x: startMonkey.x + 2, y: 11 };
         clearRoutes();
         routeLayer.append(createPath([pctToView(startMonkey.x, startMonkey.y), pctToView(deepMonkey.x, deepMonkey.y), pctToView(scoreMonkey.x, scoreMonkey.y)], '#7dd3fc'), createPath([pctToView(bear.x, bear.y), { x: bear.x * 10 + 120, y: bear.y * 6.2 - 120 }, pctToView(scoreMonkey.x, scoreMonkey.y)], '#aef6ff'));
         await animateMove('monkey', [startMonkey, deepMonkey, scoreMonkey], 1400);
-        await animateFootball({ x: bear.x + 3, y: bear.y - 7 }, { x: scoreMonkey.x, y: scoreMonkey.y + 2 }, 1100);
+        await animateFootball({ x: bear.x + 2, y: bear.y - 6 }, { x: scoreMonkey.x, y: scoreMonkey.y + 2 }, 1100);
         rabbit.el.classList.add('pulled');
         setTimeout(() => rabbit.el.classList.remove('pulled'), 500);
         addTouchdown('home');
         return true;
       }
-
       async function runSweepPlay() {
         const refs = getRequiredAnimals(['horse', 'giraffe']);
         if (!refs) return false;
         const { horse, giraffe } = refs;
         const startHorse = { x: horse.x, y: horse.y };
-        const endHorse = { x: startHorse.x + 30, y: startHorse.y - 18 };
+        const endHorse = { x: startHorse.x + 24, y: startHorse.y - 16 };
         clearRoutes();
-        routeLayer.append(createPath([pctToView(startHorse.x, startHorse.y), { x: startHorse.x * 10 + 80, y: startHorse.y * 6.2 + 10 }, { x: startHorse.x * 10 + 160, y: startHorse.y * 6.2 - 18 }, { x: endHorse.x * 10, y: endHorse.y * 6.2 }], '#ffd447'));
-        await animateMove('horse', [startHorse, { x: startHorse.x + 10, y: startHorse.y + 2 }, { x: startHorse.x + 20, y: startHorse.y - 10 }, endHorse], 1200);
+        routeLayer.append(createPath([pctToView(startHorse.x, startHorse.y), { x: startHorse.x * 10 + 90, y: startHorse.y * 6.2 - 10 }, { x: endHorse.x * 10, y: endHorse.y * 6.2 }], '#ffd447'));
+        await animateMove('horse', [startHorse, { x: startHorse.x + 10, y: startHorse.y - 4 }, endHorse], 1200);
         giraffe.el.classList.add('pulled');
         createBurst(giraffe.x, giraffe.y, '#ffd447');
         setTimeout(() => giraffe.el.classList.remove('pulled'), 600);
         return true;
       }
-
       async function runSavedCustomPlay(play) {
         const animal = getAnimal(play.playerId);
         if (!animal || !play.points || play.points.length === 0) return false;
@@ -1583,21 +1287,20 @@
         }
         return true;
       }
-
       async function runSelectedPlay() {
         if (busy) return;
         busy = true;
         if (selectedSavedPlayId) {
           const customPlay = getSavedPlayById(selectedSavedPlayId);
-          setStatus(t(`Running custom play ${customPlay?.name || ''}...`, `正在执行自定义战术 ${customPlay?.name || ''}...`));
+          setStatus(`Running custom play ${customPlay?.name || ''}...`);
           const ok = customPlay ? await runSavedCustomPlay(customPlay) : false;
           if (ok) advanceDown();
           busy = false;
-          setStatus(ok ? t('Completed custom play.', '已完成自定义战术。') : t('Custom play unavailable.', '当前无法执行自定义战术。'));
+          setStatus(ok ? 'Completed custom play.' : 'Custom play unavailable.');
           renderCustomPlaybookLayer();
           return;
         }
-        setStatus(t(`Running ${plays[selectedPlay].enName}...`, `正在执行 ${plays[selectedPlay].zhName}...`));
+        setStatus(`Running ${plays[selectedPlay].name}...`);
         let ok = false;
         if (selectedPlay === 'slant') ok = await runSlantPlay();
         else if (selectedPlay === 'handoff') ok = await runHandoffPlayAnim();
@@ -1605,10 +1308,9 @@
         else if (selectedPlay === 'sweep') ok = await runSweepPlay();
         if (ok && plays[selectedPlay].downAdvance && !plays[selectedPlay].score) advanceDown();
         busy = false;
-        setStatus(ok ? t(`Completed ${plays[selectedPlay].enName}.`, `已完成 ${plays[selectedPlay].zhName}。`) : t('Play unavailable. Reset the field first.', '当前无法执行战术，请先重置球场。'));
+        setStatus(ok ? `Completed ${plays[selectedPlay].name}.` : 'Play unavailable. Reset the field first.');
         showPreviewRoutes();
       }
-
       async function runAutoDemo() {
         if (busy) return;
         const original = selectedPlay;
@@ -1631,31 +1333,26 @@
         updateScoreboard();
         showPreviewRoutes();
       }
-
-      function syncPlayButtons() {
-        document.querySelectorAll('.playbook-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.play === selectedPlay && !selectedSavedPlayId));
-      }
-
+      function syncPlayButtons() { document.querySelectorAll('.playbook-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.play === selectedPlay && !selectedSavedPlayId)); }
       function toggleDrawMode() {
         drawMode = !drawMode;
         drawToggleBtn.classList.toggle('active', drawMode);
-        drawToggleBtn.textContent = drawMode ? t('✏️ Draw Mode On', '✏️ 绘制模式开启') : t('✏️ Draw Mode Off', '✏️ 绘制模式关闭');
-        setStatus(drawMode ? t('Draw mode is on. Click the field to place route points.', '绘制模式已开启。点击球场添加路线点。') : t('Draw mode is off.', '绘制模式已关闭。'));
+        drawToggleBtn.textContent = drawMode ? '✏️ Draw Mode On' : '✏️ Draw Mode Off';
+        setStatus(drawMode ? 'Draw mode is on. Click the field to place route points.' : 'Draw mode is off.');
       }
-
       function renderSavedPlaysList() {
         savedPlayListEl.innerHTML = '';
         if (savedCustomPlays.length === 0) {
           const empty = document.createElement('div');
           empty.className = 'glass rounded-2xl p-4';
-          empty.textContent = t('No saved plays yet.', '还没有保存的战术。');
+          empty.textContent = 'No saved plays yet.';
           savedPlayListEl.appendChild(empty);
           return;
         }
         savedCustomPlays.forEach(play => {
           const btn = document.createElement('button');
           btn.className = `saved-play-btn rounded-2xl px-4 py-3 bg-white/10 font-extrabold text-left ${play.id === selectedSavedPlayId ? 'active' : ''}`;
-          btn.textContent = `${play.name} • ${getLocalizedPlayerName(play.playerId)}`;
+          btn.textContent = `${play.name} • ${playerInfo[play.playerId].title}`;
           btn.addEventListener('click', () => {
             selectedSavedPlayId = play.id;
             updatePlayDescription();
@@ -1663,24 +1360,18 @@
             renderSavedPlaysList();
             renderCustomPlaybookLayer();
             clearRoutes();
-            setStatus(t(`Selected custom play ${play.name}.`, `已选择自定义战术 ${play.name}。`));
+            setStatus(`Selected custom play ${play.name}.`);
           });
           savedPlayListEl.appendChild(btn);
         });
       }
-
       function saveCurrentDrawing() {
         if (currentDrawPoints.length < 1) {
-          setStatus(t('Please place at least one route point before saving.', '保存前请至少添加一个路线点。'));
+          setStatus('Please place at least one route point before saving.');
           return;
         }
         const name = customPlayNameInput.value.trim() || `Custom Play ${savedCustomPlays.length + 1}`;
-        const play = {
-          id: `custom-${Date.now()}`,
-          name,
-          playerId: drawPlayerSelect.value,
-          points: currentDrawPoints.map(pt => ({ x: Number(pt.x.toFixed(2)), y: Number(pt.y.toFixed(2)) }))
-        };
+        const play = { id: `custom-${Date.now()}`, name, playerId: drawPlayerSelect.value, points: currentDrawPoints.map(pt => ({ x: Number(pt.x.toFixed(2)), y: Number(pt.y.toFixed(2)) })) };
         savedCustomPlays.push(play);
         selectedSavedPlayId = play.id;
         currentDrawPoints = [];
@@ -1688,14 +1379,10 @@
         renderCustomPlaybookLayer();
         updatePlayDescription();
         updateScoreboard();
-        setStatus(t(`Saved ${name}.`, `已保存 ${name}。`));
+        setStatus(`Saved ${name}.`);
       }
-
       function deleteSelectedSavedPlay() {
-        if (!selectedSavedPlayId) {
-          setStatus(t('Select a saved play first.', '请先选择一个已保存的战术。'));
-          return;
-        }
+        if (!selectedSavedPlayId) { setStatus('Select a saved play first.'); return; }
         savedCustomPlays = savedCustomPlays.filter(play => play.id !== selectedSavedPlayId);
         selectedSavedPlayId = null;
         renderSavedPlaysList();
@@ -1703,9 +1390,8 @@
         updatePlayDescription();
         updateScoreboard();
         showPreviewRoutes();
-        setStatus(t('Deleted saved play.', '已删除保存的战术。'));
+        setStatus('Deleted saved play.');
       }
-
       function drawDemoLines(svg, lines, color) {
         if (!svg) return;
         svg.innerHTML = '';
@@ -1714,7 +1400,6 @@
           svg.appendChild(path);
         });
       }
-
       function renderDemoIcons(container, icons) {
         if (!container) return;
         container.innerHTML = '';
@@ -1727,7 +1412,6 @@
           container.appendChild(div);
         });
       }
-
       function renderDemoPlayers(container, players) {
         if (!container) return;
         container.innerHTML = '';
@@ -1740,57 +1424,52 @@
           container.appendChild(div);
         });
       }
-
       function renderFoulCards() {
         foulCardsEl.innerHTML = '';
         Object.entries(fouls).forEach(([id, foul]) => {
           const btn = document.createElement('button');
           btn.className = `teaching-card foul-card text-left ${selectedFoulId === id ? 'active' : ''}`;
-          btn.innerHTML = `<div class="text-3xl mb-3">${foul.emoji}</div><h4>${t(foul.enTitle, foul.zhTitle)}</h4><div class="text-sm leading-6 text-white/90">${t(foul.enBody, foul.zhBody)}</div>`;
+          btn.innerHTML = `<div class="text-3xl mb-3">${foul.emoji}</div><h4>${foul.title}</h4><div class="text-sm leading-6 text-white/90">${foul.body}</div>`;
           btn.addEventListener('click', () => updateFoulDetail(id));
           foulCardsEl.appendChild(btn);
         });
       }
-
       function updateFoulDetail(id) {
         selectedFoulId = id;
         const foul = fouls[id];
         if (!foul) return;
         foulDetailEmoji.textContent = foul.emoji;
-        foulDetailTitle.textContent = t(foul.enTitle, foul.zhTitle);
-        foulDetailBody.textContent = t(foul.enBody, foul.zhBody);
-        foulDetailWhy.textContent = t(foul.enWhy, foul.zhWhy);
-        foulDetailTip.textContent = t(foul.enTip, foul.zhTip);
+        foulDetailTitle.textContent = foul.title;
+        foulDetailBody.textContent = foul.body;
+        foulDetailWhy.textContent = foul.why;
+        foulDetailTip.textContent = foul.tip;
         renderFoulCards();
         drawDemoLines(foulDemoSvg, foul.demo.lines, '#7dd3fc');
         renderDemoIcons(foulDemoIcons, foul.demo.icons);
       }
-
       function renderPositionCards() {
         positionCardsEl.innerHTML = '';
         Object.entries(positions).forEach(([id, pos]) => {
           const btn = document.createElement('button');
           btn.className = `teaching-card position-card text-left ${selectedPositionId === id ? 'active' : ''}`;
-          btn.innerHTML = `<div class="text-3xl mb-3">${pos.emoji}</div><h4>${t(pos.enTitle, pos.zhTitle)}</h4><div class="text-sm leading-6 text-white/90">${t(pos.enBody, pos.zhBody)}</div>`;
+          btn.innerHTML = `<div class="text-3xl mb-3">${pos.emoji}</div><h4>${pos.title}</h4><div class="text-sm leading-6 text-white/90">${pos.body}</div>`;
           btn.addEventListener('click', () => updatePositionDetail(id));
           positionCardsEl.appendChild(btn);
         });
       }
-
       function updatePositionDetail(id) {
         selectedPositionId = id;
         const pos = positions[id];
         if (!pos) return;
         positionDetailEmoji.textContent = pos.emoji;
-        positionDetailTitle.textContent = t(pos.enTitle, pos.zhTitle);
-        positionDetailBody.textContent = t(pos.enBody, pos.zhBody);
-        positionDetailJob.textContent = t(pos.enJob, pos.zhJob);
-        positionDetailTip.textContent = t(pos.enTip, pos.zhTip);
+        positionDetailTitle.textContent = pos.title;
+        positionDetailBody.textContent = pos.body;
+        positionDetailJob.textContent = pos.job;
+        positionDetailTip.textContent = pos.tip;
         renderPositionCards();
         drawDemoLines(positionDemoSvg, pos.demo.lines, '#ffd447');
         renderDemoPlayers(positionDemoPlayers, pos.demo.players);
       }
-
       function resetField() {
         if (!hasFieldPieces()) return;
         busy = false;
@@ -1806,19 +1485,17 @@
         updateRoleCard('bear');
         renderCustomPlaybookLayer();
         showPreviewRoutes();
-        setStatus(t('Ready! Drag any player or pick a playbook play.', '准备好了！拖动任意球员或选择一个战术。'));
+        setStatus('Ready! Drag any player or pick a playbook play.');
         renderSavedPlaysList();
       }
-
       function runSmokeTests() {
         console.assert(hasFieldPieces(), 'Smoke test failed: field pieces missing');
-        console.assert(baseAnimals.length === 8, 'Smoke test failed: expected 8 animals');
+        console.assert(getBaseFormation().length === 8, 'Smoke test failed: expected 8 players');
         console.assert(typeof pctToView(20, 50).x === 'number', 'Smoke test failed: pctToView x should be number');
         console.assert(typeof pctToView(20, 50).y === 'number', 'Smoke test failed: pctToView y should be number');
         console.assert(getRequiredAnimals(['bear', 'monkey', 'horse', 'fox']) !== null, 'Smoke test failed: required animals missing after reset');
-        console.assert(!!runPlayBtn && !!demoBtn && !!scoreBtn && !!resetBtn, 'Smoke test failed: buttons missing');
         console.assert(Object.keys(fouls).length >= 4, 'Smoke test failed: foul data missing');
-        console.assert(Object.keys(positions).length >= 6, 'Smoke test failed: position data missing');
+        console.assert(Object.keys(positions).length >= 8, 'Smoke test failed: position data missing');
       }
 
       if (!hasFieldPieces()) {
@@ -1837,7 +1514,6 @@
         showPreviewRoutes();
         renderCustomPlaybookLayer();
       });
-
       field.addEventListener('click', (e) => {
         if (!drawMode || draggingId) return;
         const rect = field.getBoundingClientRect();
@@ -1846,9 +1522,8 @@
         const pct = viewToPct(viewX, viewY);
         currentDrawPoints.push({ x: clamp(pct.x, 4, 96), y: clamp(pct.y, 4, 96) });
         renderCustomPlaybookLayer();
-        setStatus(t('Added a route point.', '已添加一个路线点。'));
+        setStatus('Added a route point.');
       });
-
       window.addEventListener('pointerup', stopDrag);
       field.addEventListener('pointerleave', () => { if (draggingId) stopDrag(); });
       runPlayBtn?.addEventListener('click', runSelectedPlay);
@@ -1856,18 +1531,22 @@
       scoreBtn?.addEventListener('click', () => addTouchdown('home'));
       resetBtn?.addEventListener('click', resetField);
       speakRoleBtn?.addEventListener('click', speakSelectedRole);
-      languageToggle?.addEventListener('change', updateAllTextLabels);
       schoolNameInput?.addEventListener('input', updateHeaderAndTeams);
       teamHomeInput?.addEventListener('input', updateHeaderAndTeams);
       teamAwayInput?.addEventListener('input', updateHeaderAndTeams);
       skinStyleSelect?.addEventListener('change', () => { skinStyle = skinStyleSelect.value; refreshAnimalLabels(); });
       drawToggleBtn?.addEventListener('click', toggleDrawMode);
       saveCustomPlayBtn?.addEventListener('click', saveCurrentDrawing);
-      clearDrawingBtn?.addEventListener('click', () => { clearDrawing(); setStatus(t('Cleared current drawing.', '已清除当前绘制。')); });
+      clearDrawingBtn?.addEventListener('click', () => { clearDrawing(); setStatus('Cleared current drawing.'); });
       deleteSavedPlayBtn?.addEventListener('click', deleteSelectedSavedPlay);
       replayFoulDemoBtn?.addEventListener('click', () => updateFoulDetail(selectedFoulId));
       replayPositionDemoBtn?.addEventListener('click', () => updatePositionDetail(selectedPositionId));
-
+      homePlus?.addEventListener('click', () => setHomeScore(homeScore + 1));
+      homeMinus?.addEventListener('click', () => setHomeScore(homeScore - 1));
+      awayPlus?.addEventListener('click', () => setAwayScore(awayScore + 1));
+      awayMinus?.addEventListener('click', () => setAwayScore(awayScore - 1));
+      homeScoreInput?.addEventListener('change', () => setHomeScore(Number(homeScoreInput.value)));
+      awayScoreInput?.addEventListener('change', () => setAwayScore(Number(awayScoreInput.value)));
       document.querySelectorAll('.playbook-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           selectedPlay = btn.dataset.play;
@@ -1877,10 +1556,9 @@
           updateScoreboard();
           renderSavedPlaysList();
           showPreviewRoutes();
-          setStatus(t(`Selected ${plays[selectedPlay].enName}.`, `已选择 ${plays[selectedPlay].zhName}。`));
+          setStatus(`Selected ${plays[selectedPlay].name}.`);
         });
       });
-
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const tab = btn.dataset.tab;
@@ -1897,7 +1575,6 @@
       updatePlayDescription();
       updateScoreboard();
       resetField();
-      updateAllTextLabels();
       renderSavedPlaysList();
       updateFoulDetail(selectedFoulId);
       updatePositionDetail(selectedPositionId);
